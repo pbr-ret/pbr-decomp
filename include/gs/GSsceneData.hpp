@@ -183,6 +183,19 @@ struct GSmodelNodeData : public GSnodeData {
     /* 0x38 */ void *_38;
 };
 
+// size: 0x54
+struct GSlightData : public GSnodeData {
+    /* 0x30 */ u32 mLightFlags;
+    /* 0x34 */ GXColor mColor;
+    /* 0x38 */ GXColor _38;
+    /* 0x3C */ f32 _3c;
+    /* 0x40 */ GXDistAttnFn mDistAttnFn;
+    /* 0x44 */ f32 mRefDistance;
+    /* 0x48 */ f32 mRefBrightness;
+    /* 0x4C */ GXSpotFn mSpotFn;
+    /* 0x50 */ f32 mCutoff;
+};
+
 struct _UnkAnimData_1 {
     /* 0x0 */ f32 _0;
     /* 0x4 */ u16 _4;
@@ -305,9 +318,9 @@ struct GSenvData {
     /* 0x0C */ GScolor<u8> mFogColor;
     /* 0x10 */ GStexture *_10;
     /* 0x14 */ GStexture *_14;
-    /* 0x18 */ u32 _18;
-    /* 0x1C */ u32 _1c;
-    /* 0x20 */ u32 _20;
+    /* 0x18 */ GSlightData *_18;
+    /* 0x1C */ GSlightData *_1c;
+    /* 0x20 */ GSlightData *_20;
 };
 
 // .sdr files

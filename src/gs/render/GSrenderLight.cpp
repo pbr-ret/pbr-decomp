@@ -26,8 +26,7 @@ GSrenderLight::GSrenderLight() {
 }
 
 void GSrenderLight::initPointLight(
-    GXColor color, Vec position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness
-) {
+    const GScolor<u8> &color, const Vec &position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness) {
     _1 = 0;
     _0 = 0;
     mType = GS_LIGHT_POINT;
@@ -56,10 +55,14 @@ void GSrenderLight::initPointLight(
     _0 |= (1 << 0);
 }
 
-void GSrenderLight::initSpotLight(
-    GXColor color, Vec position, Vec direction, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness,
-    GXSpotFn spotFn, f32 cutoff
-) {
+void GSrenderLight::initSpotLight(const GScolor<u8> &color,
+                                  const Vec &position,
+                                  const Vec &direction,
+                                  GXDistAttnFn distAttnFn,
+                                  f32 refDistance,
+                                  f32 refBrightness,
+                                  GXSpotFn spotFn,
+                                  f32 cutoff) {
     _1 = 0;
     _0 = 0;
     mType = GS_LIGHT_SPOT;
@@ -92,7 +95,7 @@ void GSrenderLight::initSpotLight(
     _1 |= (1 << 5);
 }
 
-void GSrenderLight::initSpecLight(GXColor color, Vec direction, f32 shininess) {
+void GSrenderLight::initSpecLight(const GScolor<u8> &color, const Vec &direction, f32 shininess) {
     _1 = 0;
     _0 = 0;
     mType = GS_LIGHT_SPEC;
@@ -159,9 +162,13 @@ void GSrenderLight::load(u8 index, GSlightStruct1 *param2) {
             if ((_1 & (1 << 7)) != 0) {
                 GXInitLightShininess(&mLightObj, mShininess);
             } else if ((_1 & (1 << 3)) != 0) {
-                GXInitLightAttn(
-                    &mLightObj, mAngleAtten0, mAngleAtten1, mAngleAtten2, mDistAtten0, mDistAtten1, mDistAtten2
-                );
+                GXInitLightAttn(&mLightObj,
+                                mAngleAtten0,
+                                mAngleAtten1,
+                                mAngleAtten2,
+                                mDistAtten0,
+                                mDistAtten1,
+                                mDistAtten2);
             }
             break;
 
@@ -175,9 +182,13 @@ void GSrenderLight::load(u8 index, GSlightStruct1 *param2) {
             }
 
             if ((_1 & (1 << 3)) != 0) {
-                GXInitLightAttn(
-                    &mLightObj, mAngleAtten0, mAngleAtten1, mAngleAtten2, mDistAtten0, mDistAtten1, mDistAtten2
-                );
+                GXInitLightAttn(&mLightObj,
+                                mAngleAtten0,
+                                mAngleAtten1,
+                                mAngleAtten2,
+                                mDistAtten0,
+                                mDistAtten1,
+                                mDistAtten2);
             } else {
                 if ((_1 & (1 << 4)) != 0) {
                     GXInitLightDistAttn(&mLightObj, mRefDistance, mRefBrightness, mDistAttnFn);

@@ -41,8 +41,8 @@ GSscene::GSscene(GSsceneData *sceneData) : mData(sceneData), mObjects(NULL), _8(
             for (u16 j = 0; j < lightCount; j++) {
                 GSlight *light = object->getLight(j);
 
-                if (light && light->get_10c()) {
-                    u32 _unk7 = light->get_10c();
+                if (light && light->getLightData()) {
+                    GSlightData *_unk7 = light->getLightData();
                     if (_unk7 == envData->_18) {
                         _8 = light;
                     }
