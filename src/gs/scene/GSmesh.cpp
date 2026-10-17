@@ -61,7 +61,7 @@ GSmesh::~GSmesh() {
     }
 }
 
-bool GSmesh::fn_801ED62C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool inverted, u32 arg3) {
+bool GSmesh::fn_801ED62C(GScamera *arg0, GSmatrix *arg1, bool inverted, u32 arg3) {
     if (!mMaterial || !_18 || !mDisplayList || mMaterial->getAlpha() == 0) {
         return false;
     }
@@ -153,7 +153,7 @@ bool GSmesh::fn_801ED62C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool invert
     return true;
 }
 
-bool GSmesh::fn_801EDDFC(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool inverted) {
+bool GSmesh::fn_801EDDFC(GScamera *arg0, GSmatrix *arg1, bool inverted) {
     if (!mMaterial || !_18 || !mDisplayList || mMaterial->getAlpha() == 0) {
         return false;
     }

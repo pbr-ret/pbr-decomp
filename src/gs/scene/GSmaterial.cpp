@@ -4,6 +4,7 @@
 #include "gs/GSmath.hpp"
 #include "gs/GSrender.hpp"
 #include "gs/render/80236704.hpp"
+#include "gs/scene/GScamera.hpp"
 #include "gs/scene/GSlight.hpp"
 
 #include <cmath>
@@ -610,7 +611,7 @@ void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
 }
 
 // TODO role: adds the lighting TEV stages, with bump-mapped stages when bump mapping is on and a light is enabled
-void GSmaterial::fn_801E7FA4(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, u32 arg2) {
+void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
     bool hadStages = mCurrTevStage != 0;
 
     if (_2c.a != 0) {
@@ -857,7 +858,7 @@ void GSmaterial::fn_801E8BA4(bool useTexture) {
 }
 
 // TODO role: adds the specular TEV stage(s) with a texture matrix built from the main light direction
-void GSmaterial::fn_801E9114(_UnkMaterialStruct_3 *arg0, bool useTexture) {
+void GSmaterial::fn_801E9114(GScamera *arg0, bool useTexture) {
     GSrenderLight *renderLight = NULL;
 
     GSlight *light = GShierarchyModule::get_11c();
@@ -993,7 +994,7 @@ void GSmaterial::fn_801E98E0() {
 }
 
 // TODO role: chooses the specular TEV setup from the material's specular texture slots
-void GSmaterial::fn_801E9C18(_UnkMaterialStruct_3 *arg0) {
+void GSmaterial::fn_801E9C18(GScamera *arg0) {
     if (!(mMatData->_5d & (1 << 2))) {
         return;
     }
@@ -1040,7 +1041,7 @@ GSmatrix *GSmaterial::fn_801E9C74(u8 index, _UnkMaterialData_2 *data) {
 }
 
 // TODO role: sets up texture coordinate generation for every slot and for the extra textures
-void GSmaterial::fn_801E9DCC(const _UnkMaterialStruct_3 *arg0, GSmatrix *arg1) {
+void GSmaterial::fn_801E9DCC(const GScamera *arg0, GSmatrix *arg1) {
     GSmatrix _unk1;
 
     mTexGenCount = mMatData->_5b;
@@ -1473,7 +1474,7 @@ void GSmaterial::fn_801EB668(bool inverted) {
 }
 
 // TODO role: full setup for drawing with layer TEV stages and a single register color channel
-void GSmaterial::fn_801EB87C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1) {
+void GSmaterial::fn_801EB87C(GScamera *arg0, GSmatrix *arg1) {
     u8 i, count;
 
     count = mMatData->_58;
@@ -1548,7 +1549,7 @@ void GSmaterial::fn_801EB87C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1) {
 }
 
 // TODO role: loads konst colors, swap tables and textures, then tex gens and channels; false if fully transparent
-bool GSmaterial::fn_801EC050(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool arg2) {
+bool GSmaterial::fn_801EC050(GScamera *arg0, GSmatrix *arg1, bool arg2) {
     if (arg2 && !(mMatData->_5d & (1 << 3))) {
         GSrender::sInstance->setFogEnabled(false);
     }
@@ -1596,7 +1597,7 @@ bool GSmaterial::fn_801EC050(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool ar
 }
 
 // TODO role: builds the TEV stages unless already current; false if no stage was needed
-bool GSmaterial::fn_801EC538(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool arg2, bool arg3, u32 arg4) {
+bool GSmaterial::fn_801EC538(GScamera *arg0, GSmatrix *arg1, bool arg2, bool arg3, u32 arg4) {
     lbl_8063D768._0 = 1;
     mCurrTevStage = 0;
 

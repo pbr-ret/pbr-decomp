@@ -63,12 +63,12 @@ public:
     /* 0x10 */ virtual void initTransform(bool recursive);
     /* 0x14 */ virtual void updateTransform();
 
-    bool fn_801F06E4(_UnkMaterialStruct_3 *arg0);
-    bool fn_801F0B50(_UnkMaterialStruct_3 *arg0);
-    bool fn_801F0B7C(_UnkMaterialStruct_3 *arg0, bool arg1);
-    bool fn_801F0FD8(_UnkMaterialStruct_3 *arg0, bool arg1);
-    bool fn_801F113C(_UnkMaterialStruct_3 *arg0);
-    bool fn_801F134C(_UnkMaterialStruct_3 *arg0);
+    bool fn_801F06E4(GScamera *arg0);
+    bool fn_801F0B50(GScamera *arg0);
+    bool fn_801F0B7C(GScamera *arg0, bool arg1);
+    bool fn_801F0FD8(GScamera *arg0, bool arg1);
+    bool fn_801F113C(GScamera *arg0);
+    bool fn_801F134C(GScamera *arg0);
     void fn_801F15EC(u16 animId, u32 arg1, f32 arg2);
 
     // TODO(samm) Name

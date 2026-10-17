@@ -222,7 +222,7 @@ void GSmodel::initTransform(bool recursive) {
     }
 }
 
-bool GSmodel::fn_801F0B50(_UnkMaterialStruct_3 *arg0) {
+bool GSmodel::fn_801F0B50(GScamera *arg0) {
     u32 _unk1;
     if (GSrenderPass::getActiveRenderPass()) {
         _unk1 = GSrenderPass::getActiveRenderPass()->get_0();
@@ -232,7 +232,7 @@ bool GSmodel::fn_801F0B50(_UnkMaterialStruct_3 *arg0) {
     return fn_801F0B7C(arg0, _unk1 != 8);
 }
 
-bool GSmodel::fn_801F0B7C(_UnkMaterialStruct_3 *arg0, bool arg1) {
+bool GSmodel::fn_801F0B7C(GScamera *arg0, bool arg1) {
     if (!fn_801F3CE0()) {
         return false;
     }
@@ -312,7 +312,7 @@ bool GSmodel::fn_801F0B7C(_UnkMaterialStruct_3 *arg0, bool arg1) {
     return false;
 }
 
-bool GSmodel::fn_801F0FD8(_UnkMaterialStruct_3 *arg0, bool arg1) {
+bool GSmodel::fn_801F0FD8(GScamera *arg0, bool arg1) {
     if (!fn_801F3CE0() || !checkDataFlag((1 << 9))) {
         return false;
     }
@@ -354,7 +354,7 @@ bool GSmodel::fn_801F0FD8(_UnkMaterialStruct_3 *arg0, bool arg1) {
     return false;
 }
 
-bool GSmodel::fn_801F113C(_UnkMaterialStruct_3 *arg0) {
+bool GSmodel::fn_801F113C(GScamera *arg0) {
     if (!fn_801F3CE0() || !checkDataFlag((1 << 10))) {
         return false;
     }
@@ -415,7 +415,7 @@ bool GSmodel::fn_801F113C(_UnkMaterialStruct_3 *arg0) {
     return false;
 }
 
-bool GSmodel::fn_801F134C(_UnkMaterialStruct_3 *arg0) {
+bool GSmodel::fn_801F134C(GScamera *arg0) {
     if (!fn_801F3CE0() || !checkDataFlag((1 << 11))) {
         return false;
     }

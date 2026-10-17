@@ -5,6 +5,7 @@
 #include "gs/GSrender.hpp"
 #include "gs/scene/GSanimationObject.hpp"
 
+class GScamera;
 struct GSmeshRenderSettings;
 class GSchannelData;
 
@@ -26,29 +27,6 @@ struct Unk8063D768 {
     /* 0x3 */ u8 mTexCoordId;
     /* 0x4 */ u8 _4;
     /* 0x5 */ u8 _5;
-};
-
-// size: >= 0x204
-struct _UnkMaterialStruct_3 {
-    /* 0x000 */ u8 _unk0[0x104];
-    /* 0x104 */ u32 _104;
-    /* 0x108 */ u8 _unk108[0x60];
-    /* 0x168 */ f32 _168;
-    /* 0x16C */ f32 _16c;
-    /* 0x170 */ f32 _170;
-    /* 0x174 */ f32 _174;
-    /* 0x178 */ f32 _178;
-    /* 0x17C */ f32 _17c;
-    /* 0x180 */ u8 _unk180[0x2C];
-    /* 0x1AC */ GSvec3 _1ac;
-    /* 0x1B8 */ GSvec3 _1b8;
-    /* 0x1C4 */ GSvec3 _1c4;
-    /* 0x1D0 */ u8 _unk1D0[0x4];
-    /* 0x1D4 */ GSmatrix _1d4;
-
-    GSmatrix *get_1d4() {
-        return &_1d4;
-    }
 };
 
 // NOTE(samm) Name known from RTTI
@@ -94,22 +72,22 @@ public:
 
     void fn_801E6F78(GStexture *baseTex, GStexture *spotTex, u32 spotOffsets, const bool *darken);
     void fn_801E74B0(_UnkMaterialData_1 *arg0);
-    void fn_801E7FA4(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, u32 arg2);
+    void fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2);
     void fn_801E8858(bool useTexture);
     void fn_801E8BA4(bool useTexture);
-    void fn_801E9114(_UnkMaterialStruct_3 *arg0, bool useTexture);
+    void fn_801E9114(GScamera *arg0, bool useTexture);
     void fn_801E98E0();
-    void fn_801E9C18(_UnkMaterialStruct_3 *arg0);
+    void fn_801E9C18(GScamera *arg0);
     GSmatrix *fn_801E9C74(u8 arg0, _UnkMaterialData_2 *arg1);
-    void fn_801E9DCC(const _UnkMaterialStruct_3 *arg0, GSmatrix *arg1);
+    void fn_801E9DCC(const GScamera *arg0, GSmatrix *arg1);
     void fn_801EA44C();
     void fn_801EAA94();
     void fn_801EABE8(bool inverted);
     void fn_801EB044(bool inverted, bool blend, bool zComp);
     void fn_801EB668(bool inverted);
-    void fn_801EB87C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1);
-    bool fn_801EC050(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool arg2);
-    bool fn_801EC538(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool arg2, bool arg3, u32 arg4);
+    void fn_801EB87C(GScamera *arg0, GSmatrix *arg1);
+    bool fn_801EC050(GScamera *arg0, GSmatrix *arg1, bool arg2);
+    bool fn_801EC538(GScamera *arg0, GSmatrix *arg1, bool arg2, bool arg3, u32 arg4);
     void fn_801ECBA8();
 
     GSmeshRenderSettings *getRenderSettings() const {
