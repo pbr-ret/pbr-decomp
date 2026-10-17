@@ -227,6 +227,7 @@ struct GSobjectData {
     /* 0x18 */ _UnkObjectData_1 *_18;
 };
 
+// size: >= 0x7
 struct _UnkMaterialData_1 {
     /* 0x0 */ u8 _0;
     /* 0x1 */ u8 _1;
@@ -237,12 +238,12 @@ struct _UnkMaterialData_1 {
     /* 0x6 */ u8 _6;
 };
 
-// Size: 0x18
+// size: 0x18
 struct _UnkMaterialData_2 {
     /* 0x00 */ u8 _0;
     /* 0x01 */ u8 _1;
     /* 0x02 */ u8 _2;
-    /* 0x03 */ u8 _pad_3[0x1];
+    /* 0x03 */ u8 _unk3[0x1];
     /* 0x04 */ f32 _4;
     /* 0x08 */ f32 _8;
     /* 0x0C */ f32 _c;
@@ -250,17 +251,17 @@ struct _UnkMaterialData_2 {
     /* 0x14 */ f32 _14;
 };
 
-// Size: 0x8c
+// size: 0x8C
 struct GSmaterialData {
     /* 0x00 */ char *mName;
     /* 0x04 */ GScolor _4[2];
     /* 0x0C */ u8 _c[3][4];
     /* 0x18 */ GStexture *mTextureSlots[MATERIAL_MAX_TEXTURE_SLOTS];
-    /* 0x2c */ _UnkMaterialData_2 *_2c[MATERIAL_MAX_TEXTURE_SLOTS];
+    /* 0x2C */ _UnkMaterialData_2 *_2c[MATERIAL_MAX_TEXTURE_SLOTS];
     /* 0x40 */ _UnkMaterialData_1 *_40[4];
     /* 0x50 */ GStexture *_50;
     /* 0x54 */ u8 _54;
-    /* 0x55 */ u8 _pad_55[0x3];
+    /* 0x55 */ u8 _unk55[0x3];
     /* 0x58 */ u8 _58;
     /* 0x59 */ u8 _59;
     /* 0x5A */ u8 mTextureCount;
@@ -283,9 +284,9 @@ struct GSmaterialData {
     /* 0x77 */ u8 _77;
     /* 0x78 */ GScolor _78;
     /* 0x7C */ f32 _7c;
-    /* 0x80 */ u8 _pad_80[0x4];
+    /* 0x80 */ u8 _unk80[0x4];
     /* 0x84 */ GSkeyframeData *mKeyframes;
-    /* 0x88 */ u8 _pad_88[0x4];
+    /* 0x88 */ u8 _unk88[0x4];
 
     GSmaterialData();
 };

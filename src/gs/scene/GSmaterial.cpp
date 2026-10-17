@@ -17,8 +17,8 @@ extern GSmaterialData *lbl_8063F3AC;
 extern u8 lbl_8063F3B0;
 extern GSmatrix lbl_804932B0;
 
-_UnkMaterialStruct_1 lbl_80491970(GSvec3(0.5f, -0.5f, 0.f), GSvec3(0.5f, 0.5f, 1.f));
-_UnkMaterialStruct_2 lbl_8063D768 = {1};
+/* 0x80491970 */ Unk80491970 lbl_80491970(GSvec3(0.5f, -0.5f, 0.f), GSvec3(0.5f, 0.5f, 1.f));
+/* 0x8063D768 */ Unk8063D768 lbl_8063D768 = {1};
 
 GSmaterial::GSmaterial(GSmaterialData *matData, GSmeshRenderSettings *renderSettings)
     : GSanimationObject(matData->mKeyframes),
@@ -43,7 +43,7 @@ GSmaterial::GSmaterial(GSmaterialData *matData, GSmeshRenderSettings *renderSett
       _2c(0, 0, 0, 0),
       mBaseColor(128, 128, 128, 255) {
     if (matData->_5b) {
-        _18 = new _UnkMaterialStruct_1[matData->_5b];
+        _18 = new Unk80491970[matData->_5b];
     }
 
     if (matData->mKeyframes) {
@@ -116,13 +116,14 @@ GSmaterial::~GSmaterial() {
     }
 }
 
-static const Vec2 sSpotPositions[4] = {
+/* 0x803FD848 */ static const Vec2 sSpotPositions[4] = {
     { 0.046875f, 0.0546875f},
     {0.7109375f,  0.046875f},
     { 0.234375f, 0.5078125f},
     {  0.53125f, 0.5078125f},
 };
 
+// TODO role: copies the base texture and blends four spot patterns into it, per channel min or max
 void GSmaterial::fn_801E6F78(GStexture *baseTex, GStexture *spotTex, u32 spotOffsets, const bool *darken) {
     u8 *dstData = NULL;
     u8 *srcData = NULL;
@@ -248,6 +249,7 @@ void GSmaterial::fn_801E6F78(GStexture *baseTex, GStexture *spotTex, u32 spotOff
     releaseTexture();
 }
 
+// TODO role: sets up the TEV stage(s) for one material layer from its source and blend mode
 void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
     GXTevColorArg colorIn1;
     GXTevColorArg colorIn2;
@@ -607,6 +609,7 @@ void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
     mCurrTevStage++;
 }
 
+// TODO role: adds the lighting TEV stages, with bump-mapped stages when bump mapping is on and a light is enabled
 void GSmaterial::fn_801E7FA4(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, u32 arg2) {
     bool hadStages = mCurrTevStage != 0;
 
@@ -781,6 +784,7 @@ void GSmaterial::fn_801E7FA4(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, u32 arg
     }
 }
 
+// TODO role: adds the specular TEV stage for the case without a second specular texture
 void GSmaterial::fn_801E8858(bool useTexture) {
     GSrender::sInstance->setIndTexStageDirect(mCurrTevStage);
     GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -812,6 +816,7 @@ void GSmaterial::fn_801E8858(bool useTexture) {
     mCurrTevStage++;
 }
 
+// TODO role: adds the specular TEV stage(s) sampling the second specular texture
 void GSmaterial::fn_801E8BA4(bool useTexture) {
     GXTevColorArg colorIn = GX_CC_RASC;
     u8 channel = _21;
@@ -851,6 +856,7 @@ void GSmaterial::fn_801E8BA4(bool useTexture) {
     mCurrTevStage++;
 }
 
+// TODO role: adds the specular TEV stage(s) with a texture matrix built from the main light direction
 void GSmaterial::fn_801E9114(_UnkMaterialStruct_3 *arg0, bool useTexture) {
     GSrenderLight *renderLight = NULL;
 
@@ -954,6 +960,7 @@ void GSmaterial::fn_801E9114(_UnkMaterialStruct_3 *arg0, bool useTexture) {
     mCurrTevStage++;
 }
 
+// TODO role: adds a TEV stage for the texture bound in slot _24, weighted by a konst alpha
 void GSmaterial::fn_801E98E0() {
     if (_24 == 0xFF) {
         return;
@@ -985,6 +992,7 @@ void GSmaterial::fn_801E98E0() {
     mCurrTevStage++;
 }
 
+// TODO role: chooses the specular TEV setup from the material's specular texture slots
 void GSmaterial::fn_801E9C18(_UnkMaterialStruct_3 *arg0) {
     if (!(mMatData->_5d & (1 << 2))) {
         return;
@@ -1004,12 +1012,13 @@ void GSmaterial::fn_801E9C18(_UnkMaterialStruct_3 *arg0) {
     }
 }
 
+// TODO role: returns the texture matrix of a slot, rebuilding it from scale, rotation and translation if marked dirty
 GSmatrix *GSmaterial::fn_801E9C74(u8 index, _UnkMaterialData_2 *data) {
     if (!_18) {
         return &lbl_804932B0;
     }
 
-    static GSvec3 center(0.5f, 0.5f, 0.f);
+    /* 0x804919A0 */ static GSvec3 center(0.5f, 0.5f, 0.f);
 
     GSmatrix *mtx = &_18[index];
     u16 mask = (1 << index);
@@ -1030,6 +1039,7 @@ GSmatrix *GSmaterial::fn_801E9C74(u8 index, _UnkMaterialData_2 *data) {
     return mtx;
 }
 
+// TODO role: sets up texture coordinate generation for every slot and for the extra textures
 void GSmaterial::fn_801E9DCC(const _UnkMaterialStruct_3 *arg0, GSmatrix *arg1) {
     GSmatrix _unk1;
 
@@ -1174,6 +1184,7 @@ static inline f32 lerp(f32 a, f32 b, f32 t) {
     return a + t * (b - a);
 }
 
+// TODO role: sets up the color channels from the ambient, diffuse and specular lights
 void GSmaterial::fn_801EA44C() {
     u8 lightCount = 0;
     GSrenderLight **lights = NULL;
@@ -1300,6 +1311,7 @@ void GSmaterial::fn_801EA44C() {
     }
 }
 
+// TODO role: binds the extra textures from GShierarchyModule after the material's own
 void GSmaterial::fn_801EAA94() {
     _22 = 0xFF;
     _24 = 0xFF;
@@ -1332,6 +1344,7 @@ void GSmaterial::fn_801EAA94() {
     }
 }
 
+// TODO role: applies cull mode, blending and depth state from the mesh render settings
 void GSmaterial::fn_801EABE8(bool inverted) {
     GXCullMode cullMode = (GXCullMode)mRenderSettings->mCullMode;
     if (inverted) {
@@ -1372,6 +1385,8 @@ void GSmaterial::fn_801EABE8(bool inverted) {
     sLastMeshRenderSettings = mRenderSettings;
 }
 
+// TODO role: applies cull mode and render settings with a flat alpha color, optionally without blending or depth
+// compare
 void GSmaterial::fn_801EB044(bool inverted, bool blend, bool zComp) {
     GXCullMode cullMode = (GXCullMode)mRenderSettings->mCullMode;
     if (inverted) {
@@ -1428,6 +1443,7 @@ void GSmaterial::fn_801EB044(bool inverted, bool blend, bool zComp) {
     }
 }
 
+// TODO role: applies cull mode, a flat alpha color and the depth state only
 void GSmaterial::fn_801EB668(bool inverted) {
     GXCullMode cullMode = (GXCullMode)mRenderSettings->mCullMode;
     if (inverted) {
@@ -1456,6 +1472,7 @@ void GSmaterial::fn_801EB668(bool inverted) {
     }
 }
 
+// TODO role: full setup for drawing with layer TEV stages and a single register color channel
 void GSmaterial::fn_801EB87C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1) {
     u8 i, count;
 
@@ -1530,6 +1547,7 @@ void GSmaterial::fn_801EB87C(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1) {
     GSrender::sInstance->setNumTevStages(mCurrTevStage);
 }
 
+// TODO role: loads konst colors, swap tables and textures, then tex gens and channels; false if fully transparent
 bool GSmaterial::fn_801EC050(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool arg2) {
     if (arg2 && !(mMatData->_5d & (1 << 3))) {
         GSrender::sInstance->setFogEnabled(false);
@@ -1577,6 +1595,7 @@ bool GSmaterial::fn_801EC050(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool ar
     return true;
 }
 
+// TODO role: builds the TEV stages unless already current; false if no stage was needed
 bool GSmaterial::fn_801EC538(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool arg2, bool arg3, u32 arg4) {
     lbl_8063D768._0 = 1;
     mCurrTevStage = 0;
@@ -1633,6 +1652,7 @@ bool GSmaterial::fn_801EC538(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, bool ar
     return true;
 }
 
+// TODO role: animation channel callback that writes animated values into the material's own data copy
 void GSmaterial::fn_801EC9AC(GSanimationObject *animObj, GSchannelData *channel, f32 cursor, bool blend) {
     GSmaterial *material = static_cast<GSmaterial *>(animObj);
 
@@ -1685,6 +1705,7 @@ void GSmaterial::fn_801EC9AC(GSanimationObject *animObj, GSchannelData *channel,
     }
 }
 
+// TODO role: restores the animated values from the original material data and rebuilds the texture matrices
 void GSmaterial::fn_801ECBA8() {
     u8 i, count;
 
@@ -1718,4 +1739,4 @@ void GSmaterial::fn_801ECBA8() {
     }
 }
 
-_UnkMaterialStruct_1::_UnkMaterialStruct_1() {}
+Unk80491970::Unk80491970() {}

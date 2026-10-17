@@ -8,17 +8,18 @@
 struct GSmeshRenderSettings;
 class GSchannelData;
 
-// Size: 0x30
-struct _UnkMaterialStruct_1 : public GSmatrix {
-    _UnkMaterialStruct_1();
+// size: 0x30
+struct Unk80491970 : public GSmatrix {
+    Unk80491970();
 
-    _UnkMaterialStruct_1(GSvec3 scale, GSvec3 trans) {
+    Unk80491970(GSvec3 scale, GSvec3 trans) {
         MTXScale(*this, scale.x, scale.y, scale.z);
         MTXTransApply(*this, *this, trans.x, trans.y, trans.z);
     }
 };
 
-struct _UnkMaterialStruct_2 {
+// size: 0x6
+struct Unk8063D768 {
     /* 0x0 */ u8 _0;
     /* 0x1 */ bool _1;
     /* 0x2 */ u8 mTexMapId;
@@ -27,21 +28,22 @@ struct _UnkMaterialStruct_2 {
     /* 0x5 */ u8 _5;
 };
 
+// size: >= 0x204
 struct _UnkMaterialStruct_3 {
-    /* 0x000 */ u8 _pad_0[0x104];
+    /* 0x000 */ u8 _unk0[0x104];
     /* 0x104 */ u32 _104;
-    /* 0x108 */ u8 _pad_108[0x60];
+    /* 0x108 */ u8 _unk108[0x60];
     /* 0x168 */ f32 _168;
     /* 0x16C */ f32 _16c;
     /* 0x170 */ f32 _170;
     /* 0x174 */ f32 _174;
     /* 0x178 */ f32 _178;
-    /* 0x17c */ f32 _17c;
-    /* 0x180 */ u8 _pad_180[0x2c];
+    /* 0x17C */ f32 _17c;
+    /* 0x180 */ u8 _unk180[0x2C];
     /* 0x1AC */ GSvec3 _1ac;
     /* 0x1B8 */ GSvec3 _1b8;
     /* 0x1C4 */ GSvec3 _1c4;
-    /* 0x1D0 */ u8 _pad_1d0[0x4];
+    /* 0x1D0 */ u8 _unk1D0[0x4];
     /* 0x1D4 */ GSmatrix _1d4;
 
     GSmatrix *get_1d4() {
@@ -50,14 +52,14 @@ struct _UnkMaterialStruct_3 {
 };
 
 // NOTE(samm) Name known from RTTI
-// Size: 0x38
+// size: 0x38
 class GSmaterial : public GSanimationObject {
 protected:
     /* 0x08 */ const GSmaterialData *mOrigMatData;
     /* 0x0C */ GSmaterialData *mMatData;
     /* 0x10 */ GSmeshRenderSettings *mRenderSettings;
     /* 0x14 */ GStexture *_14;
-    /* 0x18 */ _UnkMaterialStruct_1 *_18;
+    /* 0x18 */ Unk80491970 *_18;
     /* 0x1C */ u8 _1c;
     /* 0x1D */ u8 mTexGenCount;
     /* 0x1E */ u8 mChannelCount;
@@ -87,6 +89,7 @@ protected:
 public:
     GSmaterial(GSmaterialData *data, GSmeshRenderSettings *arg1);
 
+    // vtable pointer: 0x34
     /* 0x8 */ virtual ~GSmaterial();
 
     void fn_801E6F78(GStexture *baseTex, GStexture *spotTex, u32 spotOffsets, const bool *darken);
