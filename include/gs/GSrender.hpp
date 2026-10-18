@@ -850,7 +850,7 @@ public:
     void fn_80231400();
     void update(f32 deltaTime);
     void draw();
-    void fn_8023177C(GSdvdError error, u32 param2, GScolor<u8> fillColor);
+    void fn_8023177C(GSdvdError error, u32 param2, const GScolor<u8> &fillColor);
     void fn_80231918();
     void fn_802321DC();
 

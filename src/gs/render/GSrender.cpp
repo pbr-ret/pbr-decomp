@@ -303,13 +303,10 @@ void GSrender::draw() {
     _16f9 = false;
 }
 
-void GSrender::fn_8023177C(GSdvdError error, u32 param2, GScolor<u8> color) {
+void GSrender::fn_8023177C(GSdvdError error, u32 param2, const GScolor<u8> &color) {
     mDvdError = error;
     _1704 = param2;
-    mFillColor.r = color.r;
-    mFillColor.g = color.g;
-    mFillColor.b = color.b;
-    mFillColor.a = color.a;
+    mFillColor = color;
 
     if (error == DVD_ERROR_OK) {
         if (_1714 != NULL) {
