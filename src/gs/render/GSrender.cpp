@@ -20,9 +20,9 @@ extern bool fn_8024A410(u32);
 extern void fn_80250134(u32, u32, u32, u32, u32, u32);
 
 /* lbl_8063F698 */ GSrender *GSrender::sInstance;
-/* lbl_8063F69C */ static GScolor CLEAR(0, 0, 0, 0);
-/* lbl_8063F6A0 */ static GScolor BLACK(0, 0, 0, 255);
-/* lbl_8063F6A4 */ static GScolor WHITE(255, 255, 255, 255);
+/* lbl_8063F69C */ static GScolor<u8> CLEAR(0, 0, 0, 0);
+/* lbl_8063F6A0 */ static GScolor<u8> BLACK(0, 0, 0, 255);
+/* lbl_8063F6A4 */ static GScolor<u8> WHITE(255, 255, 255, 255);
 
 GSrender::GSrender(GSrenderStruct1 *param1) : GSvideo(param1->mNumBuffers, param1->mEfbHeight, param1->mVidFmt) {
     mState = NULL;
@@ -303,7 +303,7 @@ void GSrender::draw() {
     _16f9 = false;
 }
 
-void GSrender::fn_8023177C(GSdvdError error, u32 param2, GScolor color) {
+void GSrender::fn_8023177C(GSdvdError error, u32 param2, GScolor<u8> color) {
     mDvdError = error;
     _1704 = param2;
     mFillColor.r = color.r;
@@ -471,16 +471,16 @@ void GSrender::fn_80231918() {
         fn_8023352C(4);
         // vert 1
         GXPosition2f32(0.f, 0.f);
-        GXColor1u32(mFillColor);
+        GXColor1u32(*reinterpret_cast<u32 *>(&mFillColor));
         // vert 2
         GXPosition2f32(0.f, 480.f);
-        GXColor1u32(mFillColor);
+        GXColor1u32(*reinterpret_cast<u32 *>(&mFillColor));
         // vert 3
         GXPosition2f32(640.f, 0.f);
-        GXColor1u32(mFillColor);
+        GXColor1u32(*reinterpret_cast<u32 *>(&mFillColor));
         // vert 4
         GXPosition2f32(640.f, 480.f);
-        GXColor1u32(mFillColor);
+        GXColor1u32(*reinterpret_cast<u32 *>(&mFillColor));
         fn_80233580();
         fn_80250134(_1704, 100, 200, 0, 0, -1);
     } else if (_1714) {

@@ -485,7 +485,7 @@ void GSmodel::fn_801F1554(GSanimationObject *animObj, GSchannelData *channel, f3
 
     switch (channel->mChannel) {
         case 17: {
-            GScolor *vtxColors = model->_16c.mVertexColors;
+            GScolor<u8> *vtxColors = model->_16c.mVertexColors;
 
             if (vtxColors && vtxColors != modelData->mVertexColors) {
                 fn_801E1440(channel, cursor, &vtxColors[channel->mIndex]);

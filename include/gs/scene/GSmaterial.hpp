@@ -51,8 +51,8 @@ protected:
     /* 0x26 */ u8 _26;
     /* 0x27 */ u8 _27;
     /* 0x28 */ u32 _28;
-    /* 0x2C */ GScolor _2c;
-    /* 0x30 */ GScolor mBaseColor;
+    /* 0x2C */ GScolor<u8> _2c;
+    /* 0x30 */ GScolor<u8> mBaseColor;
 
     void releaseTexture() {
         if (mOrigMatData->_50) {

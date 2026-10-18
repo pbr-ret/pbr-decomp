@@ -13,7 +13,7 @@ public: // TODO(samm) Make private
     /* 0x104 */ u32 _104;
     /* 0x108 */ u8 _pad_108[0x4];
     /* 0x10C */ u32 _10c;
-    /* 0x110 */ GScolor _110;
+    /* 0x110 */ GScolor<u8> _110;
     /* 0x114 */ u8 _pad_114[0x1c];
     /* 0x130 */ GSrenderLight *_130;
     /* 0x134 */ GSrenderLight *_134;

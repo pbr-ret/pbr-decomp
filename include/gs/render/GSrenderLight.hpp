@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gs/GScolor.hpp"
 #include "gs/GSmath.hpp"
 
 #include <revolution.h>

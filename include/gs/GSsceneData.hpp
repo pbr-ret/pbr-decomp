@@ -170,7 +170,7 @@ struct GSmodelData {
     /* 0x06 */ u16 _6;
     /* 0x08 */ void *mVertices;
     /* 0x0C */ void *mWeights;
-    /* 0x10 */ GScolor *mVertexColors;
+    /* 0x10 */ GScolor<u8> *mVertexColors;
     /* 0x14 */ _UnkModelData_2 *_14;
     /* 0x18 */ GSmeshData *mFirstMesh;
     /* 0x1C */ _UnkModelData_1 *_1c;
@@ -254,7 +254,7 @@ struct _UnkMaterialData_2 {
 // size: 0x8C
 struct GSmaterialData {
     /* 0x00 */ char *mName;
-    /* 0x04 */ GScolor _4[2];
+    /* 0x04 */ GScolor<u8> _4[2];
     /* 0x0C */ u8 _c[3][4];
     /* 0x18 */ GStexture *mTextureSlots[MATERIAL_MAX_TEXTURE_SLOTS];
     /* 0x2C */ _UnkMaterialData_2 *_2c[MATERIAL_MAX_TEXTURE_SLOTS];
@@ -270,19 +270,19 @@ struct GSmaterialData {
     /* 0x5D */ u8 _5d;
     /* 0x5E */ u8 _5e;
     /* 0x5F */ u8 _5f;
-    /* 0x60 */ GScolor _60;
-    /* 0x64 */ GScolor _64;
+    /* 0x60 */ GScolor<u8> _60;
+    /* 0x64 */ GScolor<u8> _64;
     /* 0x68 */ f32 _68;
     /* 0x6C */ u8 _6c;
     /* 0x6D */ u8 _6d;
     /* 0x6E */ u8 _6e;
     /* 0x6F */ u8 _6f;
-    /* 0x70 */ GScolor _70;
+    /* 0x70 */ GScolor<u8> _70;
     /* 0x74 */ u8 _74;
     /* 0x75 */ u8 _75;
     /* 0x76 */ u8 _76;
     /* 0x77 */ u8 _77;
-    /* 0x78 */ GScolor _78;
+    /* 0x78 */ GScolor<u8> _78;
     /* 0x7C */ f32 _7c;
     /* 0x80 */ u8 _unk80[0x4];
     /* 0x84 */ GSkeyframeData *mKeyframes;
@@ -302,7 +302,7 @@ struct GSenvData {
     /* 0x02 */ bool mFogRangeAdjEnable;
     /* 0x04 */ f32 mFogStartZ;
     /* 0x08 */ f32 mFogEndZ;
-    /* 0x0C */ GScolor mFogColor;
+    /* 0x0C */ GScolor<u8> mFogColor;
     /* 0x10 */ GStexture *_10;
     /* 0x14 */ GStexture *_14;
     /* 0x18 */ u32 _18;
@@ -331,7 +331,7 @@ void fn_801E10C0(GSchannelData *channelData, f32 cursor, f32 *dst);
 void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec3 *dst);
 void fn_801E1360(GSchannelData *channelData, f32 cursor, GSquat *dst);
 void fn_801E13B8(GSchannelData *channelData, f32 cursor, GSvec2 *dst);
-void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor *dst);
+void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor<u8> *dst);
 void fn_801E1504(GSchannelData *channelData, f32 cursor, u8 *dst);
 void fn_801E1540(GSkeyframeData *arg0, GSsceneData *sceneData, u32 baseAddr);
 void fn_801E1714(_UnkSceneData_1 *arg0, GSsceneData *sceneData, u32 baseAddr);

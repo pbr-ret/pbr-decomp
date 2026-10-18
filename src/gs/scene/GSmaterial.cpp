@@ -970,7 +970,7 @@ void GSmaterial::fn_801E98E0() {
     s32 sum = _26 + mMatData->_54;
     u8 alpha = (sum < 0xFF) ? sum : 0xFF;
 
-    GScolor kColor(alpha, alpha, alpha, alpha);
+    GScolor<u8> kColor(alpha, alpha, alpha, alpha);
     GSrender::sInstance->setTevKColor(2, &kColor);
 
     GSrender::sInstance->setIndTexStageDirect(mCurrTevStage);
@@ -1197,8 +1197,8 @@ void GSmaterial::fn_801EA44C() {
         lights = GShierarchyModule::lbl_804920B0;
     }
 
-    GScolor ambColor;
-    GScolor matColor;
+    GScolor<u8> ambColor;
+    GScolor<u8> matColor;
 
     GSlight *light = GShierarchyModule::sInstance->get_118();
     if (light && (light->checkLightFlag((1 << 0)))) {
@@ -1265,7 +1265,7 @@ void GSmaterial::fn_801EA44C() {
         u8 specLightCount = GShierarchyModule::lbl_8063F46E;
         GSrenderLight **specLights = GShierarchyModule::lbl_804920D0;
         if (specLightCount) {
-            GSrender::sInstance->setChannelColors(mChannelCount, GScolor(0, 0, 0, 0), mMatData->_78);
+            GSrender::sInstance->setChannelColors(mChannelCount, GScolor<u8>(0, 0, 0, 0), mMatData->_78);
 
             if ((s8)mMatData->_76 < 0) {
                 for (u16 i = 0; i < specLightCount; i++) {
@@ -1403,7 +1403,7 @@ void GSmaterial::fn_801EB044(bool inverted, bool blend, bool zComp) {
     f32 _unk2 = u8tof32(mBaseColor.a);
     u8 value = f32tou8(_unk2 * _unk1 + 0.5f);
 
-    GScolor color;
+    GScolor<u8> color;
     color.r = color.g = color.b = color.a = value;
     GSrender::sInstance->setChannelColors(0, color, color);
 
@@ -1460,7 +1460,7 @@ void GSmaterial::fn_801EB668(bool inverted) {
     f32 _unk2 = u8tof32(mBaseColor.a);
     u8 value = f32tou8(_unk2 * _unk1 + 0.5f);
 
-    GScolor color;
+    GScolor<u8> color;
     color.r = color.g = color.b = color.a = value;
     GSrender::sInstance->setChannelColors(0, color, color);
 
@@ -1478,7 +1478,7 @@ void GSmaterial::fn_801EB87C(GScamera *arg0, GSmatrix *arg1) {
     u8 i, count;
 
     count = mMatData->_58;
-    GScolor *kColor = mMatData->_4;
+    GScolor<u8> *kColor = mMatData->_4;
     for (i = 0; i < count; i++, kColor++) {
         GSrender::sInstance->setTevKColor(i, kColor);
     }
@@ -1561,7 +1561,7 @@ bool GSmaterial::fn_801EC050(GScamera *arg0, GSmatrix *arg1, bool arg2) {
     u8 i, count;
 
     count = mMatData->_58;
-    GScolor *kColor = mMatData->_4;
+    GScolor<u8> *kColor = mMatData->_4;
     for (i = 0; i < count; i++, kColor++) {
         GSrender::sInstance->setTevKColor(i, kColor);
     }
@@ -1722,12 +1722,12 @@ void GSmaterial::fn_801ECBA8() {
 
         count = mOrigMatData->_58;
         for (i = 0; i < count; i++) {
-            static_cast<GXColor &>(mMatData->_4[i]) = mOrigMatData->_4[i];
+            mMatData->_4[i] = mOrigMatData->_4[i];
         }
 
-        static_cast<GXColor &>(mMatData->_60) = mOrigMatData->_60;
-        static_cast<GXColor &>(mMatData->_64) = mOrigMatData->_64;
-        static_cast<GXColor &>(mMatData->_78) = mOrigMatData->_78;
+        mMatData->_60 = mOrigMatData->_60;
+        mMatData->_64 = mOrigMatData->_64;
+        mMatData->_78 = mOrigMatData->_78;
     }
 
     if (_18) {

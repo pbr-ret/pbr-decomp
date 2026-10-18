@@ -147,6 +147,12 @@ struct GSviewport {
 };
 
 // Size: 0x38
+// The render state setters store a color with a single word access, which a
+// GScolor<u8> copy (four byte accesses) does not produce.
+static inline void storeColor(GXColor &dst, const GScolor<u8> &src) {
+    *reinterpret_cast<u32 *>(&dst) = *reinterpret_cast<const u32 *>(&src);
+}
+
 struct GScolorChannel {
     /* 0x0 */ GXBool mEnable;
     /* 0x4 */ GXColorSrc mAmbSrc;
@@ -283,8 +289,8 @@ struct GSrenderSettings {
     /* 0x120 */ GXClipMode mClipMode;
     /* 0x124 */ u8 mNumChans;
     /* 0x128 */ GScolorChannel mChannels[4];
-    /* 0x208 */ GScolor mChanAmbColors[2];
-    /* 0x210 */ GScolor mChanMatColors[2];
+    /* 0x208 */ GXColor mChanAmbColors[2];
+    /* 0x210 */ GXColor mChanMatColors[2];
     /* 0x218 */ u8 mNumTevStages;
     /* 0x21c */ GStevStage mTevStages[GX_MAX_TEVSTAGE];
     /* 0x2dc */ GStevColorIn mTevColorIns[GX_MAX_TEVSTAGE];
@@ -300,7 +306,7 @@ struct GSrenderSettings {
     /* 0x828 */ u8 mNumIndStages;
     /* 0x82c */ GSindTexOrder mIndTexOrders[GX_MAX_INDTEXSTAGE];
     /* 0x84c */ GSindTexScale mIndTexScales[GX_MAX_INDTEXSTAGE];
-    /* 0x86c */ GScolor mTevKColors[GX_MAX_KCOLOR];
+    /* 0x86c */ GXColor mTevKColors[GX_MAX_KCOLOR];
     /* 0x87c */ GXTevKColorSel mTevKColorSels[GX_MAX_TEVSTAGE];
     /* 0x8bc */ GXTevKAlphaSel mTevKAlphaSels[GX_MAX_TEVSTAGE];
     /* 0x8fc */ GStevSwapMode mTevSwapModes[GX_MAX_TEVSTAGE];
@@ -330,7 +336,7 @@ struct GSrenderSettings {
     /* 0x9f8 */ f32 mFogEndZ;
     /* 0x9fc */ f32 mFogNearZ;
     /* 0xa00 */ f32 mFogFarZ;
-    /* 0xa04 */ GScolor mFogColor;
+    /* 0xa04 */ GXColor mFogColor;
     /* 0xa08 */ GXFogAdjTable mFogAdjTable;
     /* 0xa1c */ u16 mFogRangeAdjCenter;
     // TODO(samm) Avoid this use of volatile?
@@ -403,7 +409,7 @@ private:
     /* 0x16fe */ u16 mFlags;
     /* 0x1700 */ GSdvdError mDvdError;
     /* 0x1704 */ u32 _1704;
-    /* 0x1708 */ GScolor mFillColor;
+    /* 0x1708 */ GScolor<u8> mFillColor;
     /* 0x170c */ MEMHeapHandle _170c;
     /* 0x1710 */ void *_1710;
     /* 0x1714 */ GStexture *_1714;
@@ -515,24 +521,24 @@ public:
         mState->_0 |= (1 << 7);
     }
 
-    void setChannelColors(u8 channel, const GScolor &ambColor, const GScolor &matColor) {
-        mState->mCurr.mChanAmbColors[channel] = ambColor;
-        mState->mCurr.mChanMatColors[channel] = matColor;
+    void setChannelColors(u8 channel, const GScolor<u8> &ambColor, const GScolor<u8> &matColor) {
+        storeColor(mState->mCurr.mChanAmbColors[channel], ambColor);
+        storeColor(mState->mCurr.mChanMatColors[channel], matColor);
         mState->mChanAmbColorFlags |= (1 << channel);
         mState->mChanMatColorFlags |= (1 << channel);
         mState->_0 |= (1 << 2);
     }
 
-    void setTevColor(u8 reg, const GScolor &color) {
+    void setTevColor(u8 reg, const GScolor<u8> &color) {
         GStevColor *tevColor = &mState->mCurr.mTevColors[reg];
         tevColor->mType = GS_TEV_COLOR_U8;
-        static_cast<GScolor &>(tevColor->mColor) = color;
+        storeColor(tevColor->mColor, color);
         mState->mTevColorFlags |= (1 << reg);
         mState->_0 |= (1 << 3);
     }
 
-    void setTevKColor(u8 index, GScolor *color) {
-        mState->mCurr.mTevKColors[index] = *color;
+    void setTevKColor(u8 index, GScolor<u8> *color) {
+        storeColor(mState->mCurr.mTevKColors[index], *color);
         mState->mTevKColorFlags |= (1 << index);
         mState->_0 |= (1 << 4);
     }
@@ -677,11 +683,11 @@ public:
         mState->_0 |= (1 << 6);
     }
 
-    void setFog(GXFogType type, f32 startZ, f32 endZ, const GScolor *color) {
+    void setFog(GXFogType type, f32 startZ, f32 endZ, const GScolor<u8> *color) {
         mState->mCurr.mFogType = type;
         mState->mCurr.mFogStartZ = startZ;
         mState->mCurr.mFogEndZ = endZ;
-        mState->mCurr.mFogColor = *color;
+        storeColor(mState->mCurr.mFogColor, *color);
 
         if (mState->mCurr.mFogEnable) {
             mState->_64 |= (1 << 6);
@@ -844,7 +850,7 @@ public:
     void fn_80231400();
     void update(f32 deltaTime);
     void draw();
-    void fn_8023177C(GSdvdError error, u32 param2, GScolor fillColor);
+    void fn_8023177C(GSdvdError error, u32 param2, GScolor<u8> fillColor);
     void fn_80231918();
     void fn_802321DC();
 
