@@ -46,7 +46,7 @@ Pushes to `main` never fail on regressions: they were accepted, or not, in the p
 `tools/qa/cleanup_index.py` lists every place in `src/` and `include/` that still needs cleanup under `STYLE.md` and `docs/fakematches.md`, in three families:
 
 - **names**: functions and data defined with an address name (`fn_`, `lbl_`), `Unk` types, `TODO` notes;
-- **structure**: raw pointer arithmetic, pointers moved by a constant or cast and indexed, placeholder parameters (`a0`...), `extern "C"` linkage;
+- **structure**: raw pointer arithmetic, pointers moved by a constant or cast and indexed, placeholder signatures (`(u32 a0, ..., u32 a7)`...), `extern "C"` linkage;
 - **fakematch**: the other rules of `tools/qa/fakematch_rules.toml`.
 
 The rules are tree-sitter queries in `tools/qa/cleanup_rules.toml`. Each site is listed with its unit's status and match score, so the work can be picked file by file.

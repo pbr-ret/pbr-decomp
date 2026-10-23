@@ -3,7 +3,7 @@
 
 Lists every site that still needs cleanup under STYLE.md and
 docs/fakematches.md: address names, Unk types and TODO notes (names still
-to find), raw offsets, placeholder parameters and extern "C" linkage (memory
+to find), raw offsets, placeholder signatures and extern "C" linkage (memory
 and signatures still to type), and the constructs tools/qa/lint.py reports
 (fakematches). Each site is listed with its unit's status and, given a
 report.json, its match score.
