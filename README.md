@@ -79,6 +79,7 @@ Steps:
 | [STYLE.md](STYLE.md) | Code conventions |
 | [docs/areas.md](docs/areas.md) | Currently claimed sections being worked on |
 | [docs/fakematches.md](docs/fakematches.md) | What counts as a fakematch and how to justify one |
+| [docs/quality.md](docs/quality.md) | The quality checks run on every pull request, and how to run them locally |
 | [docs/matching-notes.md](docs/matching-notes.md) | Compiler behaviour worked out on this project |
 | [docs/game-map.md](docs/game-map.md) | Map of `main.dol` by area (addresses, sizes, dependencies) and of the game's data files |
 
@@ -96,7 +97,7 @@ Steps:
 | `configure.py` | Compiler settings and the unit list with `Matching`/`NonMatching` flags; generates `build.ninja` |
 | `orig/RPBP01/` | Your disc image (not in the repository) |
 | `build/` | Build output, including the target assembly of each split in `build/RPBP01/asm/` |
-| `tools/` | Build scripts and [progress.py](tools/progress.py); `tools/decomp/` has scripts for checking a unit |
+| `tools/` | Build scripts and [progress.py](tools/progress.py); `tools/decomp/` has scripts for checking a unit, `tools/qa/` the quality checks |
 | `scripts/` | Custom analysis scripts |
 | `ghidra_scripts/` | Imports [symbols.txt](config/RPBP01/symbols.txt) into a Ghidra project |
 | `docs/` | Documentation (see above) |

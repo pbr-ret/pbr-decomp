@@ -19,11 +19,11 @@ Read before starting:
 
 ## Tools
 
-Found in `tools/decomp/` (Python 3.12+); each has `--help`.
+Found in `tools/decomp/` unless noted (Python 3.12+); each has `--help`.
 
 - `unit_status.py <unit>`: prints a unit's status, baseline vs current scores, and its functions in address order with source line numbers.
 - `fn_diff.py <symbol>`: prints target vs current asm for one function. `--context N` shows only differing rows plus N rows around them. `--target` prints the target asm alone, with labels.
-- `lint.py`: checks for fakematches (see [docs/fakematches.md](docs/fakematches.md)).
+- `tools/qa/lint.py`: checks for fakematches (see [docs/fakematches.md](docs/fakematches.md)).
 
 ## Build and verify
 
@@ -31,7 +31,7 @@ Found in `tools/decomp/` (Python 3.12+); each has `--help`.
 - Record a baseline before editing: `ninja baseline`.
 - Rebuild one unit and the report: `ninja build/RPBP01/src/<path>.o build/RPBP01/report.json`. If compilation failed, `report.json` on disk is stale: fix the failure first.
 - `ninja changes` lists regressions against your baseline; `ninja changes_all` lists improvements too. Game code uses `-ipa file`: changing one function can change codegen elsewhere in the same unit, so judge the whole unit.
-- Before opening a PR: clang-format (version given in [STYLE.md](STYLE.md)) on the files you changed under `src/` and `include/`, plain `ninja` exits 0, and `python tools/decomp/lint.py` reports 0 errors. List each fakematch warning in the PR's Fakematches section.
+- Before opening a PR: clang-format (version given in [STYLE.md](STYLE.md)) on the files you changed under `src/` and `include/`, plain `ninja` exits 0, and `python tools/qa/lint.py` reports 0 errors. List each fakematch warning in the PR's Fakematches section.
 
 ## Definition of done for a unit
 
@@ -67,6 +67,6 @@ These should get a maintainer's approval *before* opening a PR, as they may affe
 - Moving or removing an existing [splits.txt](config/RPBP01/splits.txt) boundary, or renaming a unit.
 - Project-wide flags, compilers or build changes in [configure.py](configure.py) (this excludes marking your own unit `Matching`).
 - Changes to `CONTRIBUTING.md`, `STYLE.md`, or `.clang-format`.
-- Changes to `docs/fakematches.md`, `tools/decomp/lint.py`, or `tools/decomp/fakematch_rules.toml`.
+- Changes to `docs/fakematches.md`, `tools/qa/lint.py`, or `tools/qa/fakematch_rules.toml`.
 - Changes to CI workflows (`.github/workflows/`).
 - Code imported from a new outside source. Always include an attribution comment on the first line of each imported file.
