@@ -17,7 +17,7 @@
 - <header outside the TU>: <what changed and why>
 - or: none
 
-## Name changs
+## Name changes
 <!-- List every symbol renamed in symbols.txt -->
 - <old name> -> <new name>: <justification for new name>
 - or: none
