@@ -65,12 +65,24 @@ def main() -> None:
                 }
             )
 
+    # Where tools/project.py puts objdiff-cli: a given binary, one built from
+    # a given source tree, or the downloaded release.
+    if config.objdiff_path is not None and config.objdiff_path.is_file():
+        objdiff = config.objdiff_path
+    elif config.objdiff_path is not None:
+        objdiff = config.build_dir / "tools" / "release" / f"objdiff-cli{project.EXE}"
+    else:
+        objdiff = config.build_dir / "tools" / f"objdiff-cli{project.EXE}"
+    binutils = config.binutils_path or config.build_dir / "binutils"
+
     tools = {
         "wrapper": None if wrapper is None else _absolute(root, wrapper),
         "sjiswrap": _absolute(root, sjiswrap),
-        "binutils": _absolute(
-            root, config.binutils_path or config.build_dir / "binutils"
+        "binutils": _absolute(root, binutils),
+        "readelf": _absolute(
+            root, Path(binutils) / f"powerpc-eabi-readelf{project.EXE}"
         ),
+        "objdiff": _absolute(root, objdiff),
         "compilers": _absolute(root, config.compilers()),
         "symbols": (root / "config" / config.version / "symbols.txt").as_posix(),
         "splits": (root / "config" / config.version / "splits.txt").as_posix(),

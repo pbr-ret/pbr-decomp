@@ -9,7 +9,7 @@ Each check runs on both trees and fails only on problems the change adds. Proble
 | Check | Needs the game files | Fails on |
 |---|---|---|
 | `diagnostics` | no | a new compiler warning or error under the extra warning flags; in C units, a call to a function with no prototype (`-requireprotos`) |
-| `symbols` | no | a compiled symbol whose scope differs from `symbols.txt`, a name missing from `symbols.txt` (except under `libs/`, whose unused code and data the linker strips), a definition outside the unit's `splits.txt` range, functions out of retail order, an undefined name that neither `symbols.txt` nor any unit provides. In placeholder units (`src/.unsorted/`), `version` and its static initializer are not checked |
+| `symbols` | no | a compiled symbol whose scope differs from `symbols.txt`, a name missing from `symbols.txt` (except under `libs/`, whose unused code and data the linker strips), a definition outside the unit's `splits.txt` range, functions out of address order, an undefined name that neither `symbols.txt` nor any unit provides. In placeholder units (`src/.unsorted/`), `version` and its static initializer are not checked |
 | `format` | no | a changed file under `src/` or `include/` that clang-format would change (the whole file is checked, not only the changed lines) |
 | `lint` | no | an error from `tools/qa/lint.py` on the added lines |
 | `regressions` | yes | a function that was 100% and no longer is, or a unit or the total losing matched or linked code or data (objdiff report of the base against the change). Code moved to another unit is compared where it now is. |
@@ -33,7 +33,7 @@ python tools/qa/check.py --only symbols,format
 
 The base defaults to the merge base of `HEAD` and `origin/main`, and is checked out as a worktree in `build/qa/base`. Uncommitted changes in the working tree are included.
 
-Requirements: Python 3.12+, the build tools (`python configure.py` then `ninja`), and the packages in `tools/qa/requirements.txt` (`pip install -r tools/qa/requirements.txt`): clang-format 23 and tree-sitter for `lint.py`. To use another clang-format 23 binary, set `CLANG_FORMAT`.
+Requirements: Python 3.12+, the build tools (`python configure.py` then `ninja`), and the packages in `tools/qa/requirements.txt` (`pip install -r tools/qa/requirements.txt`): clang-format 23 and tree-sitter for `lint.py`. The `symbols` check also needs binutils, which a plain `ninja` does not fetch: `ninja build/binutils`, or `--configure-args "--binutils PATH"`; a missing tool stops the run with the command that fetches it. The pinned clang-format is used ahead of another 23.x on `PATH`; to use another clang-format 23 binary, set `CLANG_FORMAT`.
 
 ## Accepting a regression
 

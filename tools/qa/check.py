@@ -11,7 +11,7 @@ Checks that need only the compilers (no game files):
   symbols      each compiled object against symbols.txt and splits.txt:
                scope (static or global), names missing from symbols.txt,
                definitions outside the unit's address range, functions out of
-               retail order, and undefined names that nothing provides
+               address order, and undefined names that nothing provides
   format       clang-format (the major version pinned in tools/qa/requirements.txt)
                on the changed files under src/ and include/
   lint         tools/qa/lint.py on the lines added
@@ -48,6 +48,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import sysconfig
 
 ROOT = Path(__file__).resolve().parents[2]
 QA_DIR = ROOT / "build" / "qa"
@@ -217,12 +218,61 @@ def checkout_base(sha: str) -> Path:
             same = clean = False
         if same and clean:
             return path
+        unlink_orig(path)
         run(["git", "worktree", "remove", "--force", str(path)], ROOT, check=False)
         shutil.rmtree(path, ignore_errors=True)
         run(["git", "worktree", "prune"], ROOT)
     QA_DIR.mkdir(parents=True, exist_ok=True)
     run(["git", "worktree", "add", "--detach", str(path), sha], ROOT)
     return path
+
+
+def is_link(path: Path) -> bool:
+    """A symbolic link, or a junction (Windows only)."""
+    return path.is_symlink() or (os.name == "nt" and path.is_junction())
+
+
+def link_orig(source: Path, target: Path) -> None:
+    """Make `target` stand for the game file or folder `source`. Windows allows
+    symbolic links only in Developer Mode or an elevated shell; without them a
+    folder gets a junction and a file a hard link, and a copy is the last
+    resort."""
+    try:
+        target.symlink_to(source, target_is_directory=source.is_dir())
+        return
+    except OSError:
+        if os.name != "nt":
+            raise
+    if source.is_dir():
+        junction = ["cmd", "/c", "mklink", "/J", str(target), str(source)]
+        if run(junction, ROOT, check=False).returncode == 0:
+            return
+        print(f"note: copying {source} to {target}")
+        shutil.copytree(source, target)
+        return
+    try:
+        os.link(source, target)
+    except OSError:
+        print(f"note: copying {source} to {target}")
+        shutil.copy2(source, target)
+
+
+def unlink_orig(tree_root: Path) -> None:
+    """Remove what link_orig put in a tree's orig/, without following links,
+    so that deleting the tree can never reach the game files in the real
+    orig/."""
+    folder = tree_root / "orig" / VERSION
+    if is_link(folder) or not folder.is_dir():
+        return
+    for entry in folder.iterdir():
+        if entry.name == ".gitkeep":
+            continue
+        if is_link(entry) and os.name == "nt" and entry.is_dir():
+            os.rmdir(entry)  # removes a Windows folder link, not its contents
+        elif is_link(entry) or entry.is_file():
+            entry.unlink()  # a link, a hard link or a copy
+        elif entry.is_dir():
+            shutil.rmtree(entry)  # a copy
 
 
 @dataclass
@@ -412,6 +462,52 @@ def compile_unit(tree: Tree, unit: dict) -> CompileResult:
     return CompileResult(unit, None if failed else object_path, diagnostics, failed)
 
 
+def compile_tools(tree: Tree, readelf: bool) -> List[Tuple[str, str, str]]:
+    """(name, path run, path ninja fetches) of the tools the compiler-only
+    checks run."""
+    tools = []
+    if tree.tools["wrapper"]:
+        tools.append(("compiler wrapper", tree.tools["wrapper"], tree.tools["wrapper"]))
+    if any(unit["shift_jis"] for unit in tree.units):
+        tools.append(("sjiswrap", tree.tools["sjiswrap"], tree.tools["sjiswrap"]))
+    compilers = tree.tools["compilers"]
+    if not Path(compilers).is_dir():
+        tools.append(("compilers", compilers, compilers))
+    else:
+        for compiler in sorted({unit["compiler"] for unit in tree.units}):
+            tools.append(("compiler", compiler, compilers))
+    if readelf:
+        tools.append(("binutils", tree.tools["readelf"], tree.tools["binutils"]))
+    return tools
+
+
+def exit_if_missing(tools: List[Tuple[str, str, str]]) -> None:
+    """Stop with the ninja targets that fetch the missing tools, rather than a
+    traceback once a check runs them."""
+    lines, targets = [], []
+    for name, path, fetched in tools:
+        if shutil.which(path) or Path(path).exists():
+            continue
+        lines.append(f"  {name}: {path}")
+        try:
+            target = Path(fetched).resolve().relative_to(ROOT / "build").as_posix()
+        except ValueError:
+            continue  # given to configure.py, or a command such as wine
+        if f"build/{target}" not in targets:
+            targets.append(f"build/{target}")
+    if not lines:
+        return
+    message = "error: tools needed by the checks are missing:\n" + "\n".join(lines)
+    if targets:
+        message += (
+            f"\nFetch them with `ninja {' '.join(targets)}` after `python configure.py`"
+        )
+        message += ", or pass their location with --configure-args."
+    else:
+        message += "\nCheck the paths passed with --configure-args."
+    sys.exit(message)
+
+
 def compile_tree(tree: Tree, jobs: int) -> List[CompileResult]:
     with ThreadPoolExecutor(jobs) as pool:
         return list(pool.map(lambda unit: compile_unit(tree, unit), tree.units))
@@ -505,6 +601,10 @@ def load_splits(path: Path) -> Dict[str, List[Tuple[str, int, int]]]:
     return splits
 
 
+# Problems of a symbol's definition; a symbol has at most one of them.
+DEFINITION_KINDS = ("unknown", "outside", "scope")
+
+
 @dataclass
 class ElfSymbol:
     name: str
@@ -543,7 +643,7 @@ def is_compiler_name(name: str) -> bool:
 def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
     symbols = load_symbols(Path(tree.tools["symbols"]))
     splits = load_splits(Path(tree.tools["splits"]))
-    readelf = str(Path(tree.tools["binutils"]) / "powerpc-eabi-readelf")
+    readelf = tree.tools["readelf"]
     issues: List[Issue] = []
 
     per_unit: Dict[str, List[ElfSymbol]] = {}
@@ -635,7 +735,7 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                         "symbols",
                         (name, "order", function),
                         f"{unit['source']}: {function} (0x{address:08X}) is defined after "
-                        f"{previous[1]} (0x{previous[0]:08X}); keep retail order",
+                        f"{previous[1]} (0x{previous[0]:08X}); keep address order",
                         unit["source"],
                     )
                 )
@@ -665,11 +765,21 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                 )
             )
     # Keyed without the unit, which goes in the detail: renaming or splitting
-    # a unit keeps its problems inherited. Placeholder units (src/.unsorted)
-    # all get `version` and its initializer from common.hpp; their addresses
-    # are only known once the file is identified.
+    # a unit keeps its problems inherited. A definition has one problem at a
+    # time, so a symbol whose problem changes kind (not in symbols.txt, then
+    # in another unit's range once named) keeps it inherited too; the kind
+    # pairs it with the same problem in the base first. Placeholder units
+    # (src/.unsorted) all get `version` and its initializer from common.hpp;
+    # their addresses are only known once the file is identified.
     return [
-        dataclasses.replace(issue, key=issue.key[1:], detail=issue.key[0])
+        dataclasses.replace(
+            issue,
+            key=(
+                "definition" if issue.key[1] in DEFINITION_KINDS else issue.key[1],
+                issue.key[2],
+            ),
+            detail=f"{issue.key[0]} {issue.key[1]}",
+        )
         for issue in issues
         if not (
             issue.path.startswith("src/.unsorted/")
@@ -698,38 +808,61 @@ def changed_files(base: Optional[str], paths: List[str]) -> List[str]:
     )
 
 
-def clang_format_major() -> str:
-    """The clang-format major version pinned in tools/qa/requirements.txt."""
-    match = re.search(r"^clang-format==(\d+)\.", REQUIREMENTS.read_text(), re.MULTILINE)
+def pinned_clang_format() -> str:
+    """The clang-format version pinned in tools/qa/requirements.txt."""
+    match = re.search(
+        r"^clang-format==(\d+(?:\.\d+)*)", REQUIREMENTS.read_text(), re.MULTILINE
+    )
     if match is None:
         sys.exit(f"error: no clang-format version in {REQUIREMENTS}")
     return match.group(1)
 
 
-def find_clang_format(major: str) -> Optional[str]:
-    for candidate in [
+def find_clang_format(pinned: str) -> Tuple[Optional[str], str]:
+    """The clang-format to use, and its version. CLANG_FORMAT is used when it
+    has the pinned major version. Otherwise the pinned version is preferred,
+    from the Python environment (`pip install -r tools/qa/requirements.txt`)
+    and then from PATH, over another release of the same major version."""
+    major = pinned.split(".")[0]
+    scripts = [sysconfig.get_path("scripts")]
+    scripts.append(
+        sysconfig.get_path("scripts", sysconfig.get_preferred_scheme("user"))
+    )
+    candidates = [
         os.environ.get("CLANG_FORMAT"),
+        *(str(Path(folder) / "clang-format") for folder in scripts if folder),
         "clang-format",
         f"clang-format-{major}",
-    ]:
-        if candidate and shutil.which(candidate):
-            version = run([candidate, "--version"], ROOT, check=False).stdout
-            if re.search(rf"version {major}\.", version):
-                return candidate
-    return None
+    ]
+    found: List[Tuple[str, str]] = []
+    for candidate in candidates:
+        path = shutil.which(candidate) if candidate else None
+        if path is None:
+            continue
+        output = run([path, "--version"], ROOT, check=False).stdout
+        match = re.search(r"version (\d+(?:\.\d+)*)", output)
+        if match and match.group(1).split(".")[0] == major:
+            if candidate == os.environ.get("CLANG_FORMAT") or match.group(1) == pinned:
+                return path, match.group(1)
+            found.append((path, match.group(1)))
+    return found[0] if found else (None, "")
 
 
 def check_format(base: Optional[str]) -> CheckResult:
     result = CheckResult("format")
-    major = clang_format_major()
-    clang_format = find_clang_format(major)
+    pinned = pinned_clang_format()
+    clang_format, version = find_clang_format(pinned)
     if clang_format is None:
         result.failed = True
         result.notes.append(
-            f"clang-format {major} not found (set CLANG_FORMAT, or "
+            f"clang-format {pinned.split('.')[0]} not found (set CLANG_FORMAT, or "
             "`pip install -r tools/qa/requirements.txt`)"
         )
         return result
+    if version != pinned:
+        result.notes.append(
+            f"using {clang_format} {version}; tools/qa/requirements.txt pins {pinned}"
+        )
     # Whole files, not only the changed lines: a change to a file that is not
     # formatted yet (some of src/gs and include/gs today) formats all of it.
     files = changed_files(base, FORMAT_PATHS)
@@ -802,9 +935,9 @@ def prepare_dol_tree(tree: Tree, configure_args: List[str]) -> Path:
             if source.name == ".gitkeep":
                 continue
             target = tree.root / "orig" / VERSION / source.name
-            if not target.exists() and not target.is_symlink():
+            if not target.exists() and not is_link(target):
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.symlink_to(source.resolve())
+                link_orig(source.resolve(), target)
         result = run(
             [sys.executable, "configure.py", *configure_args], tree.root, check=False
         )
@@ -822,16 +955,18 @@ def measures(entry: Optional[dict]) -> dict:
     return (entry or {}).get("measures", entry or {})
 
 
-def check_regressions(head_report: Path, base_report: Optional[Path]) -> CheckResult:
+def check_regressions(
+    objdiff: str, head_report: Path, base_report: Optional[Path]
+) -> CheckResult:
     result = CheckResult("regressions")
     if base_report is None:
         result.skipped = "no base to compare with"
         return result
-    objdiff = ROOT / "build" / "tools" / "objdiff-cli"
+    exit_if_missing([("objdiff-cli", objdiff, objdiff)])
     changes_path = QA_DIR / "report_changes.json"
     run(
         [
-            str(objdiff),
+            objdiff,
             "report",
             "changes",
             "--format",
@@ -1120,11 +1255,13 @@ def main() -> None:
             "wrapper",
             "sjiswrap",
             "binutils",
+            "readelf",
         ):  # the base tree has no downloaded tools
             base.tools[tool] = head.tools[tool]
 
     results: List[CheckResult] = []
     if {"diagnostics", "symbols"} & set(checks):
+        exit_if_missing(compile_tools(head, "symbols" in checks))
         head_compiled = compile_tree(head, args.jobs)
         base_compiled = compile_tree(base, args.jobs) if base else None
         if "diagnostics" in checks:
@@ -1159,7 +1296,9 @@ def main() -> None:
             else None
         )
         if "regressions" in checks:
-            results.append(check_regressions(head_report, base_report))
+            results.append(
+                check_regressions(head.tools["objdiff"], head_report, base_report)
+            )
         if "apply" in checks:
             results.append(check_apply(head.root, base.root if base else None))
         complete = CheckResult("complete")
