@@ -5,8 +5,6 @@
 #include <revolution/os.h>
 #include <string.h>
 
-DECOMP_FORCE_LITERAL(AXVPB_c, 2.0f);
-
 /**
  * It's really even worse than this: what appears to be manually unrolled
  * copies.
@@ -429,6 +427,38 @@ static void __AXVPBInitCommon(void) {
     DCFlushRange(__AXPB, __AXMaxVoices * sizeof(AXPB));
 }
 
+// From koopthekoopa/wii-ipl (CC0), libs/RVL_SDK/src/ax/AXVPB.c
+void AXSetVoiceSrcType(AXVPB* vpb, u32 type) {
+    BOOL old;
+    AXPB* ppb;
+
+    old = OSDisableInterrupts();
+    ppb = &vpb->pb;
+    switch (type) {
+    case AX_SRC_TYPE_NONE:
+        ppb->srcSelect = 2;
+        break;
+    case AX_SRC_TYPE_LINEAR:
+        ppb->srcSelect = 1;
+        break;
+    case AX_SRC_TYPE_4TAP_8K:
+        ppb->srcSelect = 0;
+        ppb->coefSelect = 0;
+        break;
+    case AX_SRC_TYPE_4TAP_12K:
+        ppb->srcSelect = 0;
+        ppb->coefSelect = 1;
+        break;
+    case AX_SRC_TYPE_4TAP_16K:
+        ppb->srcSelect = 0;
+        ppb->coefSelect = 2;
+        break;
+    }
+
+    vpb->sync |= AX_PBSYNC_SELECT;
+    OSRestoreInterrupts(old);
+}
+
 void AXSetVoiceState(AXVPB* vpb, u16 state) {
     BOOL enabled = OSDisableInterrupts();
 
@@ -507,9 +537,34 @@ void AXSetVoiceAddr(AXVPB* vpb, AXPBADDR* addr) {
     OSRestoreInterrupts(enabled);
 }
 
+void AXSetVoiceCurrentAddr(AXVPB* vpb, u32 addr) {
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    vpb->pb.addr.currentAddressHi = addr >> 16;
+    vpb->pb.addr.currentAddressLo = addr;
+    vpb->sync |= AX_PBSYNC_CURR_ADDR;
+    OSRestoreInterrupts(old);
+}
+
+// From koopthekoopa/wii-ipl (CC0), libs/RVL_SDK/src/ax/AXVPB.c
+void AXSetVoiceSrcRatio(AXVPB* vpb, float ratio) {
+    u32 r;
+    BOOL old;
+
+    old = OSDisableInterrupts();
+    r = 65536.0f * ratio;
+    vpb->pb.src.ratioHi = r >> 16;
+    vpb->pb.src.ratioLo = r;
+    vpb->sync |= AX_PBSYNC_SRC_RATIO;
+    OSRestoreInterrupts(old);
+}
+
+// cos and sqrt as in koopthekoopa/wii-ipl (CC0), libs/RVL_SDK/src/ax/AXVPB.c:
+// the game calls the double versions.
 void AXGetLpfCoefs(u16 freq, u16* a, u16* b) {
-    f32 rf31 = 2.0f - cosf(2 * M_PI * freq / AX_SAMPLE_RATE);
-    f32 rf30 = sqrtf(rf31 * rf31 - 1.0f) - rf31;
+    f32 rf31 = 2.0f - (f32)cos(2 * (f32)M_PI * freq / AX_SAMPLE_RATE);
+    f32 rf30 = (f32)sqrt(rf31 * rf31 - 1.0f) - rf31;
 
     *b = 32768 * -rf30;
     *a = 32767 - *b;
