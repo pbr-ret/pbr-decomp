@@ -1896,6 +1896,8 @@ libs/RVL_SDK/src/vf/d_common.c:
 
 libs/RVL_SDK/src/vf/nand_drv.c:
 	.text       start:0x8031BE1C end:0x8031C120
+	.bss        start:0x8060FA50 end:0x8060FBF0
+	.sbss       start:0x806402C8 end:0x806402D0
 
 libs/RVL_SDK/src/vf/sd_drv.c:
 	.text       start:0x8031C120 end:0x8031C124

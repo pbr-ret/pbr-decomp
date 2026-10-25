@@ -1,10 +1,11 @@
 // Imported from doldecomp/ogws (CC0), src/revolution/VF/nand_drv.c
 #include <private/vf.h>
 #include <revolution/mem.h>
+#include <revolution/os.h>
 
 extern struct PDM_DISK_SET VFipdm_disk_set;
-s32 VF_nand_retry_max;
 s32 VF_nand_sleep_msec;
+s32 VF_nand_retry_max;
 
 static struct {
     s32 (*create)(const char *, u8, u8);
@@ -24,7 +25,7 @@ static const struct PDM_FUNCTBL l_nand_func = {
     (s32 (*)(struct PDM_DISK *, struct PDM_DISK_INFO *))nanddrv_get_disk_info};
 
 static inline void _SleepAfewMiliSec(void) {
-    OSSleepTicks((s64)VF_nand_sleep_msec * ((*(u32 *)0x800000F8 / 4) / 1000));
+    OSSleepMilliseconds(VF_nand_sleep_msec);
 }
 
 s32 VFi_NandCreate(const char *path, u8 perm, u8 attr) {
@@ -455,8 +456,8 @@ static s32 nanddrv_BuildUpBootSector(struct PDM_DISK *p_disk, u8 *buf, enum FatT
     struct PDM_DISK *realDisk_p;
     u32 drvSPU;
 
-    realDisk_p = (struct PDM_DISK *)((u8 *)&VFipdm_disk_set + ((u32)p_disk & 0xFF) * 0x34);
-    drvSPU = *(u32 *)((u8 *)realDisk_p + 0x1BC);
+    realDisk_p = &VFipdm_disk_set.disk[(u32)p_disk & 0xFF];
+    drvSPU = realDisk_p->disk_info.total_sectors;
 
     dCommon_MakeBootSector(buf,
                            type,
