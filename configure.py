@@ -506,7 +506,7 @@ config.libs = [
             Object(NonMatching, "os/OSUtf.c"),
             Object(NonMatching, "os/OSIpc.c"),
             Object(NonMatching, "os/OS.c"),
-            Object(NonMatching, "os/OSAudioSystem.c"),
+            Object(Matching, "os/OSAudioSystem.c"),
             Object(NonMatching, "os/OSCache.c"),
             Object(NonMatching, "os/OSStateTM.c"),
             Object(NonMatching, "os/OSPlayRecord.c"),
