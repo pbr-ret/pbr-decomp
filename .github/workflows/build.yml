@@ -120,7 +120,7 @@ jobs:
 
     - name: Generate
       run: |
-        python tools/qa/cleanup_index.py --out build/pages \
+        python tools/qa/cleanup_index.py --strict --out build/pages \
             --report build/RPBP01/report.json \
             --revision ${{ github.sha }} --generated "$(date -u +%Y-%m-%d)" \
             --repo ${{ github.server_url }}/${{ github.repository }}
@@ -144,6 +144,9 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

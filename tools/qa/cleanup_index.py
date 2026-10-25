@@ -18,9 +18,11 @@ Usage:
   python tools/qa/cleanup_index.py --out DIR     DIR/index.html and
                                                  DIR/cleanup_index.tsv
   Options for the page: --report build/RPBP01/report.json (match scores),
-  --revision, --generated, --repo.
+  --revision, --generated, --repo. --strict fails when configure.py can't be
+  loaded, instead of listing every file without its unit.
 """
 
+from bisect import bisect_left
 from collections import Counter
 from pathlib import Path
 from typing import Dict, Iterator, List, NamedTuple, Optional, TextIO, Tuple
@@ -102,6 +104,14 @@ def load_categories() -> Tuple[List[Category], List[str]]:
                 tuple(entry.get("skip_inside", [])),
             )
         )
+    for index, category in enumerate(categories):
+        earlier = {other.id for other in categories[:index]}
+        for other in category.skip_inside:
+            if other not in earlier:
+                sys.exit(
+                    f"error: rule {category.id}: skip_inside {other!r} "
+                    "is not a rule listed before it"
+                )
     listed = {category.id for category in categories}
     for rule in fakematch.rules:
         if rule.id in listed:
@@ -141,6 +151,7 @@ def scan_file(
         captures = QueryCursor(category.query).captures(tree.root_node)
         matches = sorted(captures.get("match", []), key=lambda node: node.start_byte)
         names = sorted(captures.get("_name", []), key=lambda node: node.start_byte)
+        name_starts = [name.start_byte for name in names]
         outer = [
             span for other in category.skip_inside for span in spans.get(other, [])
         ]
@@ -150,10 +161,11 @@ def scan_file(
             if any(a <= node.start_byte and node.end_byte <= b for a, b in outer):
                 continue
             spans[category.id].append((node.start_byte, node.end_byte))
-            named = next(
-                (n for n in names if node.start_byte <= n.start_byte < node.end_byte),
-                node,
-            )
+            first = bisect_left(name_starts, node.start_byte)
+            if first < len(names) and names[first].start_byte < node.end_byte:
+                named = names[first]
+            else:
+                named = node
             line = lint.get_line_number(source, named)
             detail = detail_of(category, node_text(source, named))
             key = detail if category.once_per_name else line
@@ -176,9 +188,10 @@ def source_paths() -> Iterator[str]:
 # Units
 
 
-def load_units() -> Dict[str, Tuple[str, bool]]:
+def load_units(strict: bool) -> Dict[str, Tuple[str, bool]]:
     """Source path -> (unit name, Matching), from configure.py via units.py.
-    Empty, with a warning, when configure.py can't be loaded."""
+    Empty, with a warning, when configure.py can't be loaded; an error with
+    `strict`."""
     with tempfile.TemporaryDirectory() as directory:
         output = Path(directory) / "units.json"
         result = subprocess.run(
@@ -188,6 +201,11 @@ def load_units() -> Dict[str, Tuple[str, bool]]:
             text=True,
         )
         if result.returncode != 0:
+            if strict:
+                sys.exit(
+                    "error: no unit status (configure.py could not be loaded):\n"
+                    + result.stderr
+                )
             print(
                 "warning: no unit status (configure.py could not be loaded)",
                 file=sys.stderr,
@@ -219,7 +237,7 @@ def describe_files(
     for path in paths:
         name, matching = units.get(path, ("", False))
         status = ("Matching" if matching else "NonMatching") if name else ""
-        score = scores.get(str(Path(path).with_suffix(""))) if name else None
+        score = scores.get(Path(path).with_suffix("").as_posix()) if name else None
         files.append(SourceFile(path, name, status, score))
     return files
 
@@ -299,6 +317,11 @@ def main() -> int:
         default="https://github.com/pbr-ret/pbr-decomp",
         help="repository the page links into",
     )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="fail when configure.py can't be loaded, instead of listing no units",
+    )
     args = parser.parse_args()
 
     categories, blank_macros = load_categories()
@@ -307,7 +330,7 @@ def main() -> int:
         site for path in paths for site in scan_file(path, categories, blank_macros)
     ]
     sites.sort(key=lambda site: (site.path, site.line))
-    files = describe_files(paths, load_units(), load_scores(args.report))
+    files = describe_files(paths, load_units(args.strict), load_scores(args.report))
     by_path = {source.path: source for source in files}
 
     if args.tsv == "-":
@@ -326,7 +349,10 @@ def main() -> int:
         write_html(sites, files, categories, args.out / "index.html", meta)
         with open(args.out / "cleanup_index.tsv", "w", encoding="utf-8") as handle:
             write_tsv(sites, by_path, handle)
-        print(f"wrote {args.out}/index.html and {args.out}/cleanup_index.tsv")
+        print(
+            f"wrote {args.out}/index.html and {args.out}/cleanup_index.tsv",
+            file=sys.stderr,
+        )
     if not args.tsv and not args.out:
         summarize(sites, categories)
     return 0

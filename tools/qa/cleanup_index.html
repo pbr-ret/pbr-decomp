@@ -331,8 +331,22 @@ function writeHash() {
 }
 
 function readHash() {
+    // Links can outlive the rules and files they name: drop unknown values
+    const known = {
+        family: DATA.families,
+        category: CATEGORIES.map(c => c.id),
+        status: ["NonMatching", "Matching", "header"],
+        dir: FILES.map(f => f.dir),
+        view: ["files", "list"],
+        sort: META.scores ? ["count", "path", "match"] : ["count", "path"],
+    };
     const params = new URLSearchParams(location.hash.slice(1));
-    for (const key of Object.keys(state)) if (params.has(key)) state[key] = params.get(key);
+    for (const key of Object.keys(state)) {
+        const value = params.get(key);
+        if (value === null) continue;
+        if (known[key] && !known[key].some(k => k === value || (key === "dir" && k.startsWith(value + "/")))) continue;
+        state[key] = value;
+    }
     document.getElementById("q").value = state.q;
 }
 
