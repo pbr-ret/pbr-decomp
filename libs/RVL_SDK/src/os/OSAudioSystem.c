@@ -6,10 +6,13 @@
 
 #include <string.h>
 
-// TODO DSP boot microcode, 0x80 bytes in .data; not importable until the data sections are split
-extern u8 DSPInitCode[];
 #define DSP_INIT_CODE_ADDR 0x01000000
 #define DSP_INIT_CODE_SIZE 0x80
+
+// DSP boot microcode, extracted from the game at build time (config.yml)
+static u8 DSPInitCode[DSP_INIT_CODE_SIZE] = {
+#include <revolution/os/DSPInitCode.inc>
+};
 
 extern BOOL __OSInIPL;
 

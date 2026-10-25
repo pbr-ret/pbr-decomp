@@ -1419,6 +1419,7 @@ libs/RVL_SDK/src/os/OSArena.c:
 
 libs/RVL_SDK/src/os/OSAudioSystem.c:
 	.text       start:0x8026A160 end:0x8026A614
+	.data       start:0x804269E0 end:0x80426A60
 
 libs/RVL_SDK/src/os/OSCache.c:
 	.text       start:0x8026A614 end:0x8026AC14
