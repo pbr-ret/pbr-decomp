@@ -67,6 +67,7 @@ void AXSetVoiceType(AXVPB* vpb, u16 type);
 void AXSetVoiceMix(AXVPB* vpb, AXPBMIX* mix);
 void AXSetVoiceVe(AXVPB* vpb, AXPBVE* ve);
 void AXSetVoiceAddr(AXVPB* vpb, AXPBADDR* addr);
+void AXSetVoiceCurrentAddr(AXVPB* vpb, u32 addr);
 void AXSetVoiceAdpcm(AXVPB* vpb, AXPBADPCM* adpcm);
 void AXSetVoiceSrc(AXVPB* vpb, AXPBSRC* src_);
 void AXSetVoiceSrcRatio(AXVPB* vpb, float ratio);
