@@ -29,7 +29,10 @@ Usage:
   python tools/qa/check.py --base none     report everything, compare nothing
 
 The base defaults to the merge base of HEAD and origin/main. The base tree is
-checked out in build/qa/base. Exit status: 0 when the change adds no problem,
+checked out in build/qa/base. When the game files are in orig/, both trees are
+split before anything is compiled, for the headers config.yml extracts from
+the game; without them, units that include such a header do not compile in
+either tree. Exit status: 0 when the change adds no problem,
 1 otherwise.
 """
 
@@ -925,8 +928,14 @@ def ninja(tree_root: Path, *targets: str) -> None:
         sys.exit(f"error: `ninja {' '.join(targets)}` failed in {tree_root}")
 
 
-def prepare_dol_tree(tree: Tree, configure_args: List[str]) -> Path:
-    """Configure and build a tree; return its report.json."""
+def has_game_files() -> bool:
+    return (ROOT / "orig" / VERSION / "sys" / "main.dol").exists()
+
+
+def split_tree(tree: Tree, configure_args: List[str]) -> None:
+    """Configure a tree and split the game in it. The split also writes the
+    headers that config.yml extracts from the game, which some units include,
+    so it runs before any unit is compiled."""
     if tree.root != ROOT:
         # Link the top-level entries: orig/ may hold directories or symlinks
         # to them, which a recursive walk would not follow.
@@ -945,6 +954,11 @@ def prepare_dol_tree(tree: Tree, configure_args: List[str]) -> Path:
             sys.exit(
                 f"error: configure.py failed in {tree.root}:\n{result.stdout}{result.stderr}"
             )
+    ninja(tree.root, f"build/{VERSION}/config.json")
+
+
+def prepare_dol_tree(tree: Tree) -> Path:
+    """Build a tree that split_tree has prepared; return its report.json."""
     report = tree.root / "build" / VERSION / "report.json"
     ninja(tree.root)
     ninja(tree.root, str(report.relative_to(tree.root)))
@@ -1258,6 +1272,12 @@ def main() -> None:
             "readelf",
         ):  # the base tree has no downloaded tools
             base.tools[tool] = head.tools[tool]
+    if needs_trees and has_game_files():
+        split_tree(head, configure_args)
+        if base:
+            split_tree(base, configure_args_for_base(head, configure_args))
+    elif DOL_CHECKS & set(checks):
+        sys.exit(f"error: --with-dol needs the game files in orig/{VERSION}")
 
     results: List[CheckResult] = []
     if {"diagnostics", "symbols"} & set(checks):
@@ -1265,13 +1285,19 @@ def main() -> None:
         head_compiled = compile_tree(head, args.jobs)
         base_compiled = compile_tree(base, args.jobs) if base else None
         if "diagnostics" in checks:
-            results.append(
-                compare(
-                    "diagnostics",
-                    diagnostic_issues(head_compiled),
-                    diagnostic_issues(base_compiled) if base_compiled else None,
-                )
+            diagnostics = compare(
+                "diagnostics",
+                diagnostic_issues(head_compiled),
+                diagnostic_issues(base_compiled) if base_compiled else None,
             )
+            # Without its object, a unit's -requireprotos pass is skipped too,
+            # so the change gets the problems of that unit as new.
+            diagnostics.notes += [
+                f"{result.unit['source']} does not compile in the base"
+                for result in base_compiled or []
+                if result.failed
+            ]
+            results.append(diagnostics)
         if "symbols" in checks:
             results.append(
                 compare(
@@ -1289,12 +1315,8 @@ def main() -> None:
     if "lint" in checks:
         results.append(check_lint(base_sha))
     if DOL_CHECKS & set(checks):
-        head_report = prepare_dol_tree(head, configure_args)
-        base_report = (
-            prepare_dol_tree(base, configure_args_for_base(head, configure_args))
-            if base
-            else None
-        )
+        head_report = prepare_dol_tree(head)
+        base_report = prepare_dol_tree(base) if base else None
         if "regressions" in checks:
             results.append(
                 check_regressions(head.tools["objdiff"], head_report, base_report)

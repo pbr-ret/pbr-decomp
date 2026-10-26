@@ -2,6 +2,7 @@
 #include <revolution/os.h>
 
 #include <private/bus.h>
+#include <private/os/OSAudioSystem.h>
 #include <private/hollywood.h>
 
 #include <string.h>
@@ -80,7 +81,7 @@ void __AIClockInit(BOOL compatB) {
     waitMicroSec(1000);
 }
 
-void __OSInitAudioSystem() {
+void __OSInitAudioSystem(void) {
     u8 errFlag;
     u16 reg;
     OSTick start_tick;
@@ -161,7 +162,7 @@ void __OSInitAudioSystem() {
     memcpy((u8*)OSPhysicalToCached(DSP_INIT_CODE_ADDR), (u8*)OSGetArenaHi() - DSP_INIT_CODE_SIZE, DSP_INIT_CODE_SIZE);
 }
 
-void __OSStopAudioSystem() {
+void __OSStopAudioSystem(void) {
     u16 reg;
     OSTick start_tick;
 
