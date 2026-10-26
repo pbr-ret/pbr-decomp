@@ -19,7 +19,7 @@ With the game files, the output also lists units that are 100% but not marked `M
 
 The warning flags are `-w missingreturn,hidevirtual,possible,unusedexpr,filecaps,sysfilecaps,tokenpasting`. `-W all` is not used: it reports every implicit integer conversion, which the original code is full of. Warning flags do not change the generated code.
 
-The `diagnostics` and `symbols` checks compile every unit of both trees into `build/qa/` with the project's own flags. They do not touch the normal build.
+The `diagnostics` and `symbols` checks compile every unit of both trees into `build/qa/` with the project's own flags. They do not touch the normal build. When the game files are in `orig/`, both trees are split first, which writes the headers `config.yml` extracts from the game; without them, units that include such a header do not compile in either tree, and the output lists each unit that does not compile in the base.
 
 ## Running locally
 
