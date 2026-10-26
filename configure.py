@@ -625,6 +625,12 @@ config.libs = [
         ],
     ),
     RVLSDKLib(
+        "usb",
+        [
+            Object(NonMatching, "usb/usb.c"),
+        ],
+    ),
+    RVLSDKLib(
         "dsp",
         [
             Object(NonMatching, "dsp/dsp.c"),
@@ -1070,7 +1076,7 @@ config.libs = [
             Object(NonMatching, ".unsorted/802A5B28.cpp"),
             Object(NonMatching, ".unsorted/802AD0D4.cpp"),
             Object(NonMatching, ".unsorted/802B2D18.cpp"),
-            Object(NonMatching, ".unsorted/802B3C20.cpp"),
+            Object(NonMatching, ".unsorted/802B4CC0.cpp"),
             Object(NonMatching, ".unsorted/802EA66C.cpp"),
             Object(NonMatching, ".unsorted/802EC97C.cpp"),
             Object(NonMatching, ".unsorted/8031C124.cpp"),
