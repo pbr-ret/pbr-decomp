@@ -625,6 +625,14 @@ config.libs = [
         ],
     ),
     RVLSDKLib(
+        "dsp",
+        [
+            Object(NonMatching, "dsp/dsp.c"),
+            Object(NonMatching, "dsp/dsp_debug.c"),
+            Object(NonMatching, "dsp/dsp_task.c"),
+        ],
+    ),
+    RVLSDKLib(
         "nwc24",
         [
             Object(NonMatching, "nwc24/NWC24StdApi.c"),
@@ -1057,6 +1065,7 @@ config.libs = [
             Object(NonMatching, ".unsorted/802959F8.cpp"),
             Object(NonMatching, ".unsorted/802973F8.cpp"),
             Object(NonMatching, ".unsorted/80297890.cpp"),
+            Object(NonMatching, ".unsorted/8029B918.cpp"),
             Object(NonMatching, ".unsorted/802A2904.cpp"),
             Object(NonMatching, ".unsorted/802A5B28.cpp"),
             Object(NonMatching, ".unsorted/802AD0D4.cpp"),
