@@ -2,14 +2,18 @@
 #include <revolution/os.h>
 
 #include <private/bus.h>
+#include <private/os/OSAudioSystem.h>
 #include <private/hollywood.h>
 
 #include <string.h>
 
-// TODO DSP boot microcode, 0x80 bytes in .data; not importable until the data sections are split
-extern u8 DSPInitCode[];
 #define DSP_INIT_CODE_ADDR 0x01000000
 #define DSP_INIT_CODE_SIZE 0x80
+
+// DSP boot microcode, extracted from the game at build time (config.yml)
+static u8 DSPInitCode[DSP_INIT_CODE_SIZE] = {
+#include <revolution/os/DSPInitCode.inc>
+};
 
 extern BOOL __OSInIPL;
 
@@ -77,7 +81,7 @@ void __AIClockInit(BOOL compatB) {
     waitMicroSec(1000);
 }
 
-void __OSInitAudioSystem() {
+void __OSInitAudioSystem(void) {
     u8 errFlag;
     u16 reg;
     OSTick start_tick;
@@ -158,7 +162,7 @@ void __OSInitAudioSystem() {
     memcpy((u8*)OSPhysicalToCached(DSP_INIT_CODE_ADDR), (u8*)OSGetArenaHi() - DSP_INIT_CODE_SIZE, DSP_INIT_CODE_SIZE);
 }
 
-void __OSStopAudioSystem() {
+void __OSStopAudioSystem(void) {
     u16 reg;
     OSTick start_tick;
 
