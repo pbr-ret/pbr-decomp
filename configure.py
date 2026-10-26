@@ -626,6 +626,12 @@ config.libs = [
         ],
     ),
     RVLSDKLib(
+        "arc",
+        [
+            Object(NonMatching, "arc/arc.c"),
+        ],
+    ),
+    RVLSDKLib(
         "usb",
         [
             Object(NonMatching, "usb/usb.c"),
@@ -1082,6 +1088,7 @@ config.libs = [
             Object(NonMatching, ".unsorted/802B4CC0.cpp"),
             Object(NonMatching, ".unsorted/802EA66C.cpp"),
             Object(NonMatching, ".unsorted/802EC97C.cpp"),
+            Object(NonMatching, ".unsorted/802ED204.cpp"),
             Object(NonMatching, ".unsorted/8031C124.cpp"),
             Object(Matching, ".unsorted/803D9EB4.cpp", extra_cflags=["-O4,s", "-inline noauto"]),
             Object(Matching, "ds/trainer_info.cpp", extra_cflags=["-O4,s", "-inline noauto"]),
