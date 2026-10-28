@@ -1,18 +1,21 @@
 #pragma once
 
 #include "gs/GScolor.hpp"
+#include "gs/GSmath.hpp"
 #include "gs/GSrender.hpp"
 #include "gs/scene/GSanimationObject.hpp"
 
-struct GSmatrix;
 struct GSmeshRenderSettings;
 class GSchannelData;
 
 // Size: 0x30
-struct _UnkMaterialStruct_1 {
-    /* 0x00 */ u8 _pad_0[0x30];
-
+struct _UnkMaterialStruct_1 : public GSmatrix {
     _UnkMaterialStruct_1();
+
+    _UnkMaterialStruct_1(GSvec3 scale, GSvec3 trans) {
+        MTXScale(*this, scale.x, scale.y, scale.z);
+        MTXTransApply(*this, *this, trans.x, trans.y, trans.z);
+    }
 };
 
 struct _UnkMaterialStruct_2 {
@@ -38,6 +41,12 @@ struct _UnkMaterialStruct_3 {
     /* 0x1AC */ GSvec3 _1ac;
     /* 0x1B8 */ GSvec3 _1b8;
     /* 0x1C4 */ GSvec3 _1c4;
+    /* 0x1D0 */ u8 _pad_1d0[0x4];
+    /* 0x1D4 */ GSmatrix _1d4;
+
+    GSmatrix *get_1d4() {
+        return &_1d4;
+    }
 };
 
 // NOTE(samm) Name known from RTTI
@@ -65,12 +74,29 @@ protected:
     /* 0x2C */ GScolor _2c;
     /* 0x30 */ GScolor mBaseColor;
 
+    void releaseTexture() {
+        if (mOrigMatData->_50) {
+            if (_14 && (_28 & (1 << 0))) {
+                _14->fn_8023E2D0();
+                _28 &= ~(1 << 0);
+            }
+            _14 = NULL;
+        }
+    }
+
 public:
     GSmaterial(GSmaterialData *data, GSmeshRenderSettings *arg1);
 
     /* 0x8 */ virtual ~GSmaterial();
 
+    void fn_801E6F78(GStexture *baseTex, GStexture *spotTex, u32 spotOffsets, const bool *darken);
     void fn_801E74B0(_UnkMaterialData_1 *arg0);
+    void fn_801E7FA4(_UnkMaterialStruct_3 *arg0, GSmatrix *arg1, u32 arg2);
+    void fn_801E8858(bool useTexture);
+    void fn_801E8BA4(bool useTexture);
+    void fn_801E9114(_UnkMaterialStruct_3 *arg0, bool useTexture);
+    void fn_801E98E0();
+    void fn_801E9C18(_UnkMaterialStruct_3 *arg0);
     GSmatrix *fn_801E9C74(u8 arg0, _UnkMaterialData_2 *arg1);
     void fn_801E9DCC(const _UnkMaterialStruct_3 *arg0, GSmatrix *arg1);
     void fn_801EA44C();
