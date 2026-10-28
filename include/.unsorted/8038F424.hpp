@@ -372,6 +372,14 @@ u8 fn_80399984(u8 **h, s32 i);
 f32 fn_803999B8(u8 **h, s32 i);
 u8 fn_80399F30(u8 **h, s32 i);
 }
+
+namespace nw4r {
+namespace ut {
+struct List;
+void *List_GetNth(const List *pList, u16 n);
+} // namespace ut
+} // namespace nw4r
+
 struct DataHdr {
     u32 magic;
     u32 ver;
@@ -765,7 +773,6 @@ void OSRegisterVersion(const char *v);
 void fn_8039B474(u8 *p);
 void fn_803A357C(u8 *p);
 void MEMDestroyFrmHeap(void *h);
-u8 *fn_80362AEC(u8 *p, u16 x);
 void WPADControlMotor(s32 ch, u32 cmd);
 s32 WPADControlSpeaker(s32 ch, u32 cmd, void *cb);
 void fn_803A5D9C(s32 a, s32 b);
