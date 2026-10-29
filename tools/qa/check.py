@@ -614,6 +614,7 @@ class ElfSymbol:
     kind: str  # FUNC, OBJECT, ...
     bind: str  # global, local, weak
     section: str  # section name, or "UND"
+    size: int = 0
 
 
 def read_elf_symbols(readelf: str, path: Path) -> List[ElfSymbol]:
@@ -627,33 +628,29 @@ def read_elf_symbols(readelf: str, path: Path) -> List[ElfSymbol]:
         fields = line.split()
         if len(fields) < 8 or not fields[0].rstrip(":").isdigit():
             continue
-        _, value, _, kind, bind, _, ndx, name = fields[:8]
+        _, value, size, kind, bind, _, ndx, name = fields[:8]
         section = "UND" if ndx == "UND" else sections.get(ndx, ndx)
-        symbols.append(ElfSymbol(name, int(value, 16), kind, bind.lower(), section))
+        symbols.append(
+            ElfSymbol(name, int(value, 16), kind, bind.lower(), section, int(size, 0))
+        )
     return symbols
 
 
-def symbol_referrers(readelf: str, path: Path) -> Dict[str, Set[str]]:
-    """Map each symbol an object refers to onto the symbols whose bytes refer to it.
+def symbol_referrers(
+    readelf: str, path: Path, elf_symbols: List[ElfSymbol]
+) -> Dict[str, Set[Tuple[str, str]]]:
+    """Map each symbol an object refers to onto the (name, binding) of the
+    symbols whose bytes refer to it.
 
-    A relocation outside every sized symbol maps to "" so that it is never
-    taken for a stripped referrer.
+    A relocation outside every sized symbol, or inside a compiler-generated
+    one (whose name rarely appears in symbols.txt), maps to ("", "") so that
+    it is never taken for a stripped referrer.
     """
-    sections = {}
-    output = run([readelf, "-SW", str(path)], ROOT).stdout
-    for match in re.finditer(r"^\s*\[\s*(\d+)\]\s+(\S+)", output, re.M):
-        sections[match.group(1)] = match.group(2)
-    spans: Dict[str, List[Tuple[int, int, str]]] = defaultdict(list)
-    output = run([readelf, "-sW", str(path)], ROOT).stdout
-    for line in output.splitlines():
-        fields = line.split()
-        if len(fields) < 8 or not fields[0].rstrip(":").isdigit():
-            continue
-        _, value, size, kind, _, _, ndx, name = fields[:8]
-        if kind in ("FUNC", "OBJECT") and int(size, 0) > 0 and ndx in sections:
-            start = int(value, 16)
-            spans[sections[ndx]].append((start, start + int(size, 0), name))
-    referrers: Dict[str, Set[str]] = defaultdict(set)
+    spans: Dict[str, List[ElfSymbol]] = defaultdict(list)
+    for symbol in elf_symbols:
+        if symbol.kind in ("FUNC", "OBJECT") and symbol.size > 0:
+            spans[symbol.section].append(symbol)
+    referrers: Dict[str, Set[Tuple[str, str]]] = defaultdict(set)
     section = None
     output = run([readelf, "-rW", str(path)], ROOT).stdout
     for line in output.splitlines():
@@ -669,8 +666,15 @@ def symbol_referrers(readelf: str, path: Path) -> Dict[str, Set[str]]:
         ):
             continue
         offset = int(fields[0], 16)
-        holders = [n for start, end, n in spans[section] if start <= offset < end]
-        referrers[fields[4]].add(holders[0] if holders else "")
+        holders = [
+            symbol
+            for symbol in spans[section]
+            if symbol.value <= offset < symbol.value + symbol.size
+        ]
+        if not holders or is_compiler_name(holders[0].name):
+            referrers[fields[4]].add(("", ""))
+        else:
+            referrers[fields[4]].add((holders[0].name, holders[0].bind))
     return referrers
 
 
@@ -737,9 +741,16 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                 )
                 continue
             if not local:
-                if elf.bind == "weak" and any(s.scope == "weak" for s in candidates):
+                if elf.bind == "weak" and any(
+                    s.scope == "weak"
+                    and any(
+                        section == s.section and s.address < start
+                        for section, start, _ in ranges
+                    )
+                    for s in candidates
+                ):
                     # A weak inline copy: the linker keeps the first one in link
-                    # order, which symbols.txt places in another unit.
+                    # order, which symbols.txt places in an earlier unit.
                     continue
                 stripped_static = (
                     elf.kind == "FUNC"
@@ -788,7 +799,7 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                 )
             previous = (address, function)
 
-        referrers: Optional[Dict[str, Set[str]]] = None
+        referrers: Optional[Dict[str, Set[Tuple[str, str]]]] = None
         for elf in per_unit[name]:
             if elf.section != "UND" or not elf.name or is_compiler_name(elf.name):
                 continue
@@ -803,9 +814,20 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                 # and so are its references; symbols.txt names what was kept. A
                 # name no relocation uses cannot reach the link at all.
                 if referrers is None:
-                    referrers = symbol_referrers(readelf, result.object_path)
+                    referrers = symbol_referrers(
+                        readelf, result.object_path, per_unit[name]
+                    )
                 users = referrers.get(elf.name, set())
-                if not any(user == "" or user in symbols for user in users):
+                if not any(
+                    user == ""
+                    or (
+                        # a static's name may also belong to another unit
+                        any(in_unit(s) for s in symbols.get(user, []))
+                        if bind == "local"
+                        else user in symbols
+                    )
+                    for user, bind in users
+                ):
                     continue
             hint = (
                 " (an uppercase name is usually a missing macro)"
