@@ -614,6 +614,7 @@ class ElfSymbol:
     kind: str  # FUNC, OBJECT, ...
     bind: str  # global, local, weak
     section: str  # section name, or "UND"
+    index: int  # section index; an object can have several sections of one name
 
 
 def read_elf_symbols(readelf: str, path: Path) -> List[ElfSymbol]:
@@ -629,7 +630,10 @@ def read_elf_symbols(readelf: str, path: Path) -> List[ElfSymbol]:
             continue
         _, value, _, kind, bind, _, ndx, name = fields[:8]
         section = "UND" if ndx == "UND" else sections.get(ndx, ndx)
-        symbols.append(ElfSymbol(name, int(value, 16), kind, bind.lower(), section))
+        index = int(ndx) if ndx.isdigit() else -1
+        symbols.append(
+            ElfSymbol(name, int(value, 16), kind, bind.lower(), section, index)
+        )
     return symbols
 
 
@@ -669,9 +673,9 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
         def in_unit(symbol: Symbol) -> bool:
             return any(start <= symbol.address < end for _, start, end in ranges)
 
-        text_order: List[Tuple[str, int, int, str]] = (
+        text_order: List[Tuple[str, int, int, int, str]] = (
             []
-        )  # (section, offset, address, name)
+        )  # (section, index, offset, address, name)
         for elf in per_unit[name]:
             if elf.kind not in ("FUNC", "OBJECT") or is_compiler_name(elf.name):
                 continue
@@ -723,12 +727,17 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                     )
                 )
             if elf.kind == "FUNC":
-                text_order.append((elf.section, elf.value, target.address, elf.name))
+                text_order.append(
+                    (elf.section, elf.index, elf.value, target.address, elf.name)
+                )
 
+        # The linker places sections of the same name one after another in
+        # index order (with -sym on, each header's inline functions get their
+        # own .text section), so they are checked as one run.
         text_order.sort()
         previous = None
         previous_section = None
-        for section, _, address, function in text_order:
+        for section, _, _, address, function in text_order:
             if section != previous_section:
                 previous, previous_section = None, section
             if previous and address < previous[0]:
