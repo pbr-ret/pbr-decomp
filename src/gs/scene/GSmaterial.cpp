@@ -871,9 +871,7 @@ void GSmaterial::fn_801E9114(GScamera *arg0, bool useTexture) {
     }
 
     GSvec3 dir;
-    dir.x = renderLight->mDirection.x;
-    dir.y = renderLight->mDirection.y;
-    dir.z = renderLight->mDirection.z;
+    dir = renderLight->mDirection;
     MTXMultVecSR(arg0->_1d4, &dir, &dir);
 
     f32 cosAngle = -dir.z;
