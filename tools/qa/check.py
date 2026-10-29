@@ -967,28 +967,77 @@ def check_format(base: Optional[str]) -> CheckResult:
 # Check: lint
 
 
+PLACEHOLDER_DIR = "src/.unsorted/"
+
+
+def moved_placeholder_lines(base: str) -> Tuple[Set[str], Counter]:
+    """Placeholder files that are new since the merge base with `base`, and
+    the lines removed from placeholder files since then, by text.
+
+    Splitting a placeholder unit moves its lines verbatim into new files, where
+    lint sees them as added."""
+    merge_base = git("merge-base", "HEAD", base)
+    existing = set(
+        git(
+            "ls-tree", "-r", "--name-only", merge_base, "--", PLACEHOLDER_DIR
+        ).splitlines()
+    )
+    current = set(
+        git(
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
+            PLACEHOLDER_DIR,
+        ).splitlines()
+    )
+    removed: Counter = Counter()
+    diff = git("diff", "--unified=0", merge_base, "--", PLACEHOLDER_DIR)
+    for line in diff.splitlines():
+        if line.startswith("-") and not line.startswith("---"):
+            removed[line[1:].strip()] += 1
+    return current - existing, removed
+
+
 def check_lint(base: Optional[str]) -> CheckResult:
     result = CheckResult("lint")
     lint = ROOT / "tools" / "qa" / "lint.py"
     args = ["--all", "src", "include"] if base is None else [base]
     output = run([sys.executable, str(lint), *args], ROOT, check=False)
     text = output.stdout + output.stderr
+    new_files, removed = (
+        (set(), Counter()) if base is None else moved_placeholder_lines(base)
+    )
     for line in text.splitlines():
         match = re.match(r"^(ERROR|ERR)\s+(\S+?):(\d+):\s*(.*)$", line)
         if match:
-            result.new.append(
-                Issue(
-                    "lint",
-                    (match.group(2), match.group(4)),
-                    f"error: {match.group(4)}",
-                    match.group(2),
-                    int(match.group(3)),
-                )
+            path, number = match.group(2), int(match.group(3))
+            issue = Issue(
+                "lint",
+                (path, match.group(4)),
+                f"error: {match.group(4)}",
+                path,
+                number,
             )
+            if path in new_files:
+                source = (
+                    (ROOT / path)
+                    .read_text(encoding="shift_jis", errors="replace")
+                    .splitlines()
+                )
+                moved = source[number - 1].strip() if number <= len(source) else None
+                if moved is not None and removed[moved] > 0:
+                    # A line moved verbatim out of a placeholder the change
+                    # splits or removes: the problem was already there.
+                    removed[moved] -= 1
+                    result.inherited.append(issue)
+                    continue
+            result.new.append(issue)
     warnings = sum(1 for line in text.splitlines() if line.startswith("WARN"))
     if warnings:
         result.notes.append(f"{warnings} fakematch warning(s): list each one in the PR")
-    if output.returncode != 0 and not result.new:
+    if output.returncode != 0 and not (result.new or result.inherited):
         result.failed = True
         result.notes.append(text.strip()[-500:])
     return result
