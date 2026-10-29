@@ -1288,7 +1288,7 @@ void GSmaterial::fn_801EA44C() {
                                                            0,
                                                            NULL,
                                                            GX_AF_NONE,
-                                                           GX_DF_SIGN);
+                                                           GX_DF_NONE);
             }
 
             _21 = mChannelCount++;
@@ -1520,7 +1520,7 @@ void GSmaterial::fn_801EB87C(GScamera *arg0, GSmatrix *arg1) {
 
     GSrender::sInstance->setIndTexStageDirect(mCurrTevStage);
     GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GSrender::sInstance->setTevStage(mCurrTevStage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GSrender::sInstance->setTevStage(mCurrTevStage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, 0);
     GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASA);
     GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
