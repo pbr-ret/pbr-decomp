@@ -147,6 +147,12 @@ struct GSviewport {
 };
 
 // Size: 0x38
+// The render state setters store a color with a single word access, which a
+// GScolor<u8> copy (four byte accesses) does not produce.
+static inline void storeColor(GXColor &dst, const GScolor<u8> &src) {
+    *reinterpret_cast<u32 *>(&dst) = *reinterpret_cast<const u32 *>(&src);
+}
+
 struct GScolorChannel {
     /* 0x0 */ GXBool mEnable;
     /* 0x4 */ GXColorSrc mAmbSrc;
@@ -283,8 +289,8 @@ struct GSrenderSettings {
     /* 0x120 */ GXClipMode mClipMode;
     /* 0x124 */ u8 mNumChans;
     /* 0x128 */ GScolorChannel mChannels[4];
-    /* 0x208 */ GScolor mChanAmbColors[2];
-    /* 0x210 */ GScolor mChanMatColors[2];
+    /* 0x208 */ GXColor mChanAmbColors[2];
+    /* 0x210 */ GXColor mChanMatColors[2];
     /* 0x218 */ u8 mNumTevStages;
     /* 0x21c */ GStevStage mTevStages[GX_MAX_TEVSTAGE];
     /* 0x2dc */ GStevColorIn mTevColorIns[GX_MAX_TEVSTAGE];
@@ -300,7 +306,7 @@ struct GSrenderSettings {
     /* 0x828 */ u8 mNumIndStages;
     /* 0x82c */ GSindTexOrder mIndTexOrders[GX_MAX_INDTEXSTAGE];
     /* 0x84c */ GSindTexScale mIndTexScales[GX_MAX_INDTEXSTAGE];
-    /* 0x86c */ GScolor mTevKColors[GX_MAX_KCOLOR];
+    /* 0x86c */ GXColor mTevKColors[GX_MAX_KCOLOR];
     /* 0x87c */ GXTevKColorSel mTevKColorSels[GX_MAX_TEVSTAGE];
     /* 0x8bc */ GXTevKAlphaSel mTevKAlphaSels[GX_MAX_TEVSTAGE];
     /* 0x8fc */ GStevSwapMode mTevSwapModes[GX_MAX_TEVSTAGE];
@@ -330,7 +336,7 @@ struct GSrenderSettings {
     /* 0x9f8 */ f32 mFogEndZ;
     /* 0x9fc */ f32 mFogNearZ;
     /* 0xa00 */ f32 mFogFarZ;
-    /* 0xa04 */ GScolor mFogColor;
+    /* 0xa04 */ GXColor mFogColor;
     /* 0xa08 */ GXFogAdjTable mFogAdjTable;
     /* 0xa1c */ u16 mFogRangeAdjCenter;
     // TODO(samm) Avoid this use of volatile?
@@ -403,7 +409,7 @@ private:
     /* 0x16fe */ u16 mFlags;
     /* 0x1700 */ GSdvdError mDvdError;
     /* 0x1704 */ u32 _1704;
-    /* 0x1708 */ GScolor mFillColor;
+    /* 0x1708 */ GScolor<u8> mFillColor;
     /* 0x170c */ MEMHeapHandle _170c;
     /* 0x1710 */ void *_1710;
     /* 0x1714 */ GStexture *_1714;
@@ -515,24 +521,24 @@ public:
         mState->_0 |= (1 << 7);
     }
 
-    void setChannelColors(u8 channel, GScolor ambColor, GScolor matColor) {
-        mState->mCurr.mChanAmbColors[channel] = ambColor;
-        mState->mCurr.mChanMatColors[channel] = matColor;
+    void setChannelColors(u8 channel, const GScolor<u8> &ambColor, const GScolor<u8> &matColor) {
+        storeColor(mState->mCurr.mChanAmbColors[channel], ambColor);
+        storeColor(mState->mCurr.mChanMatColors[channel], matColor);
         mState->mChanAmbColorFlags |= (1 << channel);
         mState->mChanMatColorFlags |= (1 << channel);
         mState->_0 |= (1 << 2);
     }
 
-    void setTevColor(u8 reg, GStevColorType type, GScolor *color) {
-        mState->mCurr.mTevColors[reg].mType = type;
-        // TODO(samm) Figure this out
-        *(u32 *)(&mState->mCurr.mTevColors[reg].mColor) = *color;
+    void setTevColor(u8 reg, const GScolor<u8> &color) {
+        GStevColor *tevColor = &mState->mCurr.mTevColors[reg];
+        tevColor->mType = GS_TEV_COLOR_U8;
+        storeColor(tevColor->mColor, color);
         mState->mTevColorFlags |= (1 << reg);
         mState->_0 |= (1 << 3);
     }
 
-    void setTevKColor(u8 index, GScolor *color) {
-        mState->mCurr.mTevKColors[index] = *color;
+    void setTevKColor(u8 index, GScolor<u8> *color) {
+        storeColor(mState->mCurr.mTevKColors[index], *color);
         mState->mTevKColorFlags |= (1 << index);
         mState->_0 |= (1 << 4);
     }
@@ -677,11 +683,11 @@ public:
         mState->_0 |= (1 << 6);
     }
 
-    void setFog(GXFogType type, f32 startZ, f32 endZ, const GScolor *color) {
+    void setFog(GXFogType type, f32 startZ, f32 endZ, const GScolor<u8> *color) {
         mState->mCurr.mFogType = type;
         mState->mCurr.mFogStartZ = startZ;
         mState->mCurr.mFogEndZ = endZ;
-        mState->mCurr.mFogColor = *color;
+        storeColor(mState->mCurr.mFogColor, *color);
 
         if (mState->mCurr.mFogEnable) {
             mState->_64 |= (1 << 6);
@@ -717,6 +723,11 @@ public:
         mState->_0 |= (1 << 2);
     }
 
+    void setLightsDirty() {
+        mState->_0 |= (1 << 2);
+        mState->_14 |= (1 << 4);
+    }
+
     void setTexture(u8 index, GStexture *texture) {
         if (mState->mTextures[index] != texture || (texture->mFlags & (1 << 0)) == (1 << 0)) {
             mState->mTextures[index] = texture;
@@ -728,15 +739,107 @@ public:
         mFlags |= flag;
     }
 
-    void setTevKColorSel(u8 stage, u8 sel);
-    void setTevKAlphaSel(u8 stage, u8 sel);
-    void setIndTexStageDirect(u8 stage);
-    void setTevStage(u8 stage, GXTexCoordID texCoord, GXTexMapID texMap, u8 channel);
-    void setTevSwapMode(u8 stage, u8 rasSel, u8 texSel);
-    void setTevColorOp(u8 stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID reg);
-    void setTevAlphaOp(u8 stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID reg);
-    void setTevColorIn(u8 stage, GXTevColorArg argA, GXTevColorArg argB, GXTevColorArg argC, GXTevColorArg argD);
-    void setTevAlphaIn(u8 stage, GXTevAlphaArg argA, GXTevAlphaArg argB, GXTevAlphaArg argC, GXTevAlphaArg argD);
+    void setTevKColorSel(u8 stage, u8 sel) {
+        mState->mCurr.mTevKColorSels[stage] = (GXTevKColorSel)sel;
+        mState->mTevKColorSelFlags |= (1 << stage);
+        mState->_0 |= (1 << 4);
+    }
+
+    void setTevKAlphaSel(u8 stage, u8 sel) {
+        mState->mCurr.mTevKAlphaSels[stage] = (GXTevKAlphaSel)sel;
+        mState->mTevKAlphaSelFlags |= (1 << stage);
+        mState->_0 |= (1 << 4);
+    }
+
+    void setTevKSel(u8 stage, u8 colorSel, u8 alphaSel) {
+        setTevKColorSel(stage, colorSel);
+        setTevKAlphaSel(stage, alphaSel);
+    }
+
+    void setIndTexStageDirect(u8 stage) {
+        if (mState->mCurr.mIndTexStages[stage].mType != GS_TEV_NULL) {
+            mState->mCurr.mIndTexStages[stage].mType = GS_TEV_DIRECT;
+        }
+        mState->mIndTexStageFlags |= (1 << stage);
+        mState->_0 |= (1 << 3);
+    }
+
+    void setTevStage(u8 stage, u8 texCoord, u8 texMap, u8 channel) {
+        GStevStage *tevStage = &mState->mCurr.mTevStages[stage];
+        tevStage->mTexCoord = (GXTexCoordID)texCoord;
+        tevStage->mTexMap = (GXTexMapID)texMap;
+        if (channel != 0xff) {
+            tevStage->mChannel = (GXChannelID)(channel + GX_COLOR0A0);
+        } else {
+            tevStage->mChannel = GX_COLOR_NULL;
+        }
+        mState->mTevStageFlags |= (1 << stage);
+        mState->_0 |= (1 << 3);
+    }
+
+    void setTevSwapMode(u8 stage, u8 rasSel, u8 texSel) {
+        GStevSwapMode *tevSwapMode = &mState->mCurr.mTevSwapModes[stage];
+        tevSwapMode->mRasSel = (GXTevSwapSel)rasSel;
+        tevSwapMode->mTexSel = (GXTevSwapSel)texSel;
+        mState->mTevSwapModeFlags |= (1 << stage);
+        mState->_0 |= (1 << 5);
+    }
+
+    void setTevColorOp(u8 stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID reg) {
+        GStevOp *tevColorOp = &mState->mCurr.mTevColorOps[stage];
+        tevColorOp->mOp = op;
+        tevColorOp->mBias = bias;
+        tevColorOp->mScale = scale;
+        tevColorOp->mClamp = clamp;
+        tevColorOp->mReg = reg;
+        mState->mTevColorOpFlags |= (1 << stage);
+        mState->_0 |= (1 << 3);
+    }
+
+    void setTevAlphaOp(u8 stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp, GXTevRegID reg) {
+        GStevOp *tevAlphaOp = &mState->mCurr.mTevAlphaOps[stage];
+        tevAlphaOp->mOp = op;
+        tevAlphaOp->mBias = bias;
+        tevAlphaOp->mScale = scale;
+        tevAlphaOp->mClamp = clamp;
+        tevAlphaOp->mReg = reg;
+        mState->mTevAlphaOpFlags |= (1 << stage);
+        mState->_0 |= (1 << 3);
+    }
+
+    void setTevColorIn(u8 stage, GXTevColorArg argA, GXTevColorArg argB, GXTevColorArg argC, GXTevColorArg argD) {
+        GStevColorIn *tevColorIn = &mState->mCurr.mTevColorIns[stage];
+        tevColorIn->mArgA = argA;
+        tevColorIn->mArgB = argB;
+        tevColorIn->mArgC = argC;
+        tevColorIn->mArgD = argD;
+        mState->mTevColorInFlags |= (1 << stage);
+        mState->_0 |= (1 << 3);
+    }
+
+    void setTevAlphaIn(u8 stage, GXTevAlphaArg argA, GXTevAlphaArg argB, GXTevAlphaArg argC, GXTevAlphaArg argD) {
+        GStevAlphaIn *tevAlphaIn = &mState->mCurr.mTevAlphaIns[stage];
+        tevAlphaIn->mArgA = argA;
+        tevAlphaIn->mArgB = argB;
+        tevAlphaIn->mArgC = argC;
+        tevAlphaIn->mArgD = argD;
+        mState->mTevAlphaInFlags |= (1 << stage);
+        mState->_0 |= (1 << 3);
+    }
+
+    void setNormalMtx(GSmatrix *mtx);
+
+    void setBumpTexGen(u8 texCoord, u8 srcCoord, GSrenderLight *light) {
+        GStexGen *texGen = &mState->mCurr.mTexCoordGens[texCoord];
+        texGen->mType = GX_TG_BUMP0;
+        texGen->mSrc = (GXTexGenSrc)(srcCoord + GX_TG_TEXCOORD0);
+        texGen->mTexMtx = GX_IDENTITY;
+        texGen->mNormalize = GX_FALSE;
+        texGen->mPostMtx = GX_PTIDENTITY;
+        texGen->mLight = light;
+        mState->mTexGenFlags |= (1 << texCoord);
+        mState->_0 |= (1 << 0);
+    }
 
     void fn_802310C0();
     void fn_802311AC(u32 *);
@@ -747,7 +850,7 @@ public:
     void fn_80231400();
     void update(f32 deltaTime);
     void draw();
-    void fn_8023177C(GSdvdError error, u32 param2, GScolor fillColor);
+    void fn_8023177C(GSdvdError error, u32 param2, const GScolor<u8> &fillColor);
     void fn_80231918();
     void fn_802321DC();
 
@@ -816,3 +919,16 @@ void fn_80231374(void *arg0);
 void fn_8023234C();
 void fn_80232394();
 GSvertexFormat *fn_8023CF1C(u32 arg0);
+
+#include "gs/render/80236704.hpp"
+
+inline void GSrender::setNormalMtx(GSmatrix *mtx) {
+    _UnkClass80236704 *_unk1 = get_16e8();
+    if (mtx) {
+        MTXCopy(*mtx, _unk1->_4->mNrmMtx);
+    } else {
+        MTXIdentity(_unk1->_4->mNrmMtx);
+    }
+    _unk1->_4->mFlags &= ~(1 << 1);
+    _unk1->_4->mFlags |= (1 << 2);
+}

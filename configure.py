@@ -325,6 +325,13 @@ cflags_game = [
     "-RTTI on",
 ]
 
+# The gs library. Retail groups each header's weak inlines in their own
+# .text section after the unit's code, which only -sym on reproduces.
+cflags_gs = [
+    *cflags_game,
+    "-sym on",
+]
+
 config.linker_version = "GC/3.0a5.2"
 
 config.src_dir = Path("src")
@@ -787,7 +794,7 @@ config.libs = [
     {
         "lib": "gs",
         "mw_version": config.linker_version,
-        "cflags": cflags_game,
+        "cflags": cflags_gs,
         "progress_category": "game",
         "objects": [
             Object(Matching, "gs/operators.cpp"),
@@ -799,10 +806,21 @@ config.libs = [
             Object(NonMatching, "gs/GSnand.cpp"),  # 801DCE6C
             Object(Matching, "gs/scene/GSanimationPlayer.cpp"),  # 801DD5C8
             Object(Matching, "gs/scene/GSanimationObject.cpp"),  # 801DD8C0
+            Object(NonMatching, "gs/scene/GScamera.cpp"),
+            Object(NonMatching, "gs/scene/GSvolumeNode.cpp"),
             Object(NonMatching, "gs/GSsceneData.cpp"),  # 801E0A54
+            Object(NonMatching, "gs/scene/GSjointNode.cpp"),
+            Object(NonMatching, "gs/scene/GSlight.cpp"),
+            Object(NonMatching, "gs/scene/GSmaterial.cpp"),
+            Object(NonMatching, "gs/scene/GSmesh.cpp"),
+            Object(NonMatching, "gs/scene/GSmodel.cpp"),
+            Object(NonMatching, "gs/scene/GSnull.cpp"),
             Object(NonMatching, "gs/GSobject.cpp"),  # 801F40E0
+            Object(NonMatching, "gs/scene/GSparticle.cpp"),
             Object(Matching, "gs/GSscene.cpp"),  # 801FA094
             Object(NonMatching, "gs/GShierarchyModule.cpp"),  # 802000BC
+            Object(NonMatching, "gs/GSmenuModule.cpp"),
+            Object(NonMatching, "gs/math/GSboundingBox.cpp"),
             Object(Matching, "gs/math/GSrand.cpp"),  # 80223830
             Object(Matching, "gs/math/GStrig.cpp"),
             Object(Matching, "gs/math/GSquat.cpp"),
@@ -822,12 +840,12 @@ config.libs = [
             Object(NonMatching, "gs/render/GSrenderModule.cpp"),
             Object(NonMatching, "gs/render/GSrenderPass.cpp"),
             Object(NonMatching, "gs/render/80237794.cpp"),
+            Object(NonMatching, "gs/render/802377BC.cpp"),
             Object(NonMatching, "gs/render/GSrenderTarget.cpp"),
             Object(Matching, "gs/render/8023B64C.cpp"),
             Object(NonMatching, "gs/render/8023B9F4.cpp"),
             Object(NonMatching, "gs/render/GStexture.cpp"),
             Object(NonMatching, "gs/render/8023EA44.cpp"),
-            Object(NonMatching, "gs/render/802377BC.cpp"),
             Object(NonMatching, "gs/GSvideo.cpp"),
             Object(NonMatching, "gs/input/GSinput.cpp"),
             Object(NonMatching, "gs/input/802448E8.cpp"),
@@ -968,22 +986,12 @@ config.libs = [
             Object(NonMatching, ".unsorted/8018777C.cpp"),
             Object(NonMatching, ".unsorted/8019BEC4.cpp"),
             Object(NonMatching, ".unsorted/801C9584.cpp"),
-            Object(NonMatching, "gs/scene/GScamera.cpp"),
-            Object(NonMatching, "gs/scene/GSvolumeNode.cpp"),
             Object(Matching, ".unsorted/801E07E8.cpp"),
             Object(NonMatching, ".unsorted/801E0810.cpp"),
-            Object(NonMatching, "gs/scene/GSjointNode.cpp"),
             Object(NonMatching, ".unsorted/801E474C.cpp"),
-            Object(NonMatching, "gs/scene/GSlight.cpp"),
-            Object(NonMatching, "gs/scene/GSmaterial.cpp"),
-            Object(NonMatching, "gs/scene/GSmesh.cpp"),
-            Object(NonMatching, "gs/scene/GSmodel.cpp"),
-            Object(NonMatching, "gs/scene/GSnull.cpp"),
-            Object(NonMatching, "gs/scene/GSparticle.cpp"),
             Object(NonMatching, ".unsorted/801FA38C.cpp"),
             Object(NonMatching, ".unsorted/801FB42C.cpp"),
             Object(NonMatching, ".unsorted/801FF308.cpp"),
-            Object(NonMatching, "gs/GSmenuModule.cpp"),
             Object(NonMatching, ".unsorted/80204058.cpp"),
             Object(NonMatching, ".unsorted/80205954.cpp"),
             Object(NonMatching, ".unsorted/802078B8.cpp"),
@@ -1003,7 +1011,6 @@ config.libs = [
             Object(NonMatching, ".unsorted/8021D424.cpp"),
             Object(NonMatching, ".unsorted/8021EA48.cpp"),
             Object(NonMatching, ".unsorted/8021FB44.cpp"),
-            Object(NonMatching, "gs/math/GSboundingBox.cpp"),
             Object(NonMatching, ".unsorted/80220DC4.cpp"),
             Object(NonMatching, ".unsorted/802233C8.cpp"),
             Object(NonMatching, ".unsorted/80223694.cpp"),
