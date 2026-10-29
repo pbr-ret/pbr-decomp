@@ -231,8 +231,8 @@ struct GSobjectData {
 struct _UnkMaterialData_1 {
     /* 0x0 */ u8 _0;
     /* 0x1 */ u8 _1;
-    /* 0x2 */ u8 _2;
-    /* 0x3 */ u8 _3;
+    /* 0x2 */ s8 _2;
+    /* 0x3 */ s8 _3;
     /* 0x4 */ u8 _4;
     /* 0x5 */ u8 _5;
     /* 0x6 */ u8 _6;

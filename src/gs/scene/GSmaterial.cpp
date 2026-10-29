@@ -260,8 +260,8 @@ void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
 
     switch (arg0->_0) {
         case 1:
-            GSrender::sInstance->setTevKColorSel(mCurrTevStage, (GXTevKColorSel)arg0->_4);
-            GSrender::sInstance->setTevKAlphaSel(mCurrTevStage, (GXTevKAlphaSel)arg0->_5);
+            GSrender::sInstance->setTevKColorSel(mCurrTevStage, arg0->_4);
+            GSrender::sInstance->setTevKAlphaSel(mCurrTevStage, arg0->_5);
             colorIn1 = GX_CC_KONST;
             colorIn2 = GX_CC_KONST;
             alphaIn = GX_CA_KONST;
@@ -276,7 +276,7 @@ void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
             texMapId = arg0->_4;
             break;
         case 2:
-            GSrender::sInstance->setTevKColorSel(mCurrTevStage, (GXTevKColorSel)arg0->_6);
+            GSrender::sInstance->setTevKColorSel(mCurrTevStage, arg0->_6);
             colorIn1 = GX_CC_TEXC;
             colorIn2 = GX_CC_KONST;
             alphaIn = GX_CA_TEXA;
@@ -293,12 +293,11 @@ void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
     lbl_8063D768._4 = GX_CC_ZERO;
     lbl_8063D768._5 = GX_CA_ZERO;
 
-    // TODO(samm) Revisit these casts
-    bool _unk6 = !((s8)arg0->_2 + 1) && !((s8)arg0->_3 + 1);
+    bool _unk6 = arg0->_2 + 1 == 0 && arg0->_3 + 1 == 0;
 
     GSrender::sInstance->setIndTexStageDirect(mCurrTevStage);
     GSrender::sInstance->setTevStage(mCurrTevStage, texCoordId, texMapId, GX_COLOR_NULL);
-    GSrender::sInstance->setTevSwapMode(mCurrTevStage, (GXTevSwapSel)(arg0->_2 + 1), (GXTevSwapSel)(arg0->_3 + 1));
+    GSrender::sInstance->setTevSwapMode(mCurrTevStage, arg0->_2 + 1, arg0->_3 + 1);
 
     GXTevColorArg colorPrev = (mCurrTevStage != GX_TEVSTAGE0) ? GX_CC_CPREV : GX_CC_ZERO;
     GXTevAlphaArg alphaPrev = (mCurrTevStage != GX_TEVSTAGE0) ? GX_CA_APREV : GX_CA_ZERO;
