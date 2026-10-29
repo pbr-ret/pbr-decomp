@@ -635,7 +635,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
     bool hasStages = mCurrTevStage != 0;
 
     GSrenderLight *bumpLight = NULL;
-    if (arg2 && (s8)mMatData->_6c >= 0 && mMatData->_68 > EPSILON) {
+    if (arg2 && mMatData->_6c >= 0 && mMatData->_68 > EPSILON) {
         GSlight *light = (mMatData->_5d & (1 << 7)) ? GShierarchyModule::get_11c() : GShierarchyModule::get_120();
         if (light && light->isEnabled()) {
             bumpLight = light->get_130();
@@ -750,7 +750,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
         GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        if ((s8)mMatData->_6e < 0) {
+        if (mMatData->_6e < 0) {
             GSrender::sInstance->setTevColor(1, mMatData->_70);
             GSrender::sInstance->setTevStage(mCurrTevStage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
             GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_C0, GX_CC_ONE, GX_CC_CPREV);
@@ -992,10 +992,10 @@ void GSmaterial::fn_801E9C18(GScamera *arg0) {
         return;
     }
 
-    bool useTexture = (s8)mMatData->_74 >= 0;
-    if ((s8)mMatData->_76 < 0) {
+    bool useTexture = mMatData->_74 >= 0;
+    if (mMatData->_76 < 0) {
         fn_801E8858(useTexture);
-    } else if ((s8)mMatData->_77 < 0) {
+    } else if (mMatData->_77 < 0) {
         fn_801E9114(arg0, useTexture);
     } else {
         fn_801E8BA4(useTexture);
@@ -1256,7 +1256,7 @@ void GSmaterial::fn_801EA44C() {
         if (specLightCount) {
             GSrender::sInstance->setChannelColors(mChannelCount, GScolor<u8>(0, 0, 0, 0), mMatData->_78);
 
-            if ((s8)mMatData->_76 < 0) {
+            if (mMatData->_76 < 0) {
                 for (u16 i = 0; i < specLightCount; i++) {
                     GSrenderLight *specLight = specLights[i];
                     if (specLight) {
