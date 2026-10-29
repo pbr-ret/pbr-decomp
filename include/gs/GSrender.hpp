@@ -919,3 +919,16 @@ void fn_80231374(void *arg0);
 void fn_8023234C();
 void fn_80232394();
 GSvertexFormat *fn_8023CF1C(u32 arg0);
+
+#include "gs/render/80236704.hpp"
+
+inline void GSrender::setNormalMtx(GSmatrix *mtx) {
+    _UnkClass80236704 *_unk1 = get_16e8();
+    if (mtx) {
+        MTXCopy(*mtx, _unk1->_4->mNrmMtx);
+    } else {
+        MTXIdentity(_unk1->_4->mNrmMtx);
+    }
+    _unk1->_4->mFlags &= ~(1 << 1);
+    _unk1->_4->mFlags |= (1 << 2);
+}
