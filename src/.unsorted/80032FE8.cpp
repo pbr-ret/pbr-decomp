@@ -124,9 +124,6 @@ static inline void fn_80033090Inline(GScamera *camera) {
     camera->_104 |= 8;
 }
 
-// The original does not inline the functions between the dont_inline pragmas.
-#pragma dont_inline on
-
 // TODO Per-frame callback registered by fn_80033020; updates the viewport manager.
 void fn_80032FE8() {
     if (lbl_8063EA58 != NULL) {
@@ -135,12 +132,8 @@ void fn_80032FE8() {
     }
 }
 
-#pragma dont_inline reset
-
 // TODO Empty; second callback registered by fn_80033020.
 void fn_8003301C() {}
-
-#pragma dont_inline on
 
 // TODO Creates the viewport manager (replacing the previous one) and registers its callbacks.
 void fn_80033020() {
@@ -155,8 +148,6 @@ void fn_80033020() {
     fn_8023EB58(lbl_8063F778, fn_80032FE8, fn_8003301C, 3, 0xc);
     fn_80034918();
 }
-
-#pragma dont_inline reset
 
 // TODO Viewport manager created by fn_80033020.
 Unk80033090 *fn_80033088() {
@@ -276,8 +267,6 @@ void fn_80033488(Unk80033090 *p) {
 void fn_80033494(Unk80033090 *p) {
     p->_1a5 = 0;
 }
-
-#pragma dont_inline on
 
 // TODO Per-frame update: runs the animations, then sends the screen layout to render target 2.
 void fn_800334A0(Unk80033090 *p, f32 t) {
@@ -493,8 +482,6 @@ void fn_80033C0C(Unk80033090 *p) {
     fn_80034918();
 }
 
-#pragma dont_inline reset
-
 // TODO Swaps the two viewports.
 void fn_80033C6C(Unk80033090 *p) {
     // Storage for a viewport built by fn_80035380, which acts as its constructor.
@@ -505,8 +492,6 @@ void fn_80033C6C(Unk80033090 *p) {
     p->_000[1] = *(Unk80035380 *)buf;
     fn_80034918();
 }
-
-#pragma dont_inline on
 
 // TODO Window layout from a rectangle in pixels (layout 4).
 void fn_800340D0(Unk80033090 *p, f32 x0, f32 y0, f32 x1, f32 y1) {
@@ -738,15 +723,11 @@ void fn_80034AB8(Unk80033090 *p, f32 v) {
     fn_80034918();
 }
 
-#pragma dont_inline reset
-
 // TODO Sets the color used by layouts 5 to 7.
 void fn_80034B10(Unk80033090 *p, GXColor *color) {
     SetColor(p, color->r, color->g, color->b, color->a);
     fn_80034918();
 }
-
-#pragma dont_inline on
 
 // TODO Sets _1e8 and _1ec.
 void fn_80034B34(Unk80033090 *p, f32 a, f32 b) {
@@ -821,8 +802,6 @@ void fn_80034D68(Unk80033090 *p, void *a, s32 b, f32 f1, f32 f2, f32 f3, f32 f4,
     p->_200 = 7;
 }
 
-#pragma dont_inline reset
-
 // TODO Sets _168 and forwards it to the global render settings.
 void fn_80034E68(Unk80033090 *p, u8 v) {
     p->_168 = v;
@@ -837,8 +816,6 @@ void fn_80034EA0(Unk80033090 *p, f32 v) {
     SetF410_450(c);
     fn_80050388(&p->_5dc);
 }
-
-#pragma dont_inline on
 
 // TODO Animates _16c over x.
 void fn_80034EDC(Unk80033090 *p, f32 v, s32 x, f32 t) {
@@ -1059,14 +1036,10 @@ Unk80035380 *fn_80035380(Unk80035380 *p) {
     return p;
 }
 
-#pragma dont_inline reset
-
 // TODO Camera id of the viewport.
 u32 fn_800353F4(Unk80035380 *p) {
     return p->_08;
 }
-
-#pragma dont_inline on
 
 // TODO Binds the viewport camera to battle camera id.
 void fn_800353FC(Unk80035380 *p, u32 id) {
@@ -1090,15 +1063,11 @@ void fn_800353FC(Unk80035380 *p, u32 id) {
     p->_08 = id;
 }
 
-#pragma dont_inline reset
-
 // TODO Sets the screen rectangle of the viewport.
 void fn_800354D8(Unk80035380 *p, Unk800354D8 *rect) {
     p->_0c = *rect;
     fn_80034918();
 }
-
-#pragma dont_inline on
 
 // TODO Sets the screen rectangle of the viewport from pixels.
 void fn_800354FC(Unk80035380 *p, f32 x0, f32 y0, f32 x1, f32 y1) {
@@ -1199,8 +1168,6 @@ s32 fn_80035914(Unk80035380 *p) {
     return 0;
 }
 
-#pragma dont_inline reset
-
 // TODO Camera the viewport renders with: the one of its attached object, else its own.
 GScamera *fn_80035970(Unk80035380 *p) {
     if (p->_02 != 0) {
@@ -1232,8 +1199,6 @@ void fn_80035A48(Unk80035380 *p, GSobject *v) {
     p->_b0 = v;
 }
 
-#pragma dont_inline on
-
 // TODO Uses the attached object's camera from now on.
 void fn_80035A50(Unk80035380 *p) {
     if (p->_ac != NULL) {
@@ -1245,8 +1210,6 @@ void fn_80035A50(Unk80035380 *p) {
         p->_02 = 1;
     }
 }
-
-#pragma dont_inline reset
 
 // TODO Copies the attached object's camera into the viewport camera and its battle camera.
 void fn_80035AB8(Unk80035380 *p) {
