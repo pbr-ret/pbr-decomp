@@ -23,7 +23,7 @@ void GSrender::setupFlatTranslucentTexture() {
     setIndTexStageDirect(0);
 
     // TODO(samm) I feel like these names are too similar to each other
-    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, 0);
     configureTevStage(0, GS_TEV_MODE_PASSCLR);
 
     setTevSwapMode(0, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -64,7 +64,7 @@ void GSrender::setupVertexColoring() {
 
     setIndTexStageDirect(0);
 
-    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, 0);
     configureTevStage(0, GS_TEV_MODE_PASSCLR);
 
     setTevSwapMode(0, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -85,7 +85,7 @@ void GSrender::setupMultiplicativeMultiTexture(u8 textureCount) {
     for (i = 0; i < textureCount; i++) {
         setIndTexStageDirect(i);
 
-        setTevStage(i, i, i, GX_COLOR0A0);
+        setTevStage(i, i, i, 0);
 
         if (i == 0) {
             configureTevStage(i, GS_TEV_MODE_MODULATE);
