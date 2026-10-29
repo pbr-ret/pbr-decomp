@@ -7,8 +7,9 @@
 extern "C" {
 #endif
 
-void __OSInitAudioSystem();
-void __OSStopAudioSystem();
+void __AIClockInit(BOOL compatB);
+void __OSInitAudioSystem(void);
+void __OSStopAudioSystem(void);
 
 #ifdef __cplusplus
 }

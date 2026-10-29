@@ -44,7 +44,6 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 import argparse
 import dataclasses
-import difflib
 import json
 import os
 import re
@@ -1151,14 +1150,46 @@ def apply_drift(tree_root: Path) -> Set[Tuple[str, str]]:
             path.write_bytes(data)
             os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
     before = saved[config / "symbols.txt"][0].decode().splitlines()
+    return pair_symbol_lines(before, after)
+
+
+SYMBOL_LINE = re.compile(r"(\S+) = ([^:\s]+):(0x[0-9A-Fa-f]+);")
+
+
+def pair_symbol_lines(before: List[str], after: List[str]) -> Set[Tuple[str, str]]:
+    """Changed symbols.txt lines as (old, new), "" for a side that has none.
+
+    Lines are paired by section and address, not by a text diff: a diff pairs
+    lines by how alike they look, and renamed lines at nearby addresses can
+    look more alike than the old and new line of the same symbol. Several
+    symbols at one address are paired by name first, then in file order."""
+
+    def by_address(lines: List[str]) -> Dict[Tuple[str, str], List[str]]:
+        groups: Dict[Tuple[str, str], List[str]] = defaultdict(list)
+        for line in lines:
+            match = SYMBOL_LINE.match(line)
+            key = (match[2], match[3].lower()) if match else ("", line)
+            groups[key].append(line)
+        return groups
+
+    def name(line: str) -> str:
+        match = SYMBOL_LINE.match(line)
+        return match[1] if match else line
+
+    old_groups, new_groups = by_address(before), by_address(after)
     drift = set()
-    removed: List[str] = []
-    for line in difflib.ndiff(before, after):
-        if line.startswith("- "):
-            removed.append(line[2:])
-        elif line.startswith("+ "):
-            drift.add((removed.pop(0) if removed else "", line[2:]))
-    drift.update((old, "") for old in removed)
+    for key in old_groups.keys() | new_groups.keys():
+        old_lines, new_lines = old_groups.get(key, []), new_groups.get(key, [])
+        old = [line for line in old_lines if line not in new_lines]
+        new = [line for line in new_lines if line not in old_lines]
+        for line in list(old):
+            same = next((other for other in new if name(other) == name(line)), None)
+            if same is not None:
+                drift.add((line, same))
+                old.remove(line)
+                new.remove(same)
+        for i in range(max(len(old), len(new))):
+            drift.add((old[i] if i < len(old) else "", new[i] if i < len(new) else ""))
     return drift
 
 
