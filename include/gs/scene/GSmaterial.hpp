@@ -9,16 +9,6 @@ class GScamera;
 struct GSmeshRenderSettings;
 class GSchannelData;
 
-// size: 0x30
-struct Unk80491970 : public GSmatrix {
-    Unk80491970();
-
-    Unk80491970(GSvec3 scale, GSvec3 trans) {
-        MTXScale(*this, scale.x, scale.y, scale.z);
-        MTXTransApply(*this, *this, trans.x, trans.y, trans.z);
-    }
-};
-
 // size: 0x6
 struct Unk8063D768 {
     /* 0x0 */ u8 _0;

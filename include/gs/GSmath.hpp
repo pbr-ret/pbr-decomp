@@ -236,6 +236,16 @@ public:
     }
 };
 
+// size: 0x30
+struct Unk80491970 : public GSmatrix {
+    Unk80491970() {}
+
+    Unk80491970(GSvec3 scale, GSvec3 trans) {
+        MTXScale(*this, scale.x, scale.y, scale.z);
+        MTXTransApply(*this, *this, trans.x, trans.y, trans.z);
+    }
+};
+
 // TODO(samm) Name? Move? Vec vs. GSvec3?
 struct GSboundingBox {
     /* 0x00 */ GSvec3 mMin;

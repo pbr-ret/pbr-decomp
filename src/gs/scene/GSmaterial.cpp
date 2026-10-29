@@ -1727,5 +1727,3 @@ void GSmaterial::fn_801ECBA8() {
         _1c = 0;
     }
 }
-
-Unk80491970::Unk80491970() {}
