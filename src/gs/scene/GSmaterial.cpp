@@ -297,7 +297,7 @@ void GSmaterial::fn_801E74B0(_UnkMaterialData_1 *arg0) {
     bool _unk6 = !((s8)arg0->_2 + 1) && !((s8)arg0->_3 + 1);
 
     GSrender::sInstance->setIndTexStageDirect(mCurrTevStage);
-    GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)texCoordId, (GXTexMapID)texMapId, GX_COLOR_NULL);
+    GSrender::sInstance->setTevStage(mCurrTevStage, texCoordId, texMapId, GX_COLOR_NULL);
     GSrender::sInstance->setTevSwapMode(mCurrTevStage, (GXTevSwapSel)(arg0->_2 + 1), (GXTevSwapSel)(arg0->_3 + 1));
 
     GXTevColorArg colorPrev = (mCurrTevStage != GX_TEVSTAGE0) ? GX_CC_CPREV : GX_CC_ZERO;
@@ -645,10 +645,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
     if (!bumpLight) {
         if (!lbl_8063D768._0 && lbl_8063D768._1) {
             u8 stage = mCurrTevStage - 1;
-            GSrender::sInstance->setTevStage(stage,
-                                             (GXTexCoordID)lbl_8063D768.mTexCoordId,
-                                             (GXTexMapID)lbl_8063D768.mTexMapId,
-                                             _20);
+            GSrender::sInstance->setTevStage(stage, lbl_8063D768.mTexCoordId, lbl_8063D768.mTexMapId, _20);
             GSrender::sInstance->setTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
             GSrender::sInstance->setTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
             GSrender::sInstance->setTevColorIn(stage,
@@ -700,7 +697,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
         GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG2);
         GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
-        GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)mMatData->_6d, (GXTexMapID)mMatData->_6c, _20);
+        GSrender::sInstance->setTevStage(mCurrTevStage, mMatData->_6d, mMatData->_6c, _20);
         GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_TEXA, GX_CC_RASC);
         if (hadStages) {
             GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_RASA, GX_CA_APREV, GX_CA_ZERO);
@@ -720,10 +717,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
                                            GX_TRUE,
                                            hasStages ? GX_TEVREG2 : GX_TEVPREV);
         GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
-        GSrender::sInstance->setTevStage(mCurrTevStage,
-                                         (GXTexCoordID)mTexGenCount,
-                                         (GXTexMapID)mMatData->_6c,
-                                         GX_COLOR_NULL);
+        GSrender::sInstance->setTevStage(mCurrTevStage, mTexGenCount, mMatData->_6c, GX_COLOR_NULL);
         GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_TEXA, GX_CC_C2);
         GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
         mTexGenCount++;
@@ -763,10 +757,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
             GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
         } else {
             GSrender::sInstance->setTevColor(1, mMatData->_70);
-            GSrender::sInstance->setTevStage(mCurrTevStage,
-                                             (GXTexCoordID)mMatData->_6f,
-                                             (GXTexMapID)mMatData->_6e,
-                                             GX_COLOR_NULL);
+            GSrender::sInstance->setTevStage(mCurrTevStage, mMatData->_6f, mMatData->_6e, GX_COLOR_NULL);
             GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_CPREV);
             GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
         }
@@ -778,7 +769,7 @@ void GSmaterial::fn_801E7FA4(GScamera *arg0, GSmatrix *arg1, u32 arg2) {
         GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
-        GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)_23, (GXTexMapID)_22, _20);
+        GSrender::sInstance->setTevStage(mCurrTevStage, _23, _22, _20);
         GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_CPREV);
         GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
         mCurrTevStage++;
@@ -793,7 +784,7 @@ void GSmaterial::fn_801E8858(bool useTexture) {
     GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
     if (useTexture) {
-        GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)mMatData->_75, (GXTexMapID)mMatData->_74, _21);
+        GSrender::sInstance->setTevStage(mCurrTevStage, mMatData->_75, mMatData->_74, _21);
         GSrender::sInstance->setTevColorIn(mCurrTevStage,
                                            GX_CC_ZERO,
                                            GX_CC_RASC,
@@ -829,7 +820,7 @@ void GSmaterial::fn_801E8BA4(bool useTexture) {
         GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG2);
         GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG2);
-        GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)mMatData->_75, (GXTexMapID)mMatData->_74, _21);
+        GSrender::sInstance->setTevStage(mCurrTevStage, mMatData->_75, mMatData->_74, _21);
         GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
         GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
         mCurrTevStage++;
@@ -839,7 +830,7 @@ void GSmaterial::fn_801E8BA4(bool useTexture) {
     GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)mMatData->_77, (GXTexMapID)mMatData->_76, channel);
+    GSrender::sInstance->setTevStage(mCurrTevStage, mMatData->_77, mMatData->_76, channel);
 
     bool hasPrevStage = (!useTexture && mCurrTevStage != 0) || (useTexture == true && mCurrTevStage > 1);
     GSrender::sInstance->setTevColorIn(mCurrTevStage,
@@ -932,7 +923,7 @@ void GSmaterial::fn_801E9114(GScamera *arg0, bool useTexture) {
         GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG2);
         GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG2);
-        GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)mMatData->_75, (GXTexMapID)mMatData->_74, _21);
+        GSrender::sInstance->setTevStage(mCurrTevStage, mMatData->_75, mMatData->_74, _21);
         GSrender::sInstance->setTevColorIn(mCurrTevStage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
         GSrender::sInstance->setTevAlphaIn(mCurrTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
         mCurrTevStage++;
@@ -942,7 +933,7 @@ void GSmaterial::fn_801E9114(GScamera *arg0, bool useTexture) {
     GSrender::sInstance->setTevSwapMode(mCurrTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)mTexGenCount, (GXTexMapID)mMatData->_76, channel);
+    GSrender::sInstance->setTevStage(mCurrTevStage, mTexGenCount, mMatData->_76, channel);
     GSrender::sInstance->setTevColorIn(mCurrTevStage,
                                        GX_CC_ZERO,
                                        GX_CC_TEXC,
@@ -976,7 +967,7 @@ void GSmaterial::fn_801E98E0() {
     GSrender::sInstance->setTevColorOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     GSrender::sInstance->setTevAlphaOp(mCurrTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GSrender::sInstance->setTevKSel(mCurrTevStage, GX_TEV_KCSEL_K2, GX_TEV_KASEL_K2_A);
-    GSrender::sInstance->setTevStage(mCurrTevStage, (GXTexCoordID)_25, (GXTexMapID)_24, 0xFF);
+    GSrender::sInstance->setTevStage(mCurrTevStage, _25, _24, 0xFF);
     GSrender::sInstance->setTevColorIn(mCurrTevStage,
                                        (mCurrTevStage != GX_TEVSTAGE0) ? GX_CC_CPREV : GX_CC_ZERO,
                                        GX_CC_TEXC,

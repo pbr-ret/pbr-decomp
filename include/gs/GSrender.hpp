@@ -764,10 +764,10 @@ public:
         mState->_0 |= (1 << 3);
     }
 
-    void setTevStage(u8 stage, GXTexCoordID texCoord, GXTexMapID texMap, u8 channel) {
+    void setTevStage(u8 stage, u8 texCoord, u8 texMap, u8 channel) {
         GStevStage *tevStage = &mState->mCurr.mTevStages[stage];
-        tevStage->mTexCoord = texCoord;
-        tevStage->mTexMap = texMap;
+        tevStage->mTexCoord = (GXTexCoordID)texCoord;
+        tevStage->mTexMap = (GXTexMapID)texMap;
         if (channel != 0xff) {
             tevStage->mChannel = (GXChannelID)(channel + GX_COLOR0A0);
         } else {

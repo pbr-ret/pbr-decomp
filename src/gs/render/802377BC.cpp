@@ -42,7 +42,7 @@ void GSrender::setupAdditiveMultiTexture(u8 textureCount) {
     for (i = 0; i < textureCount; i++) {
         setIndTexStageDirect(i);
 
-        setTevStage(i, (GXTexCoordID)i, (GXTexMapID)i, GX_COLOR_NULL);
+        setTevStage(i, i, i, GX_COLOR_NULL);
 
         if (i == 0) {
             configureTevStage(i, GS_TEV_MODE_REPLACE);
@@ -85,7 +85,7 @@ void GSrender::setupMultiplicativeMultiTexture(u8 textureCount) {
     for (i = 0; i < textureCount; i++) {
         setIndTexStageDirect(i);
 
-        setTevStage(i, (GXTexCoordID)i, (GXTexMapID)i, GX_COLOR0A0);
+        setTevStage(i, i, i, GX_COLOR0A0);
 
         if (i == 0) {
             configureTevStage(i, GS_TEV_MODE_MODULATE);
