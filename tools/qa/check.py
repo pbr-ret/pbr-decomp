@@ -11,7 +11,8 @@ Checks that need only the compilers (no game files):
   symbols      each compiled object against symbols.txt and splits.txt:
                scope (static or global), names missing from symbols.txt,
                definitions outside the unit's address range, functions out of
-               address order, and undefined names that nothing provides
+               address order, and undefined names that nothing provides; a
+               weak function out of address order is only a warning
   format       clang-format (the major version pinned in tools/qa/requirements.txt)
                on the changed files under src/ and include/
   lint         tools/qa/lint.py on the lines added
@@ -139,6 +140,7 @@ class Issue:
     path: str = ""
     line: int = 0
     detail: str = ""  # pairs an issue with the same one in the base first
+    warning: bool = False  # reported, but does not fail the check
 
 
 @dataclass
@@ -724,12 +726,20 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                     )
                 )
             if elf.kind == "FUNC":
-                text_order.append((elf.section, elf.value, target.address, elf.name))
+                text_order.append(
+                    (elf.section, elf.value, target.address, elf.name, elf.bind)
+                )
 
+        # A weak function is an inline copy the compiler places itself, which
+        # source order cannot always reproduce: the other functions are checked
+        # without it, and a weak one outside the range its neighbours allow
+        # only warns.
         text_order.sort()
         previous = None
         previous_section = None
-        for section, _, address, function in text_order:
+        for section, _, address, function, bind in text_order:
+            if bind == "weak":
+                continue
             if section != previous_section:
                 previous, previous_section = None, section
             if previous and address < previous[0]:
@@ -743,6 +753,42 @@ def symbol_issues(tree: Tree, results: List[CompileResult]) -> List[Issue]:
                     )
                 )
             previous = (address, function)
+
+        for index, (section, _, address, function, bind) in enumerate(text_order):
+            if bind != "weak":
+                continue
+            before = next(
+                (
+                    entry
+                    for entry in reversed(text_order[:index])
+                    if entry[0] == section and entry[4] != "weak"
+                ),
+                None,
+            )
+            after = next(
+                (
+                    entry
+                    for entry in text_order[index + 1 :]
+                    if entry[0] == section and entry[4] != "weak"
+                ),
+                None,
+            )
+            if before and address < before[2]:
+                neighbour = f"after {before[3]} (0x{before[2]:08X})"
+            elif after and address > after[2]:
+                neighbour = f"before {after[3]} (0x{after[2]:08X})"
+            else:
+                continue
+            issues.append(
+                Issue(
+                    "symbols",
+                    (name, "weak-order", function),
+                    f"{unit['source']}: weak {function} (0x{address:08X}) is placed "
+                    f"{neighbour}; the compiler chose this place for the copy",
+                    unit["source"],
+                    warning=True,
+                )
+            )
 
         for elf in per_unit[name]:
             if elf.section != "UND" or not elf.name or is_compiler_name(elf.name):
@@ -1154,14 +1200,15 @@ def escape_property(text: str) -> str:
 
 
 def annotation(issue: Issue) -> str:
-    """A GitHub Actions error annotation; file-level issues have no line."""
+    """A GitHub Actions error or warning annotation; file-level issues have no line."""
     properties = []
     if issue.path:
         properties.append(f"file={escape_property(issue.path)}")
         if issue.line:
             properties.append(f"line={issue.line}")
     where = " " + ",".join(properties) if properties else ""
-    return f"::error{where}::{escape_data(f'{issue.check}: {issue.message}')}"
+    level = "warning" if issue.warning else "error"
+    return f"::{level}{where}::{escape_data(f'{issue.check}: {issue.message}')}"
 
 
 def report(
@@ -1180,16 +1227,21 @@ def report(
             print(f"[skip] {result.name}: {result.skipped}")
             lines.append(f"| {result.name} | | | skipped: {result.skipped} |")
             continue
-        status = "FAIL" if (result.new or result.failed) else "ok"
+        errors = [issue for issue in result.new if not issue.warning]
+        warnings = len(result.new) - len(errors)
+        status = "FAIL" if (errors or result.failed) else "ok"
         ok = ok and status == "ok"
         print(
-            f"[{status}] {result.name}: {len(result.new)} new, {len(result.inherited)} inherited"
+            f"[{status}] {result.name}: {len(result.new)} new"
+            f"{f' ({warnings} warning(s))' if warnings else ''}, "
+            f"{len(result.inherited)} inherited"
         )
         for issue in result.new:
             location = (
                 f"{issue.path}:{issue.line}: " if issue.path and issue.line else ""
             )
-            print(f"    {location}{issue.message}")
+            prefix = "warning: " if issue.warning else ""
+            print(f"    {prefix}{location}{issue.message}")
             if github:
                 print(annotation(issue))
         if show_inherited:
