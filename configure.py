@@ -801,6 +801,12 @@ config.libs = [
             Object(Matching, "ut/ut_TextWriterBase.cpp"),
         ],
     ),
+    Nw4rLib(
+        "nw4r_math",
+        [
+            Object(Matching, "math/math_triangular.cpp"),
+        ],
+    ),
     {
         "lib": "game",
         "mw_version": config.linker_version,
@@ -1089,6 +1095,7 @@ config.libs = [
             Object(NonMatching, ".unsorted/8037C450.cpp"),
             Object(NonMatching, ".unsorted/8037F908.cpp"),
             Object(NonMatching, ".unsorted/803839A4.cpp"),
+            Object(NonMatching, ".unsorted/80384F4C.cpp"),
             Object(NonMatching, ".unsorted/80385E20.cpp"),
             Object(NonMatching, ".unsorted/803872DC.cpp"),
             Object(NonMatching, ".unsorted/80387EB4.cpp"),
