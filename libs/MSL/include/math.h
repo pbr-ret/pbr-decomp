@@ -169,6 +169,20 @@ inline float ldexpf(float x, int n) {
 }
 
 double floor(double x);
+inline float floorf(float x) {
+    return floor(x);
+}
+
+double modf(double x, double* iptr);
+inline float modff(float x, float* iptr) {
+    float frac;
+    double intg;
+
+    frac = modf(x, &intg);
+    *iptr = intg;
+
+    return frac;
+}
 
 #ifdef __cplusplus
 }
