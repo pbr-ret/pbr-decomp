@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gs/GSmath.hpp"
 #include "gs/scene/GSnull.hpp"
 
 #include <revolution.h>
@@ -19,15 +20,19 @@ public:
     /* 0x180 */ f32 _180;
     /* 0x184 */ f32 _184;
     /* 0x188 */ u8 _pad_188[0x24];
-    /* 0x1AC */ Vec _1ac;
-    /* 0x1B8 */ Vec _1b8;
-    /* 0x1C4 */ Vec _1c4;
+    /* 0x1AC */ GSvec3 _1ac;
+    /* 0x1B8 */ GSvec3 _1b8;
+    /* 0x1C4 */ GSvec3 _1c4;
     /* 0x1D0 */ u8 _pad_1d0[0x4];
-    /* 0x1D4 */ Mtx _1d4;
+    /* 0x1D4 */ GSmatrix _1d4;
     /* 0x204 */ Mtx _204;
     /* 0x234 */ Mtx _234;
 
     GScamera(GSobject *parentObject, GSnodeData *data);
 
     static void fn_801DEEF8(GSanimationObject *animObj, GSchannelData *channel, f32 cursor, bool blend);
+
+    GSmatrix *get_1d4() {
+        return &_1d4;
+    }
 };

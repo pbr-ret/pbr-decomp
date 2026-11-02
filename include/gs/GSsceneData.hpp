@@ -170,7 +170,7 @@ struct GSmodelData {
     /* 0x06 */ u16 _6;
     /* 0x08 */ void *mVertices;
     /* 0x0C */ void *mWeights;
-    /* 0x10 */ GScolor *mVertexColors;
+    /* 0x10 */ GScolor<u8> *mVertexColors;
     /* 0x14 */ _UnkModelData_2 *_14;
     /* 0x18 */ GSmeshData *mFirstMesh;
     /* 0x1C */ _UnkModelData_1 *_1c;
@@ -227,47 +227,66 @@ struct GSobjectData {
     /* 0x18 */ _UnkObjectData_1 *_18;
 };
 
+// size: >= 0x7
 struct _UnkMaterialData_1 {
     /* 0x0 */ u8 _0;
     /* 0x1 */ u8 _1;
-    /* 0x2 */ u8 _2;
-    /* 0x3 */ u8 _3;
+    /* 0x2 */ s8 _2;
+    /* 0x3 */ s8 _3;
     /* 0x4 */ u8 _4;
     /* 0x5 */ u8 _5;
     /* 0x6 */ u8 _6;
 };
 
-// Size: 0x18
+// size: 0x18
 struct _UnkMaterialData_2 {
     /* 0x00 */ u8 _0;
     /* 0x01 */ u8 _1;
     /* 0x02 */ u8 _2;
-    /* 0x03 */ u8 _pad_3[0x15];
+    /* 0x03 */ u8 _unk3[0x1];
+    /* 0x04 */ f32 _4;
+    /* 0x08 */ f32 _8;
+    /* 0x0C */ f32 _c;
+    /* 0x10 */ f32 _10;
+    /* 0x14 */ f32 _14;
 };
 
-// Size: 0x8c
+// size: 0x8C
 struct GSmaterialData {
     /* 0x00 */ char *mName;
-    /* 0x04 */ GScolor _4[2];
+    /* 0x04 */ GScolor<u8> _4[2];
     /* 0x0C */ u8 _c[3][4];
     /* 0x18 */ GStexture *mTextureSlots[MATERIAL_MAX_TEXTURE_SLOTS];
-    /* 0x2c */ _UnkMaterialData_2 *_2c[MATERIAL_MAX_TEXTURE_SLOTS];
+    /* 0x2C */ _UnkMaterialData_2 *_2c[MATERIAL_MAX_TEXTURE_SLOTS];
     /* 0x40 */ _UnkMaterialData_1 *_40[4];
     /* 0x50 */ GStexture *_50;
     /* 0x54 */ u8 _54;
-    /* 0x55 */ u8 _pad_55[0x3];
+    /* 0x55 */ u8 _unk55[0x3];
     /* 0x58 */ u8 _58;
     /* 0x59 */ u8 _59;
     /* 0x5A */ u8 mTextureCount;
     /* 0x5B */ u8 _5b;
     /* 0x5C */ u8 _5c;
     /* 0x5D */ u8 _5d;
-    /* 0x5E */ u8 _pad_5e[0x2];
-    /* 0x60 */ GXColor _60;
-    /* 0x64 */ GScolor _64;
-    /* 0x68 */ u8 _pad_64[0x1c];
+    /* 0x5E */ u8 _5e;
+    /* 0x5F */ u8 _5f;
+    /* 0x60 */ GScolor<u8> _60;
+    /* 0x64 */ GScolor<u8> _64;
+    /* 0x68 */ f32 _68;
+    /* 0x6C */ s8 _6c;
+    /* 0x6D */ u8 _6d;
+    /* 0x6E */ s8 _6e;
+    /* 0x6F */ u8 _6f;
+    /* 0x70 */ GScolor<u8> _70;
+    /* 0x74 */ s8 _74;
+    /* 0x75 */ u8 _75;
+    /* 0x76 */ s8 _76;
+    /* 0x77 */ s8 _77;
+    /* 0x78 */ GScolor<u8> _78;
+    /* 0x7C */ f32 _7c;
+    /* 0x80 */ u8 _unk80[0x4];
     /* 0x84 */ GSkeyframeData *mKeyframes;
-    /* 0x88 */ u8 _pad_88[0x4];
+    /* 0x88 */ u8 _unk88[0x4];
 
     GSmaterialData();
 };
@@ -283,7 +302,7 @@ struct GSenvData {
     /* 0x02 */ bool mFogRangeAdjEnable;
     /* 0x04 */ f32 mFogStartZ;
     /* 0x08 */ f32 mFogEndZ;
-    /* 0x0C */ GScolor mFogColor;
+    /* 0x0C */ GScolor<u8> mFogColor;
     /* 0x10 */ GStexture *_10;
     /* 0x14 */ GStexture *_14;
     /* 0x18 */ u32 _18;
@@ -312,7 +331,7 @@ void fn_801E10C0(GSchannelData *channelData, f32 cursor, f32 *dst);
 void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec3 *dst);
 void fn_801E1360(GSchannelData *channelData, f32 cursor, GSquat *dst);
 void fn_801E13B8(GSchannelData *channelData, f32 cursor, GSvec2 *dst);
-void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor *dst);
+void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor<u8> *dst);
 void fn_801E1504(GSchannelData *channelData, f32 cursor, u8 *dst);
 void fn_801E1540(GSkeyframeData *arg0, GSsceneData *sceneData, u32 baseAddr);
 void fn_801E1714(_UnkSceneData_1 *arg0, GSsceneData *sceneData, u32 baseAddr);

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "gs/GScolor.hpp"
+#include "gs/GSmath.hpp"
+
 #include <revolution.h>
 
 enum GSlightType {
@@ -56,10 +59,24 @@ public:
     GSrenderLight();
 
     void initPointLight(GXColor color, Vec position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness);
-    void initSpotLight(
-        GXColor color, Vec position, Vec direction, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness,
-        GXSpotFn spotFn, f32 cutoff
-    );
+    void initSpotLight(GXColor color,
+                       Vec position,
+                       Vec direction,
+                       GXDistAttnFn distAttnFn,
+                       f32 refDistance,
+                       f32 refBrightness,
+                       GXSpotFn spotFn,
+                       f32 cutoff);
     void initSpecLight(GXColor color, Vec direction, f32 shininess);
     void load(u8 index, GSlightStruct1 *param2);
+
+    void setShininess(f32 shininess) {
+        if (mType == GS_LIGHT_SPEC) {
+            if ((_1 & (1 << 3)) || !FLOAT_EQUAL(mShininess, shininess)) {
+                mShininess = shininess;
+                _1 |= (1 << 7);
+                _1 &= ~(1 << 3);
+            }
+        }
+    }
 };

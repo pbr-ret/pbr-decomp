@@ -1811,7 +1811,7 @@ int fn_80044554(Unk80040EA4 *e, Vec *in, Vec *out) {
     vp._14 = lbl_806408BC;
     cam = e->_6cc;
     proj = cam->_14c;
-    view = (f32 *)cam->_1d4;
+    view = (f32 *)&cam->_1d4;
     p.x = cam->_204[0][3];
     p.y = cam->_204[1][3];
     p.z = cam->_204[2][3];
