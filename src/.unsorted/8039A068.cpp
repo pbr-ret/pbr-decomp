@@ -162,7 +162,7 @@ void fn_803A3D7C(void) {}
 
 void fn_803A3E3C(u8 *p) {
     for (u32 i = 0; i < *(u16 *)(p + 0x10); i++) {
-        (*(VObj3 **)(fn_80362AEC(p + 8, i) + 4))->v01();
+        (*(VObj3 **)((u8 *)nw4r::ut::List_GetNth((nw4r::ut::List *)(p + 8), i) + 4))->v01();
     }
 }
 
@@ -183,7 +183,7 @@ void fn_803A3F94(u8 *p, u32 v) {
 }
 
 u32 fn_803A3F9C(u8 *p, u32 x) {
-    return *(u32 *)(fn_80362AEC(p + 8, (u16)x) + 4);
+    return *(u32 *)((u8 *)nw4r::ut::List_GetNth((nw4r::ut::List *)(p + 8), (u16)x) + 4);
 }
 
 u8 fn_803A416C(u8 *p) {
@@ -201,19 +201,19 @@ void fn_803A4174(u8 *p, u32 m, f32 *v) {
 
 void fn_803A41A4(u8 *p) {
     for (u32 i = 0; i < *(u16 *)(p + 0x10); i++) {
-        (*(VObj3 **)(fn_80362AEC(p + 8, i) + 4))->v02();
+        (*(VObj3 **)((u8 *)nw4r::ut::List_GetNth((nw4r::ut::List *)(p + 8), i) + 4))->v02();
     }
 }
 
 void fn_803A420C(u8 *p) {
     for (u32 i = 0; i < *(u16 *)(p + 0x10); i++) {
-        (*(VObj3 **)(fn_80362AEC(p + 8, i) + 4))->v04();
+        (*(VObj3 **)((u8 *)nw4r::ut::List_GetNth((nw4r::ut::List *)(p + 8), i) + 4))->v04();
     }
 }
 
 void fn_803A4274(u8 *p, u8 *arg) {
     for (u32 i = 0; i < *(u16 *)(p + 0x10); i++) {
-        (*(VObj **)(fn_80362AEC(p + 8, i) + 4))->v18(arg);
+        (*(VObj **)((u8 *)nw4r::ut::List_GetNth((nw4r::ut::List *)(p + 8), i) + 4))->v18(arg);
     }
 }
 
@@ -243,7 +243,7 @@ void fn_803A4764(u8 *p, u32 v) {
 
 u8 *fn_803A476C(u8 *p, u32 key) {
     for (u32 i = 0; i < *(u16 *)(p + 0x10); i++) {
-        u8 *e = fn_80362AEC(p + 0x18, i);
+        u8 *e = (u8 *)nw4r::ut::List_GetNth((nw4r::ut::List *)(p + 0x18), i);
         if (*(u32 *)e == key) {
             return *(u8 **)(e + 4);
         }
