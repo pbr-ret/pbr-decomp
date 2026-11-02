@@ -807,6 +807,16 @@ config.libs = [
             Object(Matching, "math/math_triangular.cpp"),
         ],
     ),
+    Nw4rLib(
+        "nw4r_lyt",
+        [
+            Object(Matching, "lyt/lyt_texMap.cpp"),
+            Object(Matching, "lyt/lyt_drawInfo.cpp"),
+            Object(Matching, "lyt/lyt_resourceAccessor.cpp"),
+            Object(Matching, "lyt/lyt_arcResourceAccessor.cpp"),
+            Object(Matching, "lyt/lyt_common.cpp"),
+        ],
+    ),
     {
         "lib": "game",
         "mw_version": config.linker_version,
@@ -1101,6 +1111,8 @@ config.libs = [
             Object(NonMatching, ".unsorted/80387EB4.cpp"),
             Object(NonMatching, ".unsorted/8038A32C.cpp"),
             Object(NonMatching, ".unsorted/8038A3D8.cpp"),
+            Object(NonMatching, ".unsorted/8038D73C.cpp"),
+            Object(NonMatching, ".unsorted/8038F1CC.cpp"),
             Object(NonMatching, ".unsorted/8038F424.cpp"),
             Object(NonMatching, ".unsorted/8039A068.cpp"),
             Object(NonMatching, ".unsorted/8026BB40.cpp"),
