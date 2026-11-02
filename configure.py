@@ -197,6 +197,7 @@ cflags_includes = [
     "-i libs/Runtime/include",
     "-i libs/RevoEX/include",
     "-i libs/MetroTRK/include",
+    "-i libs/nw4r/include",
     f"-i build/{config.version}/include",
 ]
 
@@ -316,6 +317,12 @@ cflags_sdk = [
     "-fp_contract off",
 ]
 
+# NW4R flags
+cflags_nw4r = [
+    *cflags_sdk,
+    "-DREVOLUTION",
+]
+
 # Main game flags
 cflags_game = [
     *cflags_base,
@@ -372,6 +379,17 @@ def RVLSDKLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
         "progress_category": "sdk",
         "objects": objects,
         "src_dir": "libs/RVL_SDK/src",
+    }
+
+
+def Nw4rLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": config.linker_version,
+        "cflags": cflags_nw4r,
+        "progress_category": "sdk",
+        "objects": objects,
+        "src_dir": "libs/nw4r/src",
     }
 
 
@@ -763,6 +781,26 @@ config.libs = [
             Object(NonMatching, "euart/euart.c"),
         ],
     ),
+    Nw4rLib(
+        "nw4r_ut",
+        [
+            Object(Matching, "ut/ut_list.cpp"),
+            Object(Matching, "ut/ut_LinkList.cpp"),
+            Object(Matching, "ut/ut_binaryFileFormat.cpp"),
+            Object(Matching, "ut/ut_CharStrmReader.cpp"),
+            Object(Matching, "ut/ut_TagProcessorBase.cpp"),
+            Object(Matching, "ut/ut_IOStream.cpp"),
+            Object(Matching, "ut/ut_FileStream.cpp"),
+            Object(Matching, "ut/ut_DvdFileStream.cpp"),
+            Object(Matching, "ut/ut_DvdLockedFileStream.cpp"),
+            Object(Matching, "ut/ut_Font.cpp"),
+            Object(Matching, "ut/ut_RomFont.cpp"),
+            Object(Matching, "ut/ut_ResFontBase.cpp"),
+            Object(Matching, "ut/ut_ResFont.cpp"),
+            Object(Matching, "ut/ut_CharWriter.cpp"),
+            Object(Matching, "ut/ut_TextWriterBase.cpp"),
+        ],
+    ),
     {
         "lib": "game",
         "mw_version": config.linker_version,
@@ -1045,10 +1083,6 @@ config.libs = [
             Object(NonMatching, ".unsorted/80262E90.cpp"),
             Object(NonMatching, ".unsorted/80263CBC.cpp"),
             Object(NonMatching, ".unsorted/802674CC.cpp"),
-            Object(NonMatching, ".unsorted/80363510.cpp"),
-            Object(NonMatching, ".unsorted/80363618.cpp"),
-            Object(NonMatching, ".unsorted/80363C30.cpp"),
-            Object(NonMatching, ".unsorted/80363E84.cpp"),
             Object(NonMatching, ".unsorted/80367FAC.cpp"),
             Object(NonMatching, ".unsorted/8036E198.cpp"),
             Object(NonMatching, ".unsorted/8037536C.cpp"),

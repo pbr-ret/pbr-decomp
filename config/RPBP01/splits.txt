@@ -2003,24 +2003,76 @@ libs/RVL_SDK/src/vf/sd_drv.c:
 	.text       start:0x8031C120 end:0x8031C124
 
 src/.unsorted/8031C124.cpp:
-	.text       start:0x8031C124 end:0x80363510
-	.ctors      start:0x803E2244 end:0x803E2248
+	.text       start:0x8031C124 end:0x803629D8
 
-src/.unsorted/80363510.cpp:
+libs/nw4r/src/ut/ut_list.cpp:
+	.text       start:0x803629D8 end:0x80362B38
+
+libs/nw4r/src/ut/ut_LinkList.cpp:
+	.text       start:0x80362B38 end:0x80362CA4
+
+libs/nw4r/src/ut/ut_binaryFileFormat.cpp:
+	.text       start:0x80362CA4 end:0x80362D18
+
+libs/nw4r/src/ut/ut_CharStrmReader.cpp:
+	.text       start:0x80362D18 end:0x80362E28
+
+libs/nw4r/src/ut/ut_TagProcessorBase.cpp:
+	.text       start:0x80362E28 end:0x803634F8
+	.data       start:0x8044C6C8 end:0x8044C6F0
+	.sdata2     start:0x80642B08 end:0x80642B10
+
+libs/nw4r/src/ut/ut_IOStream.cpp:
+	.text       start:0x803634F8 end:0x80363510
+	.ctors      start:0x803E2244 end:0x803E2248
+	.sbss       start:0x80640460 end:0x80640468
+
+libs/nw4r/src/ut/ut_FileStream.cpp:
 	.text       start:0x80363510 end:0x80363618
 	.ctors      start:0x803E2248 end:0x803E224C
+	.sbss       start:0x80640468 end:0x80640470
 
-src/.unsorted/80363618.cpp:
+libs/nw4r/src/ut/ut_DvdFileStream.cpp:
 	.text       start:0x80363618 end:0x80363C30
 	.ctors      start:0x803E224C end:0x803E2250
+	.data       start:0x8044C6F0 end:0x8044C758
+	.sbss       start:0x80640470 end:0x80640478
 
-src/.unsorted/80363C30.cpp:
+libs/nw4r/src/ut/ut_DvdLockedFileStream.cpp:
 	.text       start:0x80363C30 end:0x80363E84
 	.ctors      start:0x803E2250 end:0x803E2254
+	.data       start:0x8044C758 end:0x8044C7C0
+	.bss        start:0x806216F0 end:0x80621708
+	.sbss       start:0x80640478 end:0x80640480
 
-src/.unsorted/80363E84.cpp:
-	.text       start:0x80363E84 end:0x80367FAC
+libs/nw4r/src/ut/ut_Font.cpp:
+	.text       start:0x80363E84 end:0x80363F2C
+	.data       start:0x8044C7C0 end:0x8044C7F0
+
+libs/nw4r/src/ut/ut_RomFont.cpp:
+	.text       start:0x80363F2C end:0x80363F6C
+	.data       start:0x8044C7F0 end:0x8044C848
+
+libs/nw4r/src/ut/ut_ResFontBase.cpp:
+	.text       start:0x80363F6C end:0x8036453C
+	.data       start:0x8044C848 end:0x8044C8B0
+
+libs/nw4r/src/ut/ut_ResFont.cpp:
+	.text       start:0x8036453C end:0x80364840
+	.data       start:0x8044C8B0 end:0x8044C908
+
+libs/nw4r/src/ut/ut_CharWriter.cpp:
+	.text       start:0x80364840 end:0x80365F68
+	.bss        start:0x80621708 end:0x80621728
+	.sbss       start:0x80640480 end:0x80640488
+	.sdata2     start:0x80642B10 end:0x80642B30
+
+libs/nw4r/src/ut/ut_TextWriterBase.cpp:
+	.text       start:0x80365F68 end:0x80367FAC
 	.ctors      start:0x803E2254 end:0x803E2258
+	.bss        start:0x80621728 end:0x80621740
+	.sbss       start:0x80640488 end:0x80640498
+	.sdata2     start:0x80642B30 end:0x80642B48
 
 src/.unsorted/80367FAC.cpp:
 	.text       start:0x80367FAC end:0x8036E198
