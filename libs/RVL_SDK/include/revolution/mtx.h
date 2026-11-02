@@ -12,6 +12,7 @@ extern "C" {
 void PSMTXIdentity(Mtx m);
 void PSMTXCopy(const Mtx src, Mtx dst);
 void PSMTXConcat(const Mtx a, const Mtx b, Mtx ab);
+void PSMTXConcatArray(const Mtx a, const Mtx b, Mtx ab, u32 count);
 u32 PSMTXInverse(const Mtx src, Mtx inv);
 u32 PSMTXInvXpose(const Mtx src, Mtx invX);
 void PSMTXRotRad(Mtx m, char axis, f32 rad);
@@ -89,6 +90,7 @@ void C_MTXMultVecSR(const Mtx m, const Vec *src, Vec *dst);
 void C_MTXFrustum(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void C_MTXPerspective(Mtx44 m, f32 fovY, f32 aspect, f32 n, f32 f);
 void C_MTXOrtho(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+void C_MTXLookAt(Mtx m, const Vec *camPos, const Vec *camUp, const Vec *target);
 
 #define MTXFrustum C_MTXFrustum
 #define MTXPerspective C_MTXPerspective
@@ -101,6 +103,9 @@ void PSVECCrossProduct(const Vec *a, const Vec *b, Vec *axb);
 void PSVECNormalize(const Vec *src, Vec *dst);
 void PSVECScale(const Vec *src, Vec *dst, f32 scale);
 f32 PSVECSquareMag(Vec *vec);
+f32 PSVECMag(const Vec *v);
+f32 PSVECDotProduct(const Vec *a, const Vec *b);
+f32 PSVECSquareDistance(const Vec *a, const Vec *b);
 void PSVECSubtract(const Vec *a, const Vec *b, Vec *ab);
 
 void C_VECAdd(const Vec *a, const Vec *b, Vec *ab);
