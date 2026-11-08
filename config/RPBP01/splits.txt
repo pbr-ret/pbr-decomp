@@ -2123,7 +2123,37 @@ src/.unsorted/8038A32C.cpp:
 	.ctors      start:0x803E227C end:0x803E2280
 
 src/.unsorted/8038A3D8.cpp:
-	.text       start:0x8038A3D8 end:0x8038F424
+	.text       start:0x8038A3D8 end:0x8038D388
+
+libs/nw4r/src/lyt/lyt_texMap.cpp:
+	.text       start:0x8038D388 end:0x8038D688
+	.sdata2     start:0x80642EC0 end:0x80642ED8
+
+libs/nw4r/src/lyt/lyt_drawInfo.cpp:
+	.text       start:0x8038D688 end:0x8038D73C
+	.data       start:0x8044E550 end:0x8044E560
+	.sdata2     start:0x80642ED8 end:0x80642EE0
+
+src/.unsorted/8038D73C.cpp:
+	.text       start:0x8038D73C end:0x8038E2E0
+
+libs/nw4r/src/lyt/lyt_resourceAccessor.cpp:
+	.text       start:0x8038E2E0 end:0x8038E338
+	.data       start:0x8044E580 end:0x8044E598
+
+libs/nw4r/src/lyt/lyt_arcResourceAccessor.cpp:
+	.text       start:0x8038E338 end:0x8038E718
+	.data       start:0x8044E598 end:0x8044E5B0
+	.sdata      start:0x8063E800 end:0x8063E808
+
+libs/nw4r/src/lyt/lyt_common.cpp:
+	.text       start:0x8038E718 end:0x8038F1CC
+	.bss        start:0x8063CE08 end:0x8063CE28
+	.sbss       start:0x80640598 end:0x806405A0
+	.sdata2     start:0x80642F00 end:0x80642F08
+
+src/.unsorted/8038F1CC.cpp:
+	.text       start:0x8038F1CC end:0x8038F424
 	.ctors      start:0x803E2280 end:0x803E2284
 
 src/.unsorted/8038F424.cpp:
