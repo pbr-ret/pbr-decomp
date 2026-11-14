@@ -2075,27 +2075,124 @@ libs/nw4r/src/ut/ut_TextWriterBase.cpp:
 	.sdata2     start:0x80642B30 end:0x80642B48
 
 src/.unsorted/80367FAC.cpp:
-	.text       start:0x80367FAC end:0x8036E198
+	.text       start:0x80367FAC end:0x8036C6E4
+
+libs/nw4r/src/snd/snd_AxfxImpl.cpp:
+	.text       start:0x8036C6E4 end:0x8036C854
+	.sbss       start:0x806404A8 end:0x806404B0
+
+src/.unsorted/8036C854.cpp:
+	.text       start:0x8036C854 end:0x8036CA7C
+
+libs/nw4r/src/snd/snd_BankFile.cpp:
+	.text       start:0x8036CA7C end:0x8036CE84
+	.sdata2     start:0x80642BA0 end:0x80642BA8
+
+src/.unsorted/8036CE84.cpp:
+	.text       start:0x8036CE84 end:0x8036E198
 	.ctors      start:0x803E2258 end:0x803E225C
 
 src/.unsorted/8036E198.cpp:
-	.text       start:0x8036E198 end:0x8037536C
+	.text       start:0x8036E198 end:0x8036FC38
+
+libs/nw4r/src/snd/snd_EnvGenerator.cpp:
+	.text       start:0x8036FC38 end:0x8036FF7C
+	.rodata     start:0x80402590 end:0x80402890
+	.sdata2     start:0x80642BE8 end:0x80642C18
+
+libs/nw4r/src/snd/snd_ExternalSoundPlayer.cpp:
+	.text       start:0x8036FF7C end:0x8037005C
+
+src/.unsorted/8037005C.cpp:
+	.text       start:0x8037005C end:0x80371944
+
+libs/nw4r/src/snd/snd_InstancePool.cpp:
+	.text       start:0x80371944 end:0x80371BFC
+
+libs/nw4r/src/snd/snd_Lfo.cpp:
+	.text       start:0x80371BFC end:0x80371DEC
+	.rodata     start:0x804028F8 end:0x80402920
+	.sdata2     start:0x80642C58 end:0x80642C88
+
+src/.unsorted/80371DEC.cpp:
+	.text       start:0x80371DEC end:0x803737A8
+
+libs/nw4r/src/snd/snd_RemoteSpeakerManager.cpp:
+	.text       start:0x803737A8 end:0x803739E4
+	.bss        start:0x806219F0 end:0x80621CC8
+	.sbss       start:0x806404D8 end:0x806404E0
+
+src/.unsorted/803739E4.cpp:
+	.text       start:0x803739E4 end:0x8037536C
 	.ctors      start:0x803E225C end:0x803E2260
 
 src/.unsorted/8037536C.cpp:
-	.text       start:0x8037536C end:0x8037C450
+	.text       start:0x8037536C end:0x8037C11C
+
+libs/nw4r/src/snd/snd_SoundStartable.cpp:
+	.text       start:0x8037C11C end:0x8037C1A0
+
+libs/nw4r/src/snd/snd_SoundSystem.cpp:
+	.text       start:0x8037C1A0 end:0x8037C450
 	.ctors      start:0x803E2260 end:0x803E2264
+	.data       start:0x8044CED8 end:0x8044CF20
+	.bss        start:0x80621D00 end:0x806389B0
+	.sdata      start:0x8063E7F0 end:0x8063E7F8
+	.sbss       start:0x80640530 end:0x80640538
 
 src/.unsorted/8037C450.cpp:
-	.text       start:0x8037C450 end:0x8037F908
+	.text       start:0x8037C450 end:0x8037CAC4
+
+libs/nw4r/src/snd/snd_StrmChannel.cpp:
+	.text       start:0x8037CAC4 end:0x8037CCE4
+
+libs/nw4r/src/snd/snd_StrmFile.cpp:
+	.text       start:0x8037CCE4 end:0x8037D2B0
+
+src/.unsorted/8037D2B0.cpp:
+	.text       start:0x8037D2B0 end:0x8037F908
 	.ctors      start:0x803E2264 end:0x803E2268
 
 src/.unsorted/8037F908.cpp:
-	.text       start:0x8037F908 end:0x803839A4
+	.text       start:0x8037F908 end:0x80380008
+
+libs/nw4r/src/snd/snd_TaskThread.cpp:
+	.text       start:0x80380008 end:0x803801CC
+
+src/.unsorted/803801CC.cpp:
+	.text       start:0x803801CC end:0x80382900
+
+libs/nw4r/src/snd/snd_VoiceManager.cpp:
+	.text       start:0x80382900 end:0x80382FA8
+	.bss        start:0x8063CDE0 end:0x8063CE08
+	.sbss       start:0x80640558 end:0x80640560
+
+libs/nw4r/src/snd/snd_Util.cpp:
+	.text       start:0x80382FA8 end:0x8038340C
+	.rodata     start:0x80402948 end:0x80404D98
+	.data       start:0x8044D040 end:0x8044D050
+	.sdata      start:0x8063E7F8 end:0x8063E800
+	.sdata2     start:0x80642DA8 end:0x80642DF0
+
+libs/nw4r/src/snd/snd_WaveFile.cpp:
+	.text       start:0x8038340C end:0x8038364C
+
+src/.unsorted/8038364C.cpp:
+	.text       start:0x8038364C end:0x803839A4
 	.ctors      start:0x803E2268 end:0x803E226C
 
 src/.unsorted/803839A4.cpp:
-	.text       start:0x803839A4 end:0x80384CDC
+	.text       start:0x803839A4 end:0x803839DC
+
+libs/nw4r/src/snd/snd_WsdFile.cpp:
+	.text       start:0x803839DC end:0x80383D24
+	.sdata2     start:0x80642DF0 end:0x80642DF8
+
+src/.unsorted/80383D24.cpp:
+	.text       start:0x80383D24 end:0x80384C50
+
+libs/nw4r/src/snd/snd_adpcm.cpp:
+	.text       start:0x80384C50 end:0x80384CDC
 
 libs/nw4r/src/math/math_triangular.cpp:
 	.text       start:0x80384CDC end:0x80384F4C
