@@ -17,6 +17,7 @@ u32 PSMTXInverse(const Mtx src, Mtx inv);
 u32 PSMTXInvXpose(const Mtx src, Mtx invX);
 void PSMTXRotRad(Mtx m, char axis, f32 rad);
 void PSMTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
+void PSMTXRotAxisRad(Mtx m, const Vec *axis, f32 rad);
 void PSMTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
 void PSMTXTransApply(const Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
 void PSMTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
@@ -30,6 +31,7 @@ u32 C_MTXInverse(const Mtx src, Mtx inv);
 u32 C_MTXInvXpose(const Mtx src, Mtx invX);
 void C_MTXRotRad(Mtx m, char axis, f32 rad);
 void C_MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
+void C_MTXRotAxisRad(Mtx m, const Vec *axis, f32 rad);
 void C_MTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
 void C_MTXTransApply(const Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
 void C_MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
@@ -44,6 +46,7 @@ void C_MTXQuat(Mtx, const Quaternion *);
 #define MTXInvXpose C_MTXInvXpose
 #define MTXRotRad C_MTXRotRad
 #define MTXRotTrig C_MTXRotTrig
+#define MTXRotAxisRad C_MTXRotAxisRad
 #define MTXTrans C_MTXTrans
 #define MTXTransApply C_MTXTransApply
 #define MTXScale C_MTXScale
@@ -57,6 +60,7 @@ void C_MTXQuat(Mtx, const Quaternion *);
 #define MTXInvXpose PSMTXInvXpose
 #define MTXRotRad PSMTXRotRad
 #define MTXRotTrig PSMTXRotTrig
+#define MTXRotAxisRad PSMTXRotAxisRad
 #define MTXTrans PSMTXTrans
 #define MTXTransApply PSMTXTransApply
 #define MTXScale PSMTXScale
@@ -100,6 +104,7 @@ void C_MTXLookAt(Mtx m, const Vec *camPos, const Vec *camUp, const Vec *target);
 
 void PSVECAdd(const Vec *a, const Vec *b, Vec *ab);
 void PSVECCrossProduct(const Vec *a, const Vec *b, Vec *axb);
+f32 PSVECDotProduct(const Vec *a, const Vec *b);
 void PSVECNormalize(const Vec *src, Vec *dst);
 void PSVECScale(const Vec *src, Vec *dst, f32 scale);
 f32 PSVECSquareMag(Vec *vec);
@@ -110,6 +115,8 @@ void PSVECSubtract(const Vec *a, const Vec *b, Vec *ab);
 
 void C_VECAdd(const Vec *a, const Vec *b, Vec *ab);
 void C_VECCrossProduct(const Vec *a, const Vec *b, Vec *axb);
+f32 C_VECDotProduct(const Vec *a, const Vec *b);
+void C_VECHalfAngle(const Vec *a, const Vec *b, Vec *half);
 void C_VECNormalize(const Vec *src, Vec *dst);
 void C_VECScale(const Vec *src, Vec *dst, f32 scale);
 f32 C_VECSquareMag(Vec *vec);
@@ -118,6 +125,7 @@ void C_VECSubtract(const Vec *a, const Vec *b, Vec *ab);
 #ifdef DEBUG
 #define VECAdd C_VECAdd
 #define VECCrossProduct C_VECCrossProduct
+#define VECDotProduct C_VECDotProduct
 #define VECNormalize C_VECNormalize
 #define VECScale C_VECScale
 #define VECSquareMag C_VECSquareMag
@@ -125,11 +133,14 @@ void C_VECSubtract(const Vec *a, const Vec *b, Vec *ab);
 #else
 #define VECAdd PSVECAdd
 #define VECCrossProduct PSVECCrossProduct
+#define VECDotProduct PSVECDotProduct
 #define VECNormalize PSVECNormalize
 #define VECScale PSVECScale
 #define VECSquareMag PSVECSquareMag
 #define VECSubtract PSVECSubtract
 #endif // DEBUG
+
+#define VECHalfAngle C_VECHalfAngle
 
 #ifdef __cplusplus
 }

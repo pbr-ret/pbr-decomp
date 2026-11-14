@@ -9,26 +9,21 @@
 /* lbl_80496760 */ static f32 sProjectionMatrix[4][4];
 
 void GSrender::setupFlatTranslucentTexture() {
-    GScolor translucentGray(128, 128, 128, 128);
+    GScolor<u8> translucentGray(128, 128, 128, 128);
 
     setNumChannels(1);
     setNumTexGens(0);
     setNumTevStages(1);
     setNumIndStages(0);
 
-    // TODO(samm) Inline this
-    mState->mCurr.mChanAmbColors[0] = translucentGray;
-    mState->mCurr.mChanMatColors[0] = translucentGray;
-    mState->mChanAmbColorFlags |= (1 << 0);
-    mState->mChanMatColorFlags |= (1 << 0);
-    mState->_0 |= (1 << 2);
+    setChannelColors(0, translucentGray, translucentGray);
 
     configureColorChannel(0, (1 << 0) | (1 << 1), GX_SRC_REG, GX_SRC_REG, 0, NULL, GX_AF_NONE, GX_DF_NONE);
 
     setIndTexStageDirect(0);
 
     // TODO(samm) I feel like these names are too similar to each other
-    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, 0);
     configureTevStage(0, GS_TEV_MODE_PASSCLR);
 
     setTevSwapMode(0, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -47,7 +42,7 @@ void GSrender::setupAdditiveMultiTexture(u8 textureCount) {
     for (i = 0; i < textureCount; i++) {
         setIndTexStageDirect(i);
 
-        setTevStage(i, (GXTexCoordID)i, (GXTexMapID)i, GX_COLOR_NULL);
+        setTevStage(i, i, i, GX_COLOR_NULL);
 
         if (i == 0) {
             configureTevStage(i, GS_TEV_MODE_REPLACE);
@@ -69,7 +64,7 @@ void GSrender::setupVertexColoring() {
 
     setIndTexStageDirect(0);
 
-    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    setTevStage(0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, 0);
     configureTevStage(0, GS_TEV_MODE_PASSCLR);
 
     setTevSwapMode(0, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -90,7 +85,7 @@ void GSrender::setupMultiplicativeMultiTexture(u8 textureCount) {
     for (i = 0; i < textureCount; i++) {
         setIndTexStageDirect(i);
 
-        setTevStage(i, (GXTexCoordID)i, (GXTexMapID)i, GX_COLOR0A0);
+        setTevStage(i, i, i, 0);
 
         if (i == 0) {
             configureTevStage(i, GS_TEV_MODE_MODULATE);
@@ -514,7 +509,7 @@ void GSrender::syncRenderSettings() {
                     continue;
                 }
 
-                // TODO revisit this casting (GScolor?)
+                // TODO revisit this casting (GScolor<u8>?)
                 if (*(s32 *)prev != *(s32 *)curr) {
                     GXSetChanMatColor((GXChannelID)(GX_COLOR0A0 + i), *curr);
                     prev->r = curr->r;
@@ -833,7 +828,7 @@ void GSrender::syncRenderSettings() {
                     continue;
                 }
 
-                // TODO revisit this casting (GScolor?)
+                // TODO revisit this casting (GScolor<u8>?)
                 if (*(s32 *)prev != *(s32 *)curr) {
                     GXSetTevKColor((GXTevKColorID)i, *curr);
                     (*prev).r = (*curr).r;
@@ -1035,7 +1030,7 @@ void GSrender::syncRenderSettings() {
                                            state->mPrev.mFogEndZ != state->mCurr.mFogEndZ ||
                                            state->mPrev.mFogNearZ != state->mCurr.mFogNearZ ||
                                            state->mPrev.mFogFarZ != state->mCurr.mFogFarZ
-                                           // TODO revisit this casting (GScolor?)
+                                           // TODO revisit this casting (GScolor<u8>?)
                                            || *(s32 *)(&state->mPrev.mFogColor) != *(s32 *)(&state->mCurr.mFogColor))) {
                 GXSetFog(fogType,
                          state->mCurr.mFogStartZ,
@@ -1054,7 +1049,7 @@ void GSrender::syncRenderSettings() {
                 state->mPrev.mFogColor.a = state->mCurr.mFogColor.a;
             }
         } else if ((mState->_64 & (1 << 7)) != 0) {
-            // TODO revisit this casting (GScolor?)
+            // TODO revisit this casting (GScolor<u8>?)
             if (*(s32 *)(&state->mPrev.mFogColor) != *(s32 *)(&state->mCurr.mFogColor)) {
                 GXSetFogColor(state->mCurr.mFogColor);
                 state->mPrev.mFogColor.r = state->mCurr.mFogColor.r;
