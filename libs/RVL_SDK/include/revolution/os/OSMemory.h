@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define OS_MEM_KB_TO_B(kb) ((kb) * 1024)
+
 u32 OSGetPhysicalMem1Size();
 u32 OSGetPhysicalMem2Size();
 

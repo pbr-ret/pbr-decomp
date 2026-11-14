@@ -9,7 +9,7 @@
  *
  ******************************************************************************/
 // Pi mathematical constant
-#define NW4R_MATH_PI M_PI
+#define NW4R_MATH_PI 3.141592653589793f
 
 // ln(2)
 #define NW4R_MATH_LN_2 0.69314718056f
