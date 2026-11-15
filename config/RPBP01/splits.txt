@@ -1308,6 +1308,8 @@ src/.unsorted/80253FEC.cpp:
 src/.unsorted/80254260.cpp:
 	.text       start:0x80254260 end:0x80254460
 	.ctors      start:0x803E21E4 end:0x803E21E8
+	.data       start:0x80424D88 end:0x80424DF4
+	.sbss       start:0x8063F8F8 end:0x8063F900
 
 src/.unsorted/80254460.cpp:
 	.text       start:0x80254460 end:0x8025716C

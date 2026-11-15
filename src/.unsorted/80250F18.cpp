@@ -1,5 +1,7 @@
 #include ".unsorted/80250F18.hpp"
 
+#include ".unsorted/80254260.hpp"
+
 #include "common.hpp"
 
 extern "C" {
@@ -131,11 +133,11 @@ void fn_80253DF0(u32 a, u32 b, u32 c) {
     fn_80254260(&lbl_804FDAB0, a, b, c);
 }
 
-void fn_80253E4C(u32 a, u32 b, u32 c) {
+void fn_80253E4C(u32 a, u32 b, u32 *c) {
     fn_80254334(&lbl_804FDAB0, a, b, c);
 }
 
-void fn_80253E6C(u32 a, u32 b, u32 c) {
+void fn_80253E6C(u32 a, u32 b, u32 *c) {
     fn_80254334(&lbl_804FDAB0, a, b, c);
 }
 
