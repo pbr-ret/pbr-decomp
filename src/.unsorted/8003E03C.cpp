@@ -2,15 +2,17 @@
 
 #include "common.hpp"
 
-extern "C" {
+extern Unk8063EA80 *lbl_8063EA80;
 
-extern u32 lbl_8063EA80;
+// TODO Name
+void fn_8003E158() {}
 
-void fn_8003E158(void) {}
-u32 fn_8003E15C(void) {
+// TODO Name
+Unk8063EA80 *fn_8003E15C() {
     return lbl_8063EA80;
 }
-u32 fn_8003E42C(u8 *p) {
-    return *(u32 *)(p + 0xc);
-}
+
+// TODO Name: the object read by fn_80032EEC when the file of unit 80036F88 is not cached
+Unk80032E64 *fn_8003E42C(Unk8063EA80 *arg0) {
+    return arg0->_c;
 }
