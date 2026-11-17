@@ -19,7 +19,7 @@ struct _UnkModelStruct_1 {
     /* 0x00 */ u32 _0;
     /* 0x04 */ u8 _pad_4[0x8];
     // TODO(samm) Confirm type
-    /* 0x0C */ GScolor *mVertexColors;
+    /* 0x0C */ GScolor<u8> *mVertexColors;
     /* 0x10 */ _UnkModelData_2 *_10;
     /* 0x14 */ u32 _14;
     /* 0x18 */ u8 _pad_18[0x2];
@@ -40,7 +40,7 @@ private:
     /* 0x108 */ GSboundingBox mBoundingBox;
     /* 0x124 */ GSvec3 mCenter;
     /* 0x130 */ f32 _130;
-    /* 0x134 */ GScolor _134;
+    /* 0x134 */ GScolor<u8> _134;
     /* 0x138 */ f32 _138;
     /* 0x13C */ f32 _13c;
     /* 0x140 */ f32 _140;
@@ -63,12 +63,12 @@ public:
     /* 0x10 */ virtual void initTransform(bool recursive);
     /* 0x14 */ virtual void updateTransform();
 
-    bool fn_801F06E4(_UnkMaterialStruct_3 *arg0);
-    bool fn_801F0B50(_UnkMaterialStruct_3 *arg0);
-    bool fn_801F0B7C(_UnkMaterialStruct_3 *arg0, bool arg1);
-    bool fn_801F0FD8(_UnkMaterialStruct_3 *arg0, bool arg1);
-    bool fn_801F113C(_UnkMaterialStruct_3 *arg0);
-    bool fn_801F134C(_UnkMaterialStruct_3 *arg0);
+    bool fn_801F06E4(GScamera *arg0);
+    bool fn_801F0B50(GScamera *arg0);
+    bool fn_801F0B7C(GScamera *arg0, bool arg1);
+    bool fn_801F0FD8(GScamera *arg0, bool arg1);
+    bool fn_801F113C(GScamera *arg0);
+    bool fn_801F134C(GScamera *arg0);
     void fn_801F15EC(u16 animId, u32 arg1, f32 arg2);
 
     // TODO(samm) Name
