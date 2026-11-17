@@ -1098,7 +1098,7 @@ config.libs = [
             Object(NonMatching, ".unsorted/80249D38.cpp"),
             Object(NonMatching, ".unsorted/80250F18.cpp"),
             Object(NonMatching, ".unsorted/80253FEC.cpp"),
-            Object(NonMatching, ".unsorted/80254260.cpp"),
+            Object(Matching, ".unsorted/80254260.cpp"),
             Object(NonMatching, ".unsorted/80254460.cpp"),
             Object(NonMatching, ".unsorted/8025716C.cpp"),
             Object(NonMatching, ".unsorted/80259AA4.cpp"),
