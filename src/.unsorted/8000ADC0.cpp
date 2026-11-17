@@ -30,13 +30,10 @@ u32 fn_80255738(void *, int);
 int fn_80255710(void *, int);
 int fn_802553B8(void *, int, int);
 int fn_80393084(void *, int);
-Unk80035D9C *fn_80035D9C();
-int fn_80035ED8(Unk80035D9C *);
 void fn_80255350(void *, int, int);
 void fn_8025643C(void *, int, int, void *, int);
 int fn_80393434(void *, int);
 int fn_802552AC(void *, int, int);
-int fn_80035E38();
 Unk80045590 *fn_80045590();
 void fn_80024924();
 void fn_80024A34();
@@ -45,19 +42,15 @@ void fn_80024D80();
 int fn_80024AEC(int);
 int fn_80024A70(int, u32);
 u32 fn_80255834(void *, int);
-int fn_80035EA8(Unk80035D9C *);
 int fn_8016FA3C();
 int fn_8005F198();
 int fn_80254E70(void *, int, int, int, int);
 int fn_80393050(void *, int);
 int fn_802550F8(void *, int, int, int, int);
-int fn_80036554(Unk80035D9C *, int, int, int);
 void fn_80254460(void *, void *, int, Unk8000ADC0 *, int);
 void *fn_803930B8(void *, void *);
 void *fn_80392E10(void *, void *);
 void *fn_8039325C(void *, void *);
-u8 fn_80036E6C(Unk80035D9C *, u8, int);
-u8 fn_80036E94(Unk80035D9C *, u8, int);
 u8 fn_80024B50(int, int);
 u32 fn_80009838();
 u32 fn_80256E24(void *);
@@ -80,13 +73,11 @@ void fn_80255628(void *, int, int, f32);
 u32 fn_80254B80(void *, int);
 u32 fn_80254B24(void *, int);
 u32 fn_80254C18(void *, int);
-int fn_80035F68(void *);
 u32 fn_80256890(void *, int);
 void fn_802567E8(void *);
 void fn_80254AD0(void *, int);
 void fn_80256BC0(void *, int);
 int fn_80162A90(u32);
-int fn_80035E58(Unk80035D9C *);
 f32 fn_80393504(void *, int);
 f32 fn_80393538(void *, int);
 f32 fn_8039356C(void *, int);
@@ -105,7 +96,6 @@ void fn_80255F74(void *, int, f32, f32, f32, f32, f32);
 void fn_80256264(void *, int, f32, f32, f32);
 void fn_802560F0(void *, int, f32, f32, f32);
 u8 *fn_8016F3FC(int *);
-int fn_80035E68(Unk80035D9C *);
 u8 fn_803939B4(void *, int);
 u8 fn_80393980(void *, int);
 }
@@ -991,8 +981,9 @@ void *fn_8000CD30(void *p, int del) {
 // TODO Per-frame update of the object.
 void fn_8000D1B8(Unk8063E970 *p) {
     fn_8000D8AC(p);
-    if (fn_80035D9C()) {
-        int r = fn_80035E38();
+    Unk80035CB0 *object = fn_80035D9C();
+    if (object) {
+        int r = fn_80035E38(object);
         p->_0040 = r;
         if (p->_0004 == 2) {
             switch (r) {
@@ -1045,7 +1036,7 @@ void fn_8000D26C(Unk8063E970 *bp) {
 void fn_8000D3C4(Unk8063E970 *bp) {
     char *str = lbl_80405FC0;
     if (bp->_0000) {
-        Unk80035D9C *x;
+        Unk80035CB0 *x;
         fn_8000C52C(str + 0x1fa, str + 0x2cd);
         x = fn_80035D9C();
         if (x) {
@@ -1415,7 +1406,7 @@ u16 fn_8000EA70(Unk8063E970 *p, int x) {
 
 // TODO Sets the per-side table entry k from value v.
 void fn_8000EAE0(Unk8063E970 *p, u8 k, u16 v) {
-    Unk80035D9C *x;
+    Unk80035CB0 *x;
     if (v != 0) {
         x = fn_80035D9C();
         if (v != fn_80036554(x, k, 0, 0)) {
@@ -1451,7 +1442,7 @@ void fn_8000EBAC(Unk8063E970 *p, u32 v) {
 }
 
 // TODO Updates the 0x28C0 flags from the entries of block qi.
-void fn_8000EC58(Unk8063E970 *p, Unk80035D9C *q) {
+void fn_8000EC58(Unk8063E970 *p, Unk80035CB0 *q) {
     int n = fn_80035F68(q);
     int i;
     for (i = 0; i < n; i++) {
@@ -2358,7 +2349,7 @@ void fn_80019310(Unk80019380 *p) {
 
 // TODO Fills out from the entries of block q and updates the 0x28C0 flags.
 // TODO Does not match yet (same size; the code differs).
-void fn_80019380(Unk80019380 *out, u8 k, Unk80035D9C *q) {
+void fn_80019380(Unk80019380 *out, u8 k, Unk80035CB0 *q) {
     u32 f = lbl_8063E970->_28c0;
     u8 i;
     out->_00 = q;
@@ -2999,7 +2990,7 @@ void fn_800218E8(Unk8063E970 *p) {
 
 // TODO Handles the current event, or starts a new step.
 void fn_80021974(Unk8063E970 *bp) {
-    Unk80035D9C *x = fn_80035D9C();
+    Unk80035CB0 *x = fn_80035D9C();
     if (fn_80035EA8(x) == 0x1000) {
         fn_8000EC58(bp, x);
     } else if (fn_80035EA8(x) == 0x1001) {
@@ -3013,11 +3004,11 @@ void fn_80021974(Unk8063E970 *bp) {
 // TODO Name: runs before each commentary script ("PreScriptRun" at lbl_80405FC0 + 0x285F)
 void fn_80021A0C(Unk8063E970 *arg0) {
     char *str = lbl_80405FC0;
-    Unk80035D9C *second;
-    Unk80035D9C *first = fn_80035D9C();
+    Unk80035CB0 *second;
+    Unk80035CB0 *first = fn_80035D9C();
     second = fn_80035D9C();
     fn_8000C52C(str + 0x285f, fn_80035ED8(second), fn_80035EA8(first));
-    Unk80035D9C *current = fn_80035D9C();
+    Unk80035CB0 *current = fn_80035D9C();
     arg0->_106c = 0;
     arg0->_106f = 0xff;
     u16 move = fn_80035EA8(current);
@@ -3164,12 +3155,12 @@ void fn_80021F34(Unk8063E970 *bp, int k) {
 // TODO Marks the queued messages that match the current event.
 // TODO Does not match yet: the object of the loop and the address of entry i swap registers r28 and r29.
 void fn_80021FE8(Unk8063E970 *p) {
-    Unk80035D9C *b;
-    Unk80035D9C *a = fn_80035D9C();
+    Unk80035CB0 *b;
+    Unk80035CB0 *a = fn_80035D9C();
     b = fn_80035D9C();
     fn_8000C52C(lbl_80408A04, fn_80035ED8(b), fn_80035EA8(a));
     if (p->_1170 > 0) {
-        Unk80035D9C *q = fn_80035D9C();
+        Unk80035CB0 *q = fn_80035D9C();
         if (q) {
             s8 i;
             for (i = (u8)p->_2668 + 1; i < p->_1170; i++) {
@@ -3218,13 +3209,13 @@ void fn_800220F0(Unk8063E970 *p, u32 m) {
             if (p->_1070._00 == 0) {
                 int flag = 0;
                 if (p->_28cf == 1) {
-                    Unk80035D9C *x = fn_80035D9C();
+                    Unk80035CB0 *x = fn_80035D9C();
                     u8 r;
                     if (!x) {
                         return;
                     }
                     // TODO The cast passes a as a u32, while fn_80036E6C is declared with a u8.
-                    r = ((u8 (*)(Unk80035D9C *, u32, int))fn_80036E6C)(x, a, 0);
+                    r = ((u8 (*)(Unk80035CB0 *, u32, u32))fn_80036E6C)(x, a, 0);
                     if (r <= 5) {
                         if (p->_2860[b][r] & 0xF8) {
                             flag = 1;
@@ -3241,14 +3232,14 @@ void fn_800220F0(Unk8063E970 *p, u32 m) {
 
 // TODO Name: handles commentary event TPC_JIKKYO_WAZA_START (string at lbl_80408B2E) with count arg1
 void fn_8002255C(Unk8063E970 *arg0, int arg1) {
-    Unk80035D9C *second;
-    Unk80035D9C *first = fn_80035D9C();
+    Unk80035CB0 *second;
+    Unk80035CB0 *first = fn_80035D9C();
     second = fn_80035D9C();
     fn_8000C52C(lbl_80408B2E, fn_80035ED8(second), fn_80035EA8(first), arg1);
     if (arg1 != 0) {
         if (arg1 == 1) {
             if (arg0->_1170 != 0) {
-                Unk80035D9C *current = fn_80035D9C();
+                Unk80035CB0 *current = fn_80035D9C();
                 if (current) {
                     s8 i;
                     for (i = (u8)arg0->_2668 + 1; i < arg0->_1170; i++) {
@@ -3266,12 +3257,12 @@ void fn_8002255C(Unk8063E970 *arg0, int arg1) {
 
 // TODO Name: handles commentary event TPC_JIKKYO_HINSHI (string at lbl_80408C47)
 void fn_80022938(Unk8063E970 *arg0) {
-    Unk80035D9C *second;
-    Unk80035D9C *first = fn_80035D9C();
+    Unk80035CB0 *second;
+    Unk80035CB0 *first = fn_80035D9C();
     second = fn_80035D9C();
     fn_8000C52C(lbl_80408C47, arg0->_9db1, fn_80035ED8(second), fn_80035EA8(first));
     if (arg0->_1170 != 0) {
-        Unk80035D9C *current = fn_80035D9C();
+        Unk80035CB0 *current = fn_80035D9C();
         if (current) {
             s8 i;
             u8 actClient = fn_80035ED8(current);
@@ -3292,12 +3283,12 @@ void fn_80022938(Unk8063E970 *arg0) {
 
 // TODO Name: handles commentary event TPC_JIKKYO_MISS (string at lbl_80408CC2)
 void fn_80022A58(Unk8063E970 *arg0) {
-    Unk80035D9C *second;
-    Unk80035D9C *first = fn_80035D9C();
+    Unk80035CB0 *second;
+    Unk80035CB0 *first = fn_80035D9C();
     second = fn_80035D9C();
     fn_8000C52C(lbl_80408CC2, fn_80035ED8(second), fn_80035EA8(first));
     if (arg0->_1170 != 0) {
-        Unk80035D9C *current = fn_80035D9C();
+        Unk80035CB0 *current = fn_80035D9C();
         if (current) {
             s8 i;
             for (i = (u8)arg0->_2668 + 1; i < arg0->_1170; i++) {
@@ -3332,7 +3323,7 @@ void fn_80022C08() {
 }
 
 // TODO Name: marks the queued faint commentary ("hinshi") messages that match arg1 and the client in arg2
-void fn_8002347C(Unk8063E970 *arg0, Unk80035D9C *arg1, Unk8000EC58 *arg2, u8 arg3) {
+void fn_8002347C(Unk8063E970 *arg0, Unk80035CB0 *arg1, Unk8000EC58 *arg2, u8 arg3) {
     char *str = lbl_80405FC0;
     u8 client = arg2->_00;
     arg0->_9db1++;
@@ -3495,7 +3486,7 @@ void fn_80023790(Unk8063E970 *m, int unused, Unk8000EC58 *e, u8 c) {
 }
 
 // TODO Marks the queued messages that match the values of s.
-int fn_800239DC(Unk8063E970 *p, Unk80035D9C *x, Unk8000EC58 *s, u32 y) {
+int fn_800239DC(Unk8063E970 *p, Unk80035CB0 *x, Unk8000EC58 *s, u32 y) {
     u8 a = fn_80035ED8(x);
     u16 b = fn_80035EA8(x);
     int r = 0;
@@ -3512,7 +3503,7 @@ int fn_800239DC(Unk8063E970 *p, Unk80035D9C *x, Unk8000EC58 *s, u32 y) {
 }
 
 // TODO Marks the queued messages that match k and y; returns whether k is handled.
-int fn_80023AB0(Unk8063E970 *p, u16 k, u32 y, u8 a, u16 b, Unk80035D9C *x) {
+int fn_80023AB0(Unk8063E970 *p, u16 k, u32 y, u8 a, u16 b, Unk80035CB0 *x) {
     u32 t = 0;
     s8 i;
     switch (k) {
@@ -3551,7 +3542,7 @@ int fn_80023AB0(Unk8063E970 *p, u16 k, u32 y, u8 a, u16 b, Unk80035D9C *x) {
 
 // TODO Name: called by fn_800239DC; maps arg1 and arg2 to a message type and marks the queued messages of that type
 // for client arg3 and move arg4, like fn_80023AB0
-int fn_80023BC0(Unk8063E970 *arg0, int arg1, u32 arg2, u8 arg3, u16 arg4, Unk80035D9C *arg5) {
+int fn_80023BC0(Unk8063E970 *arg0, int arg1, u32 arg2, u8 arg3, u16 arg4, Unk80035CB0 *arg5) {
     u32 type = 0;
     switch (arg1) {
         case 0x10c:
@@ -3811,7 +3802,7 @@ int fn_800242D0(Unk8063E970 *p, u8 k, u32 start) {
 }
 
 // TODO Counts the entries of the first step and stores the result in 0x9DB4.
-void fn_80024480(Unk8063E970 *bp, Unk80035D9C *x) {
+void fn_80024480(Unk8063E970 *bp, Unk80035CB0 *x) {
     u8 c0, c1, c2, c3, c4;
     u8 n;
     u8 i;
@@ -3883,7 +3874,7 @@ int fn_80024688(Unk8063E970 *p) {
 
 // TODO Starts the sound of the current event; returns 1 when it is ready.
 int fn_80024700() {
-    Unk80035D9C *x = fn_80035D9C();
+    Unk80035CB0 *x = fn_80035D9C();
     lbl_8063E978 = 0;
     if (fn_80035EA8(x) == 0x2d) {
         int k = fn_80035ED8(x);

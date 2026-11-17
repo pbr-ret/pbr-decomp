@@ -1,11 +1,12 @@
 #pragma once
 
+#include ".unsorted/80035CB0.hpp"
+
 #include <revolution/mem.h>
 #include <revolution/os.h>
 #include <revolution/types.h>
 
 struct GSthreadHandle;
-struct Unk80035D9C;
 
 // Bit view of the 0x2C word of an Unk8000CC84.
 struct Unk8001914C {
@@ -16,19 +17,11 @@ struct Unk8001914C {
     u32 b0 : 1;
 };
 
-// The object returned by fn_80035D9C; the Unk8063E970 object keeps six of them.
-// size: 0x974
-struct Unk80035D9C {
-    /* 0x000 */ u8 unk000[0x96C];
-    /* 0x96C */ struct Unk8000EC58 *_96c;
-    /* 0x970 */ u8 unk970[0x4];
-};
-
 // An entry of the Unk8063E970 object, cleared by fn_8000CC84.
 // size: 0x58
 struct Unk8000CC84 {
     /* 0x00 */ u32 _00;
-    /* 0x04 */ Unk80035D9C *_04;
+    /* 0x04 */ Unk80035CB0 *_04;
     /* 0x08 */ u8 _08;
     /* 0x09 */ u8 _09;
     /* 0x0A */ u8 _0a;
@@ -64,7 +57,7 @@ struct Unk8000CC84 {
 
 // size: 0x1C
 struct Unk80019380 {
-    /* 0x00 */ Unk80035D9C *_00;
+    /* 0x00 */ Unk80035CB0 *_00;
     /* 0x04 */ u8 _04;
     /* 0x05 */ u8 _05;
     /* 0x06 */ u8 _06;
@@ -174,9 +167,9 @@ struct Unk8063E970 {
     /* 0x28D1 */ u8 unk28d1[0x3];
     /* 0x28D4 */ int _28d4[2];
     /* 0x28DC */ int _28dc;
-    /* 0x28E0 */ Unk80035D9C _28e0[6];
+    /* 0x28E0 */ Unk80035CB0 _28e0[6];
     /* 0x6198 */ int _6198;
-    /* 0x619C */ Unk80035D9C _619c[6];
+    /* 0x619C */ Unk80035CB0 _619c[6];
     /* 0x9A54 */ int _9a54;
     /* 0x9A58 */ Unk8000CC84 _9a58[4];
     /* 0x9BB8 */ Unk8000CC84 *_9bb8[4];
@@ -228,19 +221,6 @@ struct Unk800137EC {
     /* 0x5 */ u8 _5;
     /* 0x6 */ u8 _6;
     /* 0x7 */ u8 unk7;
-};
-
-// An entry of the table at 0x96C of an Unk80035D9C.
-// size: 0x1C
-struct Unk8000EC58 {
-    /* 0x00 */ u8 _00;
-    /* 0x01 */ u8 unk01[3];
-    /* 0x04 */ u16 _04;
-    /* 0x06 */ u8 unk06[6];
-    /* 0x0C */ int _0c[2];
-    /* 0x14 */ u16 _14;
-    /* 0x16 */ u16 _16;
-    /* 0x18 */ u8 unk18[4];
 };
 
 // The object reached through an entry of the table returned by fn_80045590.
@@ -353,7 +333,7 @@ void fn_8000E88C(Unk8063E970 *p);
 u16 fn_8000EA70(Unk8063E970 *p, int x);
 void fn_8000EAE0(Unk8063E970 *p, u8 k, u16 v);
 void fn_8000EBAC(Unk8063E970 *p, u32 v);
-void fn_8000EC58(Unk8063E970 *p, Unk80035D9C *q);
+void fn_8000EC58(Unk8063E970 *p, Unk80035CB0 *q);
 void fn_8000EDB0(Unk8063E970 *bp);
 void fn_8000EEBC(Unk8063E970 *p);
 int fn_8000EEF4(void *, int *, int *, void *);
@@ -394,7 +374,7 @@ u8 fn_80019170(Unk8000CC84 *p, u8 idx);
 int fn_800191D4(Unk8000CC84 *p, int v);
 Unk80019380 *fn_8001929C(Unk80019380 *p);
 void fn_80019310(Unk80019380 *p);
-void fn_80019380(Unk80019380 *out, u8 k, Unk80035D9C *q);
+void fn_80019380(Unk80019380 *out, u8 k, Unk80035CB0 *q);
 void fn_800195A8(void *);
 int fn_8001A544(Unk8000CC84 *p);
 void fn_8001A56C(void *, u8);
@@ -437,11 +417,11 @@ void fn_80022B60();
 void fn_80022B98();
 void fn_80022BD0();
 void fn_80022C08();
-void fn_8002347C(Unk8063E970 *arg0, Unk80035D9C *arg1, Unk8000EC58 *arg2, u8 arg3);
+void fn_8002347C(Unk8063E970 *arg0, Unk80035CB0 *arg1, Unk8000EC58 *arg2, u8 arg3);
 void fn_80023790(Unk8063E970 *m, int unused, Unk8000EC58 *e, u8 c);
-int fn_800239DC(Unk8063E970 *p, Unk80035D9C *x, Unk8000EC58 *s, u32 y);
-int fn_80023AB0(Unk8063E970 *p, u16 k, u32 y, u8 a, u16 b, Unk80035D9C *x);
-int fn_80023BC0(Unk8063E970 *arg0, int arg1, u32 arg2, u8 arg3, u16 arg4, Unk80035D9C *arg5);
+int fn_800239DC(Unk8063E970 *p, Unk80035CB0 *x, Unk8000EC58 *s, u32 y);
+int fn_80023AB0(Unk8063E970 *p, u16 k, u32 y, u8 a, u16 b, Unk80035CB0 *x);
+int fn_80023BC0(Unk8063E970 *arg0, int arg1, u32 arg2, u8 arg3, u16 arg4, Unk80035CB0 *arg5);
 void fn_80023DF0();
 int fn_80023E28(Unk8063E970 *p, int id, void *unused);
 bool fn_80024178(Unk8063E970 *p, int bit, int idx);
@@ -449,7 +429,7 @@ void fn_800241A8(Unk8063E970 *p, int bit, int idx);
 int fn_800241D4(void *p, int x);
 int fn_80024254(Unk8063E970 *bp, u8 k);
 int fn_800242D0(Unk8063E970 *p, u8 k, u32 start);
-void fn_80024480(Unk8063E970 *bp, Unk80035D9C *x);
+void fn_80024480(Unk8063E970 *bp, Unk80035CB0 *x);
 int fn_80024688(Unk8063E970 *p);
 int fn_80024700();
 int fn_800247AC(u32 n);
