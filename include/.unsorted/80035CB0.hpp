@@ -17,6 +17,17 @@ struct Unk8000EC58 {
     /* 0x18 */ u8 unk18[4];
 };
 
+// An entry of the array at 0x2C of an Unk80035CB0Sub, indexed by fn_8002267C.
+// size: 0x38
+struct Unk8002267C {
+    /* 0x00 */ u8 _00;
+    /* 0x01 */ u8 _unk01[0x1F];
+    /* 0x20 */ int _20;
+    /* 0x24 */ u8 _unk24[0x14];
+};
+
+// Cleared by fn_80035DA4 (memset of 0x10C bytes at 0x860 of an Unk80035CB0).
+// size: 0x10C
 struct Unk80035CB0Sub {
     /* 0x00 */ u8 unk00[2];
     /* 0x02 */ u16 _02;
@@ -27,14 +38,17 @@ struct Unk80035CB0Sub {
     /* 0x08 */ u16 _08;
     /* 0x0A */ u16 _0A;
     /* 0x0C */ u16 _0C;
-    /* 0x0E */ u8 unk0E[0x0A];
+    /* 0x0E */ u8 unk0E[0x2];
+    /* 0x10 */ int _10;
+    /* 0x14 */ u8 _unk14[0x4];
     /* 0x18 */ u16 _18;
     /* 0x1A */ u8 unk1A[0x0A];
     /* 0x24 */ u8 _24;
     /* 0x25 */ u8 _25;
     /* 0x26 */ u8 _26;
     /* 0x27 */ u8 _27;
-    // size: unknown
+    /* 0x28 */ u8 _unk28[0x4];
+    /* 0x2C */ Unk8002267C _2c[4];
 };
 
 struct Unk80035CB0 {

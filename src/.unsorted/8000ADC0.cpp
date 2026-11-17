@@ -3230,6 +3230,74 @@ void fn_800220F0(Unk8063E970 *p, u32 m) {
     }
 }
 
+// TODO Name: marks the queued commentary messages that follow the move of the current client; the "Miss" print and
+// the TPC_MENU_SHOW_FIGHTINFO_MES string (lbl_80405FC0 + 0x2B29) cover the miss case
+// TODO Does not match yet: arg0, arg1, the three loop indices and the entry address take other registers (the target
+// reuses the register of arg1 for the second and third indices).
+void fn_800222A0(Unk8063E970 *arg0, int arg1) {
+    char *str = lbl_80405FC0;
+    Unk80035CB0Sub *sub;
+    Unk80035CB0 *current = fn_80035D9C();
+    if (current == NULL) {
+        return;
+    }
+    sub = current->_970;
+    if (arg0->_1170 <= 0) {
+        return;
+    }
+    switch (sub->_06) {
+        case 0:
+            for (s8 i = arg0->_2668 + 1; i < arg0->_1170; i++) {
+                if (arg0->_123c[i] == 0x39 && sub->_0A == arg1) {
+                    u8 found;
+                    switch (sub->_10) {
+                        case 0xd3:
+                        case 0xd6:
+                        case 0xd9:
+                        case 0xdc:
+                        case 0xdf:
+                        case 0xe2:
+                        case 0xe5:
+                        case 0xe8:
+                        case 0x43a: found = 1; break;
+                        default:    found = 0; break;
+                    }
+                    if (found == 1 && arg0->_11d8[i] == fn_80035ED8(current) &&
+                        arg0->_11ec[i] == fn_80035EA8(current)) {
+                        fn_8000C52C(str + 0x28d0, i);
+                        arg0->_2668 = i;
+                    }
+                }
+            }
+            break;
+        case 2:
+            if (fn_800360D0(current) == 1) {
+                switch (current->_970->_2c[0]._20) {
+                    case 0x23e:
+                        for (s8 i = arg0->_2668 + 1; i < arg0->_1170; i++) {
+                            if (arg0->_123c[i] == 0x25 && arg0->_11d8[i] == fn_80035ED8(current) &&
+                                arg0->_11ec[i] == fn_80035EA8(current)) {
+                                fn_8000C52C(str + 0x2af9, i);
+                                arg0->_2668 = i;
+                            }
+                        }
+                        break;
+                }
+            }
+            break;
+        case 3:
+            fn_8000C52C(str + 0x2b29);
+            for (s8 i = arg0->_2668 + 1; i < arg0->_1170; i++) {
+                if (arg0->_123c[i] == 0x1e && arg0->_11d8[i] == fn_80035ED8(current) &&
+                    arg0->_11ec[i] == fn_80035EA8(current)) {
+                    fn_8000C52C(str + 0x28d0, i);
+                    arg0->_2668 = i;
+                }
+            }
+            break;
+    }
+}
+
 // TODO Name: handles commentary event TPC_JIKKYO_WAZA_START (string at lbl_80408B2E) with count arg1
 void fn_8002255C(Unk8063E970 *arg0, int arg1) {
     Unk80035CB0 *second;
@@ -3249,6 +3317,72 @@ void fn_8002255C(Unk8063E970 *arg0, int arg1) {
                             arg0->_2668 = i;
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+// TODO Name: handles commentary event TPC_JIKKYO_DAMAGE (lbl_80405FC0 + 0x2BBF) for damage count _9db0
+// TODO Does not match yet: the second object of the opening print takes r27 instead of r30.
+void fn_8002267C(Unk8063E970 *arg0) {
+    char *str = lbl_80405FC0;
+    Unk80035CB0 *second;
+    Unk80035CB0 *first = fn_80035D9C();
+    second = fn_80035D9C();
+    fn_8000C52C(str + 0x2bbf, arg0->_9db0, fn_80035ED8(second), fn_80035EA8(first));
+    arg0->_9db0++;
+    if (arg0->_1170 == 0) {
+        return;
+    }
+    Unk80035CB0 *current = fn_80035D9C();
+    if (current == NULL) {
+        return;
+    }
+    if (arg0->_9db0 == 0 || arg0->_9db0 > fn_800360D0(current)) {
+        if (fn_80035EA8(current) != 0xfb) {
+            fn_8000C52C(str + 0x2c08, arg0->_9db0, fn_800360D0(current), fn_80035EA8(current));
+            return;
+        }
+    }
+    for (s8 i = arg0->_2668 + 1; i < arg0->_1170; i++) {
+        if (arg0->_11d8[i] == fn_80035ED8(current) && arg0->_11ec[i] == fn_80035EA8(current)) {
+            switch (arg0->_123c[i]) {
+                case 0x22:
+                    if (arg0->_9db0 == 1) {
+                        fn_8000C52C(str + 0x2c55, i);
+                        arg0->_2668 = i;
+                    }
+                    break;
+                case 0x23:
+                    if (arg0->_9db0 == 2) {
+                        fn_8000C52C(str + 0x2c55, i);
+                        arg0->_2668 = i;
+                    }
+                    break;
+                case 0x24:
+                    if (arg0->_9db0 == fn_800360D0(current)) {
+                        fn_8000C52C(str + 0x2c55, i);
+                        arg0->_2668 = i;
+                    }
+                    break;
+                case 0x25: {
+                    u8 actClient = fn_80035ED8(current);
+                    Unk8002267C *entry = &current->_970->_2c[arg0->_9db0 - 1];
+                    if (entry->_00 <= 3 && actClient == entry->_00) {
+                        fn_8000C52C(str + 0x2c55, i);
+                        arg0->_2668 = i;
+                    }
+                    break;
+                }
+                case 0x26: {
+                    u8 actClient = fn_80035ED8(current);
+                    Unk8002267C *entry = &current->_970->_2c[arg0->_9db0 - 1];
+                    if (entry->_00 <= 3 && actClient != entry->_00 && !((actClient + entry->_00) & 1)) {
+                        fn_8000C52C(str + 0x2c55, i);
+                        arg0->_2668 = i;
+                    }
+                    break;
                 }
             }
         }
