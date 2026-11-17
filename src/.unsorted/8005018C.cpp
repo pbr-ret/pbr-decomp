@@ -6,7 +6,7 @@
 
 #include "common.hpp"
 
-// TODO Name: called with 1 or 2 by six units; sets up the object of lbl_8063F410 and starts it with fn_801FEE2C
+// TODO Name: called with 1 or 2 by six units
 void fn_8005018C(s32 arg0, f32 arg1) {
     if (lbl_8063F410->_468) {
         fn_801FEF68(lbl_8063F410);
@@ -58,8 +58,7 @@ void fn_8005018C(s32 arg0, f32 arg1) {
     fn_801FEE2C(lbl_8063F410, 1);
 }
 
-// TODO Name: polled by six units; true while the object of lbl_8063F410 is active and its floats at 0x474 and
-// 0x478 are equal
+// TODO Name: polled by six units; fn_801FEFFC advances 0x474 up to 0x478, which fn_801FEE2C copies from 0x458
 BOOL fn_800502BC() {
     if (lbl_8063F410->_468) {
         f32 diff = lbl_8063F410->_474 - lbl_8063F410->_478;
