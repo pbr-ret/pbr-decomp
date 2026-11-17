@@ -13,6 +13,10 @@ struct Unk80024914 {
 
 /* lbl_8063E9B0 */ extern Unk80024914 *lbl_8063E9B0;
 
+int fn_80024960(int arg0);
+int fn_80024C88(int arg0, int arg1);
+int fn_80024D04(int arg0, int arg1);
+
 extern "C" {
 // TODO Replace with proper imports
 void fn_80025024(Unk80024914 *obj);
