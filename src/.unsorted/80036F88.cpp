@@ -238,8 +238,8 @@ GSvec3 fn_80038A94(void *p) {
     return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
 }
 
-Unk80032E64 *fn_80039640(void *p) {
-    Unk80032E64 *r = (Unk80032E64 *)GScache::getCachedFile(U32(p, 0xc50), U32(p, 0xc54));
+Unk80032E60 *fn_80039640(void *p) {
+    Unk80032E60 *r = (Unk80032E60 *)GScache::getCachedFile(U32(p, 0xc50), U32(p, 0xc54));
     if (r == NULL) {
         r = fn_8003E42C(fn_8003E15C());
     }
@@ -413,7 +413,7 @@ u32 fn_8003E750(void *r, u16 a, u32 b, u8 c, u8 d);
 
 #pragma dont_inline on
 s8 *fn_8003967C(void *p, u32 a) {
-    Unk80032E64 *r = fn_80039640(p);
+    Unk80032E60 *r = fn_80039640(p);
     if (r == NULL) {
         return 0;
     }

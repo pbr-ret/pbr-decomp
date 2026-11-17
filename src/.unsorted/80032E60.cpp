@@ -4,14 +4,15 @@
 
 #include "common.hpp"
 
-// TODO Name: called by unit 80025390
-void fn_80032E60() {}
+// TODO Name: called by fn_80025390 (a constructor) on its member at 0x998
+void fn_80032E60(Unk80032E60 *arg0) {}
 
-// TODO Name: called by unit 80025390 on a file it loads
-void fn_80032E64(Unk80032E64 *arg0, Unk80032E64File *arg1) {
+// TODO Name: called by fn_800255A8 on the body of the "MTBL" chunk of a loaded file
+void fn_80032E64(Unk80032E60 *arg0, Unk80032E64 *arg1) {
     arg0->_0 = arg1->_0;
     arg0->_4 = arg1->_8;
-    // The pointer fields of the file hold offsets from its start until they are turned into pointers here.
+    // The pointer fields of the chunk hold offsets from the start of its body until they are turned into pointers
+    // here.
     for (s32 i = 0; arg0->_4[i] != NULL; i++) {
         arg0->_4[i] = (Unk80032EEC **)((u32)arg1 + (u32)arg0->_4[i]);
         for (Unk80032EEC **entry = arg0->_4[i]; *entry != NULL; entry++) {
@@ -21,7 +22,7 @@ void fn_80032E64(Unk80032E64 *arg0, Unk80032E64File *arg1) {
 }
 
 // TODO Name: only called by fn_80032EEC
-Unk80032EEC **fn_80032EC0(Unk80032E64 *arg0, s32 arg1) {
+Unk80032EEC **fn_80032EC0(Unk80032E60 *arg0, s32 arg1) {
     if (arg1 < 0 || arg1 >= arg0->_0) {
         return NULL;
     }
@@ -29,7 +30,7 @@ Unk80032EEC **fn_80032EC0(Unk80032E64 *arg0, s32 arg1) {
 }
 
 // TODO Name: called by fn_8003967C of unit 80036F88; the kind of each entry (0 to 3) decides how its id is checked
-s8 *fn_80032EEC(Unk80032E64 *arg0, s32 arg1, s32 arg2, u16 arg3) {
+s8 *fn_80032EEC(Unk80032E60 *arg0, s32 arg1, s32 arg2, u16 arg3) {
     Unk80032EEC **list = fn_80032EC0(arg0, arg1);
     if (list == NULL) {
         return NULL;
