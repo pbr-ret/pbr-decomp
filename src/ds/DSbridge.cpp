@@ -24,9 +24,6 @@ void fn_8016EEC8(Unk806405F4 *params);
 void *fn_8016F0F4(void *archive, u32 narcId, u32 memberIndex, u32 *size);
 void fn_8016FA4C(u32 command, Unk8048CDE8 *args);
 void fn_8017CC8C(u32 battleType);
-Unk80035CB0 *fn_80035D9C();
-void fn_80035E60(Unk80035CB0 *config, u32 enable);
-void fn_80035E70(Unk80035CB0 *config, u32 mode);
 s32 fn_803AC830();
 BOOL fn_803AB534(ApplicationManager *appMan, s32 *state);
 
