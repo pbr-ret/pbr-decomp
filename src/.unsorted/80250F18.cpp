@@ -133,12 +133,13 @@ void fn_80253DF0(u32 a, u32 b, u32 c) {
     fn_80254260(&lbl_804FDAB0, a, b, c);
 }
 
-void fn_80253E4C(u32 a, u32 b, u32 *c) {
-    fn_80254334(&lbl_804FDAB0, a, b, c);
+void fn_80253E4C(u32 arg0, u32 arg1, u32 *arg2) {
+    fn_80254334(&lbl_804FDAB0, arg0, arg1, arg2);
 }
 
-void fn_80253E6C(u32 a, u32 b, u32 *c) {
-    fn_80254334(&lbl_804FDAB0, a, b, c);
+void fn_80253E6C(u32 arg0, u32 arg1, f32 *arg2) {
+    // fn_80254334 returns the f32 values in the bits of a u32.
+    fn_80254334(&lbl_804FDAB0, arg0, arg1, (u32 *)arg2);
 }
 
 void fn_80253F54(u32 x, u32 y) {
