@@ -186,6 +186,8 @@ src/.unsorted/8004F37C.cpp:
 src/.unsorted/8005018C.cpp:
 	.text       start:0x8005018C end:0x80050324
 	.ctors      start:0x803E1F08 end:0x803E1F0C
+	.sbss       start:0x8063EB18 end:0x8063EB20
+	.sdata2     start:0x80640A80 end:0x80640A88
 
 src/.unsorted/80050324.cpp:
 	.text       start:0x80050324 end:0x80055504
