@@ -112,6 +112,7 @@ src/.unsorted/80032BC8.cpp:
 src/.unsorted/80032E60.cpp:
 	.text       start:0x80032E60 end:0x80032FE8
 	.ctors      start:0x803E1EC0 end:0x803E1EC4
+	.sbss       start:0x8063EA48 end:0x8063EA50
 
 src/.unsorted/80032FE8.cpp:
 	.text       start:0x80032FE8 end:0x80035CB0
