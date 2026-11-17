@@ -2,8 +2,7 @@
 
 #include "common.hpp"
 
-// TODO Name: called by fn_80253DF0 and fn_80253E10 (f32 values) on lbl_804FDAB0; sets the value arg2 of element
-// arg1 to arg3
+// TODO Name: called by fn_80253DF0 and fn_80253E10 (f32 values) on lbl_804FDAB0; sets value arg2 of element arg1
 void fn_80254260(Unk80250F18 *arg0, s32 arg1, u32 arg2, u32 arg3) {
     // Ids 3 to 7 carry an f32 in the bits of arg3, as fn_80253E10 passes them.
     f32 value = *(f32 *)&arg3;
