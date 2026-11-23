@@ -25,6 +25,7 @@ void GXInitTexObjTlut(const GXTexObj* obj, u32 tlut_name);
 
 void GXInitTexObjUserData(const GXTexObj* obj, void* user_data);
 void* GXGetTexObjUserData(const GXTexObj* obj);
+u32 GXGetTexObjTlut(const GXTexObj* obj);
 
 void GXLoadTexObjPreLoaded(const GXTexObj* obj, const GXTexRegion* region, GXTexMapID id);
 void GXLoadTexObj(const GXTexObj* obj, GXTexMapID id);

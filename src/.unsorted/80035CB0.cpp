@@ -2,14 +2,12 @@
 
 #include "common.hpp"
 
-extern "C" {
-
 /* lbl_8063EA68 */ extern Unk80035CB0 *lbl_8063EA68;
 
 Unk80035CB0 *fn_80035D9C(void) {
     return lbl_8063EA68;
 }
-u32 fn_80035E38(Unk80035CB0 *p) {
+int fn_80035E38(Unk80035CB0 *p) {
     return p->_00;
 }
 void fn_80035E40(Unk80035CB0 *p, u32 v) {
@@ -21,13 +19,13 @@ u32 fn_80035E48(Unk80035CB0 *p) {
 void fn_80035E50(Unk80035CB0 *p, u32 v) {
     p->_04 = v;
 }
-u32 fn_80035E58(Unk80035CB0 *p) {
+int fn_80035E58(Unk80035CB0 *p) {
     return p->_08;
 }
 void fn_80035E60(Unk80035CB0 *p, u32 v) {
     p->_08 = v;
 }
-u32 fn_80035E68(Unk80035CB0 *p) {
+int fn_80035E68(Unk80035CB0 *p) {
     return p->_0C;
 }
 void fn_80035E70(Unk80035CB0 *p, u32 v) {
@@ -51,7 +49,7 @@ void fn_80035E98(Unk80035CB0 *p, u32 v) {
 u32 fn_80035EA0(Unk80035CB0 *p) {
     return p->_2C;
 }
-u16 fn_80035EA8(Unk80035CB0 *p) {
+int fn_80035EA8(Unk80035CB0 *p) {
     return p->_970->_02;
 }
 void fn_80035EB4(Unk80035CB0 *p, u16 v) {
@@ -63,7 +61,7 @@ u8 fn_80035EC0(Unk80035CB0 *p) {
 void fn_80035ECC(Unk80035CB0 *p, u8 v) {
     p->_970->_04 = v;
 }
-u8 fn_80035ED8(Unk80035CB0 *p) {
+int fn_80035ED8(Unk80035CB0 *p) {
     return p->_970->_05;
 }
 void fn_80035EE4(Unk80035CB0 *p, u8 v) {
@@ -99,7 +97,7 @@ u8 fn_80035F50(Unk80035CB0 *p) {
 void fn_80035F5C(Unk80035CB0 *p, u8 v) {
     p->_970->_24 = v;
 }
-u8 fn_80035F68(Unk80035CB0 *p) {
+int fn_80035F68(Unk80035CB0 *p) {
     return p->_970->_25;
 }
 void fn_80035F74(Unk80035CB0 *p, u8 v) {
@@ -125,5 +123,4 @@ void fn_80036F20(Unk80035CB0 *p, u8 v) {
 }
 BOOL fn_80036F50(Unk80035CB0 *p, u32 mask) {
     return (p->mFlags & mask) != 0;
-}
 }

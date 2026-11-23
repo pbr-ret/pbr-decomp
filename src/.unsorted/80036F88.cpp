@@ -1,5 +1,7 @@
 #include ".unsorted/80036F88.hpp"
 
+#include ".unsorted/80032E60.hpp"
+#include ".unsorted/8003E03C.hpp"
 #include ".unsorted/800400E8.hpp"
 
 #include "common.hpp"
@@ -84,8 +86,6 @@ void fn_801F6158(GSobject *o, int a);
 void fn_801F9744(GSobject *o);
 void fn_801F9808(GSobject *o);
 u32 fn_8003D0C0(void *p, u16 a, u32 b, s8 c, u16 *d);
-void *fn_8003E15C(void);
-void *fn_8003E42C(void *a);
 u32 fn_8003E610(void *a, u16 b);
 void fn_8003DDA4(void *p, int a);
 void fn_800371D4(void *p);
@@ -238,8 +238,8 @@ GSvec3 fn_80038A94(void *p) {
     return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
 }
 
-void *fn_80039640(void *p) {
-    void *r = GScache::getCachedFile(U32(p, 0xc50), U32(p, 0xc54));
+Unk80032E60 *fn_80039640(void *p) {
+    Unk80032E60 *r = (Unk80032E60 *)GScache::getCachedFile(U32(p, 0xc50), U32(p, 0xc54));
     if (r == NULL) {
         r = fn_8003E42C(fn_8003E15C());
     }
@@ -404,7 +404,6 @@ extern const f32 lbl_80640838;
 extern const f32 lbl_806408AC;
 extern u8 lbl_8063CE34[];
 
-s8 *fn_80032EEC(void *r, u32 a, u16 b, u16 c);
 void fn_8003ADC8(void *p, u32 a, f32 x, f32 y);
 void fn_8005033C(void *a, void *b, f32 *c, void *d, u32 e, f32 f);
 u32 fn_80395E00(void *a, u16 b);
@@ -414,7 +413,7 @@ u32 fn_8003E750(void *r, u16 a, u32 b, u8 c, u8 d);
 
 #pragma dont_inline on
 s8 *fn_8003967C(void *p, u32 a) {
-    void *r = fn_80039640(p);
+    Unk80032E60 *r = fn_80039640(p);
     if (r == NULL) {
         return 0;
     }

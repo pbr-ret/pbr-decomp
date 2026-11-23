@@ -18,7 +18,7 @@ Exits 1 if any error is found. Warnings are reported but never fail.
 
 from collections import Counter
 from pathlib import Path
-from typing import Dict, Iterator, List, NamedTuple, Optional, Set
+from typing import Dict, Iterator, List, NamedTuple, Optional, Set, Tuple
 import argparse
 import re
 import subprocess
@@ -36,6 +36,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[2]
 
 PATHS = ["src", "include"]  # game code only; libs/ (SDK, runtime) is exempt
+PLACEHOLDER_DIR = "src/.unsorted/"  # placeholder units, split as units get linked
 SOURCE_SUFFIXES = {".c", ".cpp", ".cp", ".h", ".hpp", ".inc"}
 RULES_PATH = Path(__file__).with_name("fakematch_rules.toml")
 
@@ -148,28 +149,56 @@ def find_merge_base(base: str) -> str:
 
 def get_added_lines(merge_base: str) -> Dict[str, Set[int]]:
     """Line numbers added since the merge base (including untracked files), by
-    path."""
+    path.
+
+    A line added under src/.unsorted/ whose text matches a line removed from
+    src/.unsorted/ is left out: splitting a placeholder unit moves its lines
+    verbatim between placeholder files. Each removed line excuses one added
+    line."""
     added: Dict[str, Set[int]] = {}
+    moved_in: List[Tuple[str, int, str]] = []  # added lines under PLACEHOLDER_DIR
+    removed: Counter = Counter()
 
     diff = run_git("diff", "--unified=0", merge_base, "--", *PATHS)
     path = None
+    old_path = None
     line_number = 0
     for line in diff.splitlines():
-        if line.startswith("+++ "):
+        if line.startswith("--- "):
+            # e.g. `--- a/src/main.cpp`, or `--- /dev/null` for a new file
+            old_path = (
+                line.removeprefix("--- a/") if line.startswith("--- a/") else None
+            )
+        elif line.startswith("+++ "):
             # e.g. `+++ b/src/main.cpp`, or `+++ /dev/null` for a deleted file
             path = line.removeprefix("+++ b/") if line.startswith("+++ b/") else None
         elif line.startswith("@@"):
             # e.g. `@@ -10,0 +10 @@`: added lines start at line 10
             match = re.search(r"\+(\d+)", line)
             line_number = int(match.group(1)) if match else 0
+        elif line.startswith("-"):
+            if old_path and old_path.startswith(PLACEHOLDER_DIR):
+                removed[line[1:].strip()] += 1
         elif line.startswith("+") and path:
             added.setdefault(path, set()).add(line_number)
+            if path.startswith(PLACEHOLDER_DIR):
+                moved_in.append((path, line_number, line[1:].strip()))
             line_number += 1
 
     untracked = run_git("ls-files", "--others", "--exclude-standard", "--", *PATHS)
     for path in untracked.splitlines():
-        line_count = len((ROOT / path).read_bytes().splitlines())
-        added[path] = set(range(1, line_count + 1))
+        lines = (ROOT / path).read_bytes().splitlines()
+        added[path] = set(range(1, len(lines) + 1))
+        if path.startswith(PLACEHOLDER_DIR):
+            for number, text in enumerate(lines, 1):
+                moved_in.append(
+                    (path, number, text.decode("shift_jis", "replace").strip())
+                )
+
+    for path, number, text in sorted(moved_in):
+        if removed[text] > 0:
+            removed[text] -= 1
+            added[path].discard(number)
 
     return {path: lines for path, lines in added.items() if is_source(path)}
 

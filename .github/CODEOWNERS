@@ -1,0 +1,9 @@
+# PRs that touch any owned file need a code owner's review.
+# Decomp work (the paths with no owner below) needs no review.
+*          @bgsamm
+
+/libs/
+/include/
+/src/
+/config/
+/configure.py
