@@ -90,7 +90,7 @@ struct Unk80033090 {
     /* 0x648 */ eftseq::AnimNode<f32> _648;
     /* 0x66C */ eftseq::AnimNode<f32> _66c;
     // AnimNode<GScolor<unsigned char>> in the RTTI of the original.
-    /* 0x690 */ eftseq::AnimNode<GScolor> _690;
+    /* 0x690 */ eftseq::AnimNode<GScolor<u8> > _690;
 };
 
 // The render target with id 2.

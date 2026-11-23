@@ -47,6 +47,18 @@ static inline u8 f32tou8(f32 arg) {
     return ret;
 }
 
+static inline f32 s16tof32(s16 arg) {
+    f32 ret;
+    OSs16tof32(&arg, &ret);
+    return ret;
+}
+
+static inline s16 f32tos16(f32 arg) {
+    s16 ret;
+    OSf32tos16(&arg, &ret);
+    return ret;
+}
+
 #define PI 3.14159265f
 #define DEG_TO_RAD (PI / 180f)
 
@@ -157,28 +169,6 @@ private:
     Mtx mMatrix;
 
 public:
-    GSmatrix() {}
-
-    GSmatrix(
-        f32 x00, f32 x01, f32 x02, f32 x03, f32 x10, f32 x11, f32 x12, f32 x13, f32 x20, f32 x21, f32 x22, f32 x23) {
-        mMatrix[0][0] = x00;
-        mMatrix[0][1] = x01;
-        mMatrix[0][2] = x02;
-        mMatrix[0][3] = x03;
-        mMatrix[1][0] = x10;
-        mMatrix[1][1] = x11;
-        mMatrix[1][2] = x12;
-        mMatrix[1][3] = x13;
-        mMatrix[2][0] = x20;
-        mMatrix[2][1] = x21;
-        mMatrix[2][2] = x22;
-        mMatrix[2][3] = x23;
-    }
-
-    GSmatrix(const GSmatrix &other) {
-        MTXCopy(other, mMatrix);
-    }
-
     operator Mtx &() {
         return mMatrix;
     }
@@ -220,6 +210,39 @@ public:
 
     void scale(GSvec3 vec) {
         MTXScaleApply(mMatrix, mMatrix, vec.x, vec.y, vec.z);
+    }
+
+    void scaleApply(const GSmatrix &src, f32 scale) {
+        MTXScaleApply(src, mMatrix, scale, scale, scale);
+    }
+
+    GSmatrix &preConcat(const GSmatrix &other) {
+        MTXConcat(other, mMatrix, mMatrix);
+        return *this;
+    }
+
+    void clearTranslation() {
+        mMatrix[0][3] = 0.f;
+        mMatrix[1][3] = 0.f;
+        mMatrix[2][3] = 0.f;
+    }
+
+    void setScale(GSvec3 vec) {
+        MTXScale(mMatrix, vec.x, vec.y, vec.z);
+    }
+
+    void translate(GSvec3 vec) {
+        MTXTransApply(mMatrix, mMatrix, vec.x, vec.y, vec.z);
+    }
+};
+
+// size: 0x30
+struct Unk80491970 : public GSmatrix {
+    Unk80491970() {}
+
+    Unk80491970(GSvec3 scale, GSvec3 trans) {
+        MTXScale(*this, scale.x, scale.y, scale.z);
+        MTXTransApply(*this, *this, trans.x, trans.y, trans.z);
     }
 };
 
