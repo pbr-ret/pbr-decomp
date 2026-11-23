@@ -202,6 +202,12 @@ public:
         return result;
     }
 
+    GSvec3 multVecSR(const GSvec3 &vec) const {
+        GSvec3 result;
+        MTXMultVecSR(mMatrix, &vec, &result);
+        return result;
+    }
+
     GSmatrix invXpose() const {
         GSmatrix result;
         MTXInvXpose(mMatrix, result);
@@ -239,6 +245,10 @@ public:
 // size: 0x30
 struct Unk80491970 : public GSmatrix {
     Unk80491970() {}
+
+    Unk80491970(const GSmatrix &other) {
+        MTXCopy(other, *this);
+    }
 
     Unk80491970(GSvec3 scale, GSvec3 trans) {
         MTXScale(*this, scale.x, scale.y, scale.z);

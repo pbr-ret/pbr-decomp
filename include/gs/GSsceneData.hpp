@@ -196,6 +196,24 @@ struct GSlightData : public GSnodeData {
     /* 0x50 */ f32 mCutoff;
 };
 
+// size: 0x24
+struct _UnkCameraData_1 {
+    /* 0x00 */ Vec _0;
+    /* 0x0C */ Vec _c;
+    /* 0x18 */ Vec _18;
+};
+
+// size: 0x4C
+struct GScameraData : public GSnodeData {
+    /* 0x30 */ u32 mCameraFlags;
+    /* 0x34 */ f32 _34;
+    /* 0x38 */ f32 _38;
+    /* 0x3C */ f32 _3c;
+    /* 0x40 */ f32 _40;
+    /* 0x44 */ f32 _44;
+    /* 0x48 */ _UnkCameraData_1 *_48;
+};
+
 struct _UnkAnimData_1 {
     /* 0x0 */ f32 _0;
     /* 0x4 */ u16 _4;

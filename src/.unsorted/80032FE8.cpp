@@ -19,7 +19,6 @@ f32 fn_8000739C();
 void fn_8023EB58(void *, void (*)(), void (*)(), s32, s32);
 GScamera *fn_8003CE88(void *, s32);
 void fn_80039090(void *, f32);
-GScamera *fn_801DDF78(GScamera *camera);
 void fn_80050808(eftseq::AnimNode<GScolor<u8> > *, GXColor *, GXColor *, GXColor *, s32);
 void fn_80050E7C(eftseq::AnimNodeShake *, void *, f32 *, s32, s32, s32, f32, f32);
 void fn_800510E8(eftseq::AnimNodeSpring *);
@@ -201,15 +200,7 @@ Unk80033090 *fn_80033090(Unk80033090 *p) {
     fn_800353FC(&p->_000[0], fn_800402D4(cameras));
     p->_000[0]._01 = true;
     fn_80034918();
-    GScamera *second;
-    if (GSmem::isInitialized()) {
-        second = (GScamera *)GSmem::allocFromHeap(gGameHeap, sizeof(GScamera));
-    } else {
-        second = NULL;
-    }
-    if (second != NULL) {
-        second = fn_801DDF78(second);
-    }
+    GScamera *second = new GScamera();
     second->_168 = lbl_806407D4;
     second->_16c = aspect;
     second->_17c = lbl_806407DC;

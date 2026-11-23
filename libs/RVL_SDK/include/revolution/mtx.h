@@ -13,6 +13,7 @@ void PSMTXIdentity(Mtx m);
 void PSMTXCopy(const Mtx src, Mtx dst);
 void PSMTXConcat(const Mtx a, const Mtx b, Mtx ab);
 void PSMTXConcatArray(const Mtx a, const Mtx b, Mtx ab, u32 count);
+void PSMTXTranspose(const Mtx src, Mtx xPose);
 u32 PSMTXInverse(const Mtx src, Mtx inv);
 u32 PSMTXInvXpose(const Mtx src, Mtx invX);
 void PSMTXRotRad(Mtx m, char axis, f32 rad);
@@ -27,6 +28,7 @@ void PSMTXQuat(Mtx, const Quaternion *);
 void C_MTXIdentity(Mtx m);
 void C_MTXCopy(const Mtx src, Mtx dst);
 void C_MTXConcat(const Mtx a, const Mtx b, Mtx ab);
+void C_MTXTranspose(const Mtx src, Mtx xPose);
 u32 C_MTXInverse(const Mtx src, Mtx inv);
 u32 C_MTXInvXpose(const Mtx src, Mtx invX);
 void C_MTXRotRad(Mtx m, char axis, f32 rad);
@@ -42,6 +44,7 @@ void C_MTXQuat(Mtx, const Quaternion *);
 #define MTXIdentity C_MTXIdentity
 #define MTXCopy C_MTXCopy
 #define MTXConcat C_MTXConcat
+#define MTXTranspose C_MTXTranspose
 #define MTXInverse C_MTXInverse
 #define MTXInvXpose C_MTXInvXpose
 #define MTXRotRad C_MTXRotRad
@@ -56,6 +59,7 @@ void C_MTXQuat(Mtx, const Quaternion *);
 #define MTXIdentity PSMTXIdentity
 #define MTXCopy PSMTXCopy
 #define MTXConcat PSMTXConcat
+#define MTXTranspose PSMTXTranspose
 #define MTXInverse PSMTXInverse
 #define MTXInvXpose PSMTXInvXpose
 #define MTXRotRad PSMTXRotRad
