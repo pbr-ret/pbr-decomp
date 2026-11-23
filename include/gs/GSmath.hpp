@@ -86,10 +86,35 @@ struct GSvec : public Vec {
         z = other.z;
     }
 
+    // Pokemon XD's map has __as__5GSvecFRC5GSvec.
+    GSvec &operator=(const GSvec &other) {
+        x = other.x;
+        y = other.y;
+        z = other.z;
+        return *this;
+    }
+
+    // TODO For the file data structs still typed Vec (GSsceneData, GScamera data);
+    // remove once those are known to be GSvec.
     GSvec &operator=(const Vec &vec) {
         x = vec.x;
         y = vec.y;
         z = vec.z;
+        return *this;
+    }
+
+    GSvec &operator-=(const GSvec &other) {
+        VECSubtract(this, &other, this);
+        return *this;
+    }
+
+    GSvec &operator+=(const GSvec &other) {
+        VECAdd(this, &other, this);
+        return *this;
+    }
+
+    GSvec &operator*=(f32 scale) {
+        VECScale(this, this, scale);
         return *this;
     }
 
