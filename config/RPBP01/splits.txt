@@ -850,6 +850,7 @@ src/gs/scene/GSanimationObject.cpp:
 src/gs/scene/GScamera.cpp:
 	.text       start:0x801DDF78 end:0x801DF040
 	.ctors      start:0x803E2060 end:0x803E2064
+	.sdata      start:0x8063D700 end:0x8063D730
 
 src/gs/scene/GSvolumeNode.cpp:
 	.text       start:0x801DF040 end:0x801E07E8
@@ -879,6 +880,10 @@ src/.unsorted/801E474C.cpp:
 src/gs/scene/GSlight.cpp:
 	.text       start:0x801E5F7C end:0x801E6BF8
 	.ctors      start:0x803E207C end:0x803E2080
+	.data       start:0x80423590 end:0x804235D0
+	.sdata      start:0x8063D758 end:0x8063D768
+	.sbss       start:0x8063F398 end:0x8063F3A0
+	.sdata2     start:0x80641D40 end:0x80641D78
 
 src/gs/scene/GSmaterial.cpp:
 	.text       start:0x801E6BF8 end:0x801ED3F0
@@ -903,7 +908,6 @@ src/gs/scene/GSnull.cpp:
 	.text       start:0x801F1AE8 end:0x801F40E0
 	.ctors      start:0x803E208C end:0x803E2090
 	.data       start:0x804236A8 end:0x804236E0
-	.sdata      start:0x8063D708 end:0x8063D730
 	.sbss       start:0x8063F3C8 end:0x8063F3DC
 	.sdata2     start:0x80641DF0 end:0x80641E00
 

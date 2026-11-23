@@ -1190,10 +1190,10 @@ void GSmaterial::fn_801EA44C() {
 
     GSlight *light = GShierarchyModule::sInstance->get_118();
     if (light && (light->checkLightFlag((1 << 0)))) {
-        ambColor.r = f32tou8(0.5f + (u8tof32(light->_110.r) * u8tof32(mMatData->_60.r)) / 255.f);
-        ambColor.g = f32tou8(0.5f + (u8tof32(light->_110.g) * u8tof32(mMatData->_60.g)) / 255.f);
-        ambColor.b = f32tou8(0.5f + (u8tof32(light->_110.b) * u8tof32(mMatData->_60.b)) / 255.f);
-        ambColor.a = f32tou8(0.5f + (u8tof32(light->_110.a) * u8tof32(mMatData->_60.a)) / 255.f);
+        ambColor.r = f32tou8(0.5f + (u8tof32(light->mColor.r) * u8tof32(mMatData->_60.r)) / 255.f);
+        ambColor.g = f32tou8(0.5f + (u8tof32(light->mColor.g) * u8tof32(mMatData->_60.g)) / 255.f);
+        ambColor.b = f32tou8(0.5f + (u8tof32(light->mColor.b) * u8tof32(mMatData->_60.b)) / 255.f);
+        ambColor.a = f32tou8(0.5f + (u8tof32(light->mColor.a) * u8tof32(mMatData->_60.a)) / 255.f);
     } else {
         ambColor.r = 0;
         ambColor.g = 0;

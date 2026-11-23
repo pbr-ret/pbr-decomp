@@ -58,17 +58,31 @@ public:
 
     GSrenderLight();
 
-    void initPointLight(GXColor color, Vec position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness);
-    void initSpotLight(GXColor color,
-                       Vec position,
-                       Vec direction,
+    ~GSrenderLight() {
+        _1 = 0;
+    }
+
+    void initPointLight(
+        const GScolor<u8> &color, const Vec &position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness);
+    void initSpotLight(const GScolor<u8> &color,
+                       const Vec &position,
+                       const Vec &direction,
                        GXDistAttnFn distAttnFn,
                        f32 refDistance,
                        f32 refBrightness,
                        GXSpotFn spotFn,
                        f32 cutoff);
-    void initSpecLight(GXColor color, Vec direction, f32 shininess);
+    void initSpecLight(const GScolor<u8> &color, const Vec &direction, f32 shininess);
     void load(u8 index, GSlightStruct1 *param2);
+
+    void setDirection(const Vec &direction) {
+        mDirection.x = direction.x;
+        mDirection.y = direction.y;
+        mDirection.z = direction.z;
+        _1 |= (1 << 2);
+        _1 &= ~(1 << 6);
+        _0 |= (1 << 1);
+    }
 
     void setShininess(f32 shininess) {
         if (mType == GS_LIGHT_SPEC) {

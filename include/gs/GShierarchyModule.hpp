@@ -80,6 +80,20 @@ public:
         mObjectList.remove(object);
     }
 
+    static void unregisterLight(GSlight *light) {
+        GShierarchyModule *instance = sInstance;
+        if (light == instance->_118) {
+            instance->_118 = NULL;
+        }
+        if (light == instance->_11c) {
+            instance->_11c = NULL;
+        }
+        if (light == instance->_120) {
+            instance->_120 = NULL;
+        }
+        instance->mLights.remove(light);
+    }
+
     // TODO(samm) Names
 
     GStexture *get_110() const {
