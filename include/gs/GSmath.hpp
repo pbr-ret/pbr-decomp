@@ -71,22 +71,22 @@ struct GSvec2 : Vec2 {
     }
 };
 
-struct GSvec3 : public Vec {
-    GSvec3() {}
+struct GSvec : public Vec {
+    GSvec() {}
 
-    GSvec3(f32 x, f32 y, f32 z) {
+    GSvec(f32 x, f32 y, f32 z) {
         this->x = x;
         this->y = y;
         this->z = z;
     }
 
-    GSvec3(const GSvec3 &other) {
+    GSvec(const GSvec &other) {
         x = other.x;
         y = other.y;
         z = other.z;
     }
 
-    GSvec3 &operator=(const Vec &vec) {
+    GSvec &operator=(const Vec &vec) {
         x = vec.x;
         y = vec.y;
         z = vec.z;
@@ -102,30 +102,30 @@ struct GSvec3 : public Vec {
         VECNormalize(this, this);
     }
 
-    GSvec3 operator-() const {
-        return GSvec3(-x, -y, -z);
+    GSvec operator-() const {
+        return GSvec(-x, -y, -z);
     }
 
-    GSvec3 operator+(const GSvec3 &other) const {
-        GSvec3 result;
+    GSvec operator+(const GSvec &other) const {
+        GSvec result;
         VECAdd(this, &other, &result);
         return result;
     }
 
-    GSvec3 operator-(const GSvec3 &other) const {
-        GSvec3 result;
+    GSvec operator-(const GSvec &other) const {
+        GSvec result;
         VECSubtract(this, &other, &result);
         return result;
     }
 
-    GSvec3 operator*(f32 scale) const {
-        GSvec3 result;
+    GSvec operator*(f32 scale) const {
+        GSvec result;
         VECScale(this, &result, scale);
         return result;
     }
 
-    GSvec3 cross(const GSvec3 *other) const {
-        GSvec3 result;
+    GSvec cross(const GSvec *other) const {
+        GSvec result;
         VECCrossProduct(this, other, &result);
         return result;
     }
@@ -196,14 +196,14 @@ public:
         return result;
     }
 
-    GSvec3 operator*(const GSvec3 &vec) const {
-        GSvec3 result;
+    GSvec operator*(const GSvec &vec) const {
+        GSvec result;
         MTXMultVec(mMatrix, &vec, &result);
         return result;
     }
 
-    GSvec3 multVecSR(const GSvec3 &vec) const {
-        GSvec3 result;
+    GSvec multVecSR(const GSvec &vec) const {
+        GSvec result;
         MTXMultVecSR(mMatrix, &vec, &result);
         return result;
     }
@@ -214,7 +214,7 @@ public:
         return result;
     }
 
-    void scale(GSvec3 vec) {
+    void scale(GSvec vec) {
         MTXScaleApply(mMatrix, mMatrix, vec.x, vec.y, vec.z);
     }
 
@@ -233,11 +233,11 @@ public:
         mMatrix[2][3] = 0.f;
     }
 
-    void setScale(GSvec3 vec) {
+    void setScale(GSvec vec) {
         MTXScale(mMatrix, vec.x, vec.y, vec.z);
     }
 
-    void translate(GSvec3 vec) {
+    void translate(GSvec vec) {
         MTXTransApply(mMatrix, mMatrix, vec.x, vec.y, vec.z);
     }
 };
@@ -250,16 +250,16 @@ struct Unk80491970 : public GSmatrix {
         MTXCopy(other, *this);
     }
 
-    Unk80491970(GSvec3 scale, GSvec3 trans) {
+    Unk80491970(GSvec scale, GSvec trans) {
         MTXScale(*this, scale.x, scale.y, scale.z);
         MTXTransApply(*this, *this, trans.x, trans.y, trans.z);
     }
 };
 
-// TODO(samm) Name? Move? Vec vs. GSvec3?
+// TODO(samm) Name? Move? Vec vs. GSvec?
 struct GSboundingBox {
-    /* 0x00 */ GSvec3 mMin;
-    /* 0x0C */ GSvec3 mMax;
+    /* 0x00 */ GSvec mMin;
+    /* 0x0C */ GSvec mMax;
     /* 0x18 */ GSmatrix *mTransform;
 
     GSboundingBox() : mMin(EPSILON, EPSILON, EPSILON), mMax(-EPSILON, -EPSILON, -EPSILON), mTransform() {}
@@ -268,17 +268,17 @@ struct GSboundingBox {
 
 namespace GSmath {
 
-extern GSvec3 sXAxis;
-extern GSvec3 sYAxis;
-extern GSvec3 sZAxis;
+extern GSvec sXAxis;
+extern GSvec sYAxis;
+extern GSvec sZAxis;
 
 // GSboundingBox.cpp
-void calcBoundingBoxCenter(GSvec3 *dst, const GSboundingBox *aabb);
+void calcBoundingBoxCenter(GSvec *dst, const GSboundingBox *aabb);
 void expandBoundingBox(GSboundingBox *dst, const GSboundingBox *src);
 u32 fn_80220B18(GSboundingBox *arg0);
 
 // GSeuler.cpp
-void eulerToQuat(GSquat *quat, GSvec3 *euler);
+void eulerToQuat(GSquat *quat, GSvec *euler);
 
 // GSrand.cpp
 u32 *getRandSeed();
@@ -290,7 +290,7 @@ f32 cos(f32 x);
 f32 sin(f32 x);
 
 // GSquat.cpp
-void rotateVec3ByQuat(GSvec3 *p, GSquat *r);
+void rotateVec3ByQuat(GSvec *p, GSquat *r);
 
 // GSmathInit.cpp
 void init();

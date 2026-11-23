@@ -365,10 +365,10 @@ void fn_801E10C0(GSchannelData *channelData, f32 cursor, f32 *dst) {
 }
 
 // TODO: Samples a channel into a vector
-void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec3 *dst) {
+void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec *dst) {
     switch (channelData->mComponent) {
         case 0: {
-            GSvec3 result;
+            GSvec result;
             GSmath::animSampleVec3(&result, cursor, channelData->mKeyframes, 0);
             *dst = result;
         } break;
@@ -645,7 +645,7 @@ void fn_801E1CD0(GSnodeData *nodeData, const Version *version, u32 baseAddr) {
     if (pivots) {
         if (*version < VERSION(1, 3, 0)) {
             if (pivots->_24_0 != 0xfefefefe || pivots->_24_1 != 0xfefefefe || pivots->_24_2 != 0xfefefefe) {
-                GSvec3 _unk1, _unk2, _unk3;
+                GSvec _unk1, _unk2, _unk3;
 
                 _unk1 = -pivots->mScalePivot;
                 _unk2 = pivots->mScalePivot;

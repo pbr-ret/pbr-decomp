@@ -6,7 +6,7 @@
 
 #include <revolution.h>
 
-struct GSvec3;
+struct GSvec;
 class GSlight;
 class GSobject;
 class GSscene;
@@ -143,7 +143,7 @@ public:
     static void fn_80200594(GSobject *arg0);
     static void fn_80200858(GSobject *arg0);
 
-    static void fn_802027FC(GSvec3 *arg0);
+    static void fn_802027FC(GSvec *arg0);
 
     static void setCurrentScene(GSscene *scene);
 

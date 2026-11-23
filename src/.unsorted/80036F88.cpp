@@ -90,7 +90,7 @@ u32 fn_8003D0C0(void *p, u16 a, u32 b, s8 c, u16 *d);
 u32 fn_8003E610(void *a, u16 b);
 void fn_8003DDA4(void *p, int a);
 void fn_800371D4(void *p);
-GSvec3 fn_80039F60(void *p, u32 a, u32 b, u32 c);
+GSvec fn_80039F60(void *p, u32 a, u32 b, u32 c);
 f32 fn_8003B7FC(void *p);
 
 void fn_8003DB34(void *p, f32 a, f32 b) {
@@ -218,25 +218,25 @@ void fn_8003DE58(void *p) {
     fn_800371D4((u8 *)p + 0xd04);
 }
 
-GSvec3 fn_800387E0(void *p) {
+GSvec fn_800387E0(void *p) {
     if (OBJ(p)) {
-        return GSvec3(F32(p, 0xcb4), F32(p, 0xcb8), F32(p, 0xcbc));
+        return GSvec(F32(p, 0xcb4), F32(p, 0xcb8), F32(p, 0xcbc));
     }
-    return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+    return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
 }
 
-GSvec3 fn_80038914(void *p) {
+GSvec fn_80038914(void *p) {
     if (OBJ(p)) {
-        return GSvec3(F32(p, 0xccc), F32(p, 0xcd0), F32(p, 0xcd4));
+        return GSvec(F32(p, 0xccc), F32(p, 0xcd0), F32(p, 0xcd4));
     }
-    return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+    return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
 }
 
-GSvec3 fn_80038A94(void *p) {
+GSvec fn_80038A94(void *p) {
     if (OBJ(p)) {
-        return GSvec3(F32(p, 0xcc0), F32(p, 0xcc4), F32(p, 0xcc8));
+        return GSvec(F32(p, 0xcc0), F32(p, 0xcc4), F32(p, 0xcc8));
     }
-    return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+    return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
 }
 
 Unk80032E60 *fn_80039640(void *p) {
@@ -260,8 +260,8 @@ u32 fn_800396D4(void *p) {
 }
 
 #pragma dont_inline on
-GSvec3 fn_8003B890(void *p) {
-    GSvec3 v = fn_800387E0(p);
+GSvec fn_8003B890(void *p) {
+    GSvec v = fn_800387E0(p);
     v.y = fn_8003B7FC(p);
     return v;
 }
@@ -289,10 +289,10 @@ extern "C" {
 void fn_801F8BC4(GSobject *o, u8 a);
 void fn_8003E238(void *r, void *a);
 void fn_80038020(void *p);
-void fn_8003881C(void *p, GSvec3 *v);
+void fn_8003881C(void *p, GSvec *v);
 void fn_801F5A9C(GSobject *o);
 u32 fn_80039838(void *p, u32 a);
-GSvec3 fn_8003B674(void *p, int i);
+GSvec fn_8003B674(void *p, int i);
 f32 PSVECMag(const Vec *v);
 
 void fn_8003CB04(void *p) {
@@ -359,13 +359,13 @@ void *fn_8003997C(void *p, int i) {
 }
 
 f32 fn_8003A1E4(void *p, u32 a, u32 b, u32 c) {
-    GSvec3 v = fn_80039F60(p, a, b, c);
+    GSvec v = fn_80039F60(p, a, b, c);
     v.y = lbl_80640820;
     return PSVECMag(&v);
 }
 
 #pragma dont_inline on
-void fn_800388C4(void *p, GSvec3 *v) {
+void fn_800388C4(void *p, GSvec *v) {
     if (OBJ(p)) {
         fn_8003881C(p, v);
         OBJ(p)->update(lbl_80640820, true);
@@ -373,25 +373,25 @@ void fn_800388C4(void *p, GSvec3 *v) {
     }
 }
 
-GSvec3 fn_8003989C(void *p, u32 b) {
+GSvec fn_8003989C(void *p, u32 b) {
     return fn_8003B674(p, fn_80039838(p, b));
 }
 #pragma dont_inline reset
 
-GSvec3 fn_8003B6F4(void *p) {
+GSvec fn_8003B6F4(void *p) {
     GSobject *o = OBJ(p);
     GSboundingBox *bb = o ? (GSboundingBox *)((u8 *)o + 0x120) : NULL;
     if (bb == NULL) {
-        return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+        return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
     }
     return bb->mMin;
 }
 
-GSvec3 fn_8003B744(void *p) {
+GSvec fn_8003B744(void *p) {
     GSobject *o = OBJ(p);
     GSboundingBox *bb = o ? (GSboundingBox *)((u8 *)o + 0x120) : NULL;
     if (bb == NULL) {
-        return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+        return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
     }
     return bb->mMax;
 }
@@ -553,7 +553,7 @@ f32 fn_8003D2A0(void *p) {
 }
 
 f32 fn_8003B794(void *p) {
-    GSvec3 v = fn_800387E0(p);
+    GSvec v = fn_800387E0(p);
     GSobject *o = OBJ(p);
     GSboundingBox *bb = o ? (GSboundingBox *)((u8 *)o + 0x120) : NULL;
     if (bb == NULL) {
@@ -629,13 +629,13 @@ void *fn_800398EC(void *p, u32 b) {
     return NULL;
 }
 
-GSvec3 fn_8003B674(void *p, int i) {
+GSvec fn_8003B674(void *p, int i) {
     GSobject *o = OBJ(p);
     if (o && i >= 0 && i < U16(o, 0xde)) {
         _UnkObjectStruct_3 *n = (_UnkObjectStruct_3 *)objGetNode(o, i);
         return n->_unkVec3_2();
     }
-    return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+    return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
 }
 
 #pragma dont_inline on
@@ -803,8 +803,8 @@ void fn_8003DE90(void *p, u32 a, u32 b) {
 }
 
 struct BoxPair {
-    GSvec3 a;
-    GSvec3 b;
+    GSvec a;
+    GSvec b;
 };
 
 extern "C" {
@@ -825,15 +825,15 @@ u32 fn_8003B388(void *p) {
 }
 
 f32 fn_8003B7FC(void *p) {
-    GSvec3 pos = fn_800387E0(p);
+    GSvec pos = fn_800387E0(p);
     BoxPair *q = (BoxPair *)((u8 *)p + 0xc0c);
     f32 h;
     if (q == NULL) {
         h = lbl_80640820;
     } else {
-        GSvec3 t;
+        GSvec t;
         VECSubtract(&q->b, &q->a, &t);
-        GSvec3 d = t;
+        GSvec d = t;
         h = d.y;
     }
     f32 b = fn_8003B794(p);
@@ -882,13 +882,13 @@ int fn_80039718(void *p) {
 struct W3 {
     u32 a, b, c;
 };
-void fn_8003881C(void *p, GSvec3 *v) {
+void fn_8003881C(void *p, GSvec *v) {
     GSobject *o = OBJ(p);
     if (o) {
         GSnull **arr = (GSnull **)PTR(o, 8);
         if (arr && arr[0]) {
             GSnull *n = arr[0];
-            GSvec3 *d = (GSvec3 *)((u8 *)n + 0x20);
+            GSvec *d = (GSvec *)((u8 *)n + 0x20);
             f32 x = v->x;
             f32 y = v->y;
             d->x = x;
@@ -970,7 +970,7 @@ void fn_800371D4(void *p) {
 void fn_8003B2D0(void *p, u32 b, f32 x, f32 y, f32 z, f32 f) {
     TmpD64 *s = (TmpD64 *)p;
     if (PTR(p, 0xd70)) {
-        GSvec3 pos = fn_800387E0(p);
+        GSvec pos = fn_800387E0(p);
         fn_8005033C(s->s1b4, &s->d64, &z, &s->d64, b, f);
         fn_8005033C(s->s1d8, &s->d68, &x, &s->d68, b, f);
         fn_8005033C(s->s1fc, &s->d6c, &y, &s->d6c, b, f);
@@ -1110,7 +1110,7 @@ void fn_80039C10(void *p) {
 struct W12 {
     u32 a, b, c;
 };
-void fn_80038AD0(void *p, GSvec3 *v) {
+void fn_80038AD0(void *p, GSvec *v) {
     if (OBJ(p)) {
         u32 a = ((u32 *)v)[0];
         u32 b = ((u32 *)v)[1];
@@ -1361,7 +1361,7 @@ extern const f32 lbl_80640880;
 double atan2(double y, double x);
 double asin(double x);
 f32 fn_8003AA74(void *p, f32 a, f32 b);
-void fn_8003A6C8(void *p, GSvec3 *e, u32 c, u32 b, f32 f);
+void fn_8003A6C8(void *p, GSvec *e, u32 c, u32 b, f32 f);
 }
 
 inline f32 safeAsin(f32 x) {
@@ -1381,11 +1381,11 @@ inline f32 myAtan2(f32 y, f32 x) {
 }
 void fn_80038D08(void *p, void *q, u32 b, f32 f) {
     if (U16(p, 0x51c) >= 9 || U8(p, 0x520) == 0) {
-        GSvec3 d = fn_8003B674(q, 10) - fn_8003B674(p, 14);
+        GSvec d = fn_8003B674(q, 10) - fn_8003B674(p, 14);
         f32 yaw = myAtan2(d.x, d.z);
         yaw -= fn_8003AA74(p, fn_80038A94(p).y, yaw);
         f32 pitch = safeAsin(d.y / PSVECMag(&d));
-        fn_8003A6C8(p, &GSvec3(-pitch, yaw, lbl_80640820), 14, b, f);
+        fn_8003A6C8(p, &GSvec(-pitch, yaw, lbl_80640820), 14, b, f);
     }
 }
 
@@ -1393,7 +1393,7 @@ void fn_80038E58(void *p, void *q) {
     if (U16(p, 0x51c) >= 9 || U8(p, 0x520) == 0) {
         f32 yaw;
         f32 lim = lbl_80640884;
-        GSvec3 d = fn_8003B674(q, 10) - fn_8003B674(p, 14);
+        GSvec d = fn_8003B674(q, 10) - fn_8003B674(p, 14);
         yaw = myAtan2(d.x, d.z);
         yaw -= fn_8003AA74(p, fn_80038A94(p).y, yaw);
         if (yaw > lim) {
@@ -1403,7 +1403,7 @@ void fn_80038E58(void *p, void *q) {
             yaw = -lim;
         }
         f32 pitch = safeAsin(d.y / PSVECMag(&d));
-        fn_8003A958(p, &GSvec3(-pitch, yaw, lbl_80640820), 14);
+        fn_8003A958(p, &GSvec(-pitch, yaw, lbl_80640820), 14);
     }
 }
 }
@@ -1777,7 +1777,7 @@ void fn_80039A54(void *p, int flag, f32 f) {
             } else {
                 F32(p, 0xd80) = lbl_80640820;
                 fn_80039200(p, 8, lbl_80640820);
-                GSvec3 v = fn_800387E0(p);
+                GSvec v = fn_800387E0(p);
                 v.y = F32(p, 0xd7c);
                 fn_8003881C(p, &v);
             }
@@ -1803,22 +1803,22 @@ void fn_80039A54(void *p, int flag, f32 f) {
 
 extern "C" {
 
-GSvec3 fn_8003A430(void *p, u32 a, f32 t) {
+GSvec fn_8003A430(void *p, u32 a, f32 t) {
     s8 *r = fn_8003967C(p, a);
     if (r == NULL || OBJ(p) == NULL) {
-        return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+        return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
     }
     u16 id = fn_8003C25C(p, *r);
     GSobject *o = OBJ(p);
     if (objGetNode(o, 0) == NULL) {
-        return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+        return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
     }
     if (!(U32(p, 0) & 1)) {
         U16(o, 0xdc) |= 1;
     }
     OBJ(p)->startAnimation(id, 0, t, lbl_80640830, false, false, false);
     OBJ(p)->update(lbl_80640820, true);
-    GSvec3 d = fn_8003B744(p) - fn_8003B6F4(p);
+    GSvec d = fn_8003B744(p) - fn_8003B6F4(p);
     if (!(U32(p, 0) & 1)) {
         U16(OBJ(p), 0xdc) &= ~1;
     }
@@ -1830,20 +1830,20 @@ GSvec3 fn_8003A430(void *p, u32 a, f32 t) {
 
 extern "C" {
 
-GSvec3 fn_8003A270(void *p, u32 a, u32 b, f32 t) {
+GSvec fn_8003A270(void *p, u32 a, u32 b, f32 t) {
     s8 *r = fn_8003967C(p, a);
     if (r == NULL || OBJ(p) == NULL) {
-        return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+        return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
     }
     u16 id = fn_8003C25C(p, *r);
     GSnull *root = (GSnull *)objGetNode(OBJ(p), 0);
     GSnull *n = (GSnull *)objGetNode(OBJ(p), fn_80039838(p, b));
     if (root == NULL || n == NULL) {
-        return GSvec3(lbl_80640820, lbl_80640820, lbl_80640820);
+        return GSvec(lbl_80640820, lbl_80640820, lbl_80640820);
     }
     OBJ(p)->startAnimation(id, 0, t, lbl_80640830, false, false, false);
     root->update(lbl_80640820);
-    GSvec3 v = ((_UnkObjectStruct_3 *)n)->_unkVec3_2();
+    GSvec v = ((_UnkObjectStruct_3 *)n)->_unkVec3_2();
     OBJ(p)->startAnimation(0, 1, lbl_80640820, lbl_80640830, false, false, false);
     return v;
 }

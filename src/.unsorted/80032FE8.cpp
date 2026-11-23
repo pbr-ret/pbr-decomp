@@ -94,17 +94,17 @@ static inline f32 Clamp01(f32 value) {
     return value;
 }
 
-static inline GSvec3 MulVec(const Vec &a, const GSvec3 &b) {
+static inline GSvec MulVec(const Vec &a, const GSvec &b) {
     f32 z = a.z * b.z;
     f32 y = a.y * b.y;
     f32 x = a.x * b.x;
-    return GSvec3(x, y, z);
+    return GSvec(x, y, z);
 }
 
 static inline void SetCameraView(GScamera *camera, const Vec &dir) {
-    GSvec3 target(lbl_806407E4, lbl_806407CC, lbl_806407E4);
-    GSvec3 scale(lbl_806407E8, lbl_806407E8, lbl_806407EC);
-    GSvec3 pos = MulVec(dir, scale);
+    GSvec target(lbl_806407E4, lbl_806407CC, lbl_806407E4);
+    GSvec scale(lbl_806407E8, lbl_806407E8, lbl_806407EC);
+    GSvec pos = MulVec(dir, scale);
     camera->_1ac.x = pos.x;
     camera->_1ac.y = pos.y;
     camera->_1ac.z = pos.z;

@@ -55,8 +55,8 @@ static inline bool isEqual(const Vec &a, const Vec &b) {
     return true;
 }
 
-static inline GSvec3 getMtxColumn(const Mtx mtx, int col) {
-    GSvec3 vec;
+static inline GSvec getMtxColumn(const Mtx mtx, int col) {
+    GSvec vec;
     vec.x = mtx[0][col];
     vec.y = mtx[1][col];
     vec.z = mtx[2][col];
@@ -219,8 +219,8 @@ void GScamera::fn_801DE1F8() {
 // TODO Makes the up vector perpendicular to the view direction
 void GScamera::fn_801DE524() {
     if (_104 & CAMERA_FLAG_UP_DIRTY) {
-        GSvec3 forward;
-        GSvec3 right;
+        GSvec forward;
+        GSvec right;
         forward = _1c4 - _1ac;
         forward.normalize();
         right = forward.cross(&_1b8);
@@ -239,8 +239,8 @@ void GScamera::updateTransform() {
         }
         _1c4 = getMtxColumn(*_1d0->getTransform(), 3);
 
-        GSvec3 forward;
-        GSvec3 right;
+        GSvec forward;
+        GSvec right;
         forward = _1c4 - _1ac;
         forward.normalize();
         right = forward.cross(&GSmath::sYAxis);
@@ -293,9 +293,9 @@ void GScamera::updateTransform() {
 Unk80491970 GScamera::fn_801DEA3C(const GSmatrix &src, bool yawOnly) const {
     GSmatrix mtx;
     Mtx rotMtx;
-    GSvec3 position;
-    GSvec3 dir;
-    GSvec3 scale;
+    GSvec position;
+    GSvec dir;
+    GSvec scale;
     Quaternion rotQuat;
 
     const Mtx &m = src;

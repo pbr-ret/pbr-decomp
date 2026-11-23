@@ -38,7 +38,7 @@ class GSmodel : public GSnull {
 private:
     /* 0x104 */ u32 _104;
     /* 0x108 */ GSboundingBox mBoundingBox;
-    /* 0x124 */ GSvec3 mCenter;
+    /* 0x124 */ GSvec mCenter;
     /* 0x130 */ f32 _130;
     /* 0x134 */ GScolor<u8> _134;
     /* 0x138 */ f32 _138;
@@ -48,7 +48,7 @@ private:
     /* 0x148 */ f32 _148;
     /* 0x14C */ f32 _14c;
     /* 0x150 */ f32 _150;
-    /* 0x154 */ GSvec3 _154;
+    /* 0x154 */ GSvec _154;
     /* 0x160 */ f32 _160;
     /* 0x164 */ GSmodelData *mModelData;
     /* 0x168 */ GSmatrix *_168;

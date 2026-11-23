@@ -20,11 +20,11 @@ struct GSmodelData;
 
 typedef void (*GSanimationCallback)(GSanimationObject *node, GSchannelData *channel, f32 cursor, bool blend);
 
-// TODO(samm) Name? Move? Vec vs. GSvec3?
+// TODO(samm) Name? Move? Vec vs. GSvec?
 struct _TransformPivots {
-    /* 0x00 */ GSvec3 mScalePivot;
-    /* 0x0C */ GSvec3 mScaleToRot;
-    /* 0x18 */ GSvec3 mRotToTrans;
+    /* 0x00 */ GSvec mScalePivot;
+    /* 0x0C */ GSvec mScaleToRot;
+    /* 0x18 */ GSvec mRotToTrans;
     /* 0x24 */ union {
         Vec _24;
         struct {
@@ -184,8 +184,8 @@ struct Unk801E294C {
 
 // size: 0x20
 struct _UnkModelData_1 {
-    /* 0x00 */ GSvec3 mBoundingBoxMin;
-    /* 0x0C */ GSvec3 mBoundingBoxMax;
+    /* 0x00 */ GSvec mBoundingBoxMin;
+    /* 0x0C */ GSvec mBoundingBoxMax;
     /* 0x18 */ u16 _18;
     /* 0x1C */ Unk801E294C *_1c;
 };
@@ -488,7 +488,7 @@ void fn_801E0A54(GSchannelData *channelData, u32 baseAddr);
 void fn_801E0A60(GSchannelData *channelData, const Version *version, u32 baseAddr);
 void fn_801E10BC(GSchannelData *channelData);
 void fn_801E10C0(GSchannelData *channelData, f32 cursor, f32 *dst);
-void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec3 *dst);
+void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec *dst);
 void fn_801E1360(GSchannelData *channelData, f32 cursor, GSquat *dst);
 void fn_801E13B8(GSchannelData *channelData, f32 cursor, GSvec2 *dst);
 void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor<u8> *dst);

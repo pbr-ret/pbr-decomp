@@ -57,8 +57,8 @@ u8 GSnull::sDepth;
 
 // TODO(samm) Move to GSmath.hpp once fully matching
 
-inline GSvec3 getMtxScale(const Mtx mtx) {
-    GSvec3 scale;
+inline GSvec getMtxScale(const Mtx mtx) {
+    GSvec scale;
     scale.x = safe_sqrt(mtx[0][0] * mtx[0][0] + mtx[1][0] * mtx[1][0] + mtx[2][0] * mtx[2][0]);
     scale.y = safe_sqrt(mtx[0][1] * mtx[0][1] + mtx[1][1] * mtx[1][1] + mtx[2][1] * mtx[2][1]);
     scale.z = safe_sqrt(mtx[0][2] * mtx[0][2] + mtx[1][2] * mtx[1][2] + mtx[2][2] * mtx[2][2]);
@@ -69,7 +69,7 @@ inline GSquat getMtxRot(const Mtx mtx) {
     Mtx copy;
     MTXCopy(mtx, copy);
 
-    GSvec3 scale = getMtxScale(copy);
+    GSvec scale = getMtxScale(copy);
 
     // TODO(samm) Inlining/macro?
     f32 x;
@@ -101,16 +101,16 @@ inline GSquat getMtxRot(const Mtx mtx) {
     return rotation;
 }
 
-inline GSvec3 getMtxTrans(const Mtx mtx) {
-    GSvec3 trans;
+inline GSvec getMtxTrans(const Mtx mtx) {
+    GSvec trans;
     trans.x = mtx[0][3];
     trans.y = mtx[1][3];
     trans.z = mtx[2][3];
     return trans;
 }
 
-inline void blendTranslation(const GSvec3 *a, const GSvec3 *b, GSvec3 *out, f32 blendFactor) {
-    GSvec3 _unk1, _unk2;
+inline void blendTranslation(const GSvec *a, const GSvec *b, GSvec *out, f32 blendFactor) {
+    GSvec _unk1, _unk2;
     VECSubtract(b, a, &_unk1);
     VECScale(&_unk1, &_unk2, blendFactor);
     VECAdd(a, &_unk2, out);
@@ -122,14 +122,14 @@ inline void blendRotationLocal(const GSquat *a, const GSquat *b, GSquat *out, f3
     *out = blended;
 }
 
-inline void blendScaleLinear(const GSvec3 *a, const GSvec3 *b, GSvec3 *out, f32 blendFactor) {
-    GSvec3 temp;
+inline void blendScaleLinear(const GSvec *a, const GSvec *b, GSvec *out, f32 blendFactor) {
+    GSvec temp;
     VECScale(a, out, 1.f - blendFactor);
     VECScale(b, &temp, blendFactor);
     VECAdd(out, &temp, out);
 }
 
-inline void blendScaleGeometric(const GSvec3 *a, const GSvec3 *b, GSvec3 *out, f32 blendFactor) {
+inline void blendScaleGeometric(const GSvec *a, const GSvec *b, GSvec *out, f32 blendFactor) {
     out->x = SAFE_POW(a->x, 1.f - blendFactor);
     out->y = SAFE_POW(a->y, 1.f - blendFactor);
     out->z = SAFE_POW(a->z, 1.f - blendFactor);

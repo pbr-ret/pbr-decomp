@@ -12,11 +12,11 @@
 #define GET_BYTE(track, idx) (((s8 *)(track)->mValues)[idx])
 #define GET_SHORT(track, idx) (((s16 *)(track)->mValues)[idx])
 #define GET_USHORT(track, idx) (((u16 *)(track)->mValues)[idx])
-#define GET_VEC3(track, idx) (((GSvec3 *)(track)->mValues)[idx])
+#define GET_VEC3(track, idx) (((GSvec *)(track)->mValues)[idx])
 #define GET_QUAT(track, idx) (((GSquat *)(track)->mValues)[idx])
 
 #define GET_FLOAT_CONTROL(track, idx) (((f32 *)(track)->mControls)[idx])
-#define GET_VEC3_CONTROL(track, idx) (((GSvec3 *)(track)->mControls)[idx])
+#define GET_VEC3_CONTROL(track, idx) (((GSvec *)(track)->mControls)[idx])
 
 namespace GSmath {
 
@@ -237,11 +237,11 @@ void animInterpolateVec3(f32 cursor, GSanimTrackData *track, GSkeyframe *kf1, GS
         case GS_INTERP_LINEAR: {
             f32 t = (cursor - kf1->mTime) / (kf2->mTime - kf1->mTime);
 
-            GSvec3 a;
+            GSvec a;
             VECScale(&GET_VEC3(track, valueIdx), &a, 1.f - t);
             track->mCachedVec3 = a;
 
-            GSvec3 b;
+            GSvec b;
             VECScale(&GET_VEC3(track, kf2->mValueIdx), &b, t);
 
             VECAdd(&track->mCachedVec3, &b, &track->mCachedVec3);
@@ -257,19 +257,19 @@ void animInterpolateVec3(f32 cursor, GSanimTrackData *track, GSkeyframe *kf1, GS
             f32 h_10 = h_11 - tsquared + t;
             f32 h_00 = 1.f - h_01;
 
-            GSvec3 a;
+            GSvec a;
             VECScale(&GET_VEC3(track, valueIdx), &a, h_00);
             track->mCachedVec3 = a;
 
-            GSvec3 b;
+            GSvec b;
             VECScale(&GET_VEC3(track, kf2->mValueIdx), &b, h_01);
             VECAdd(&track->mCachedVec3, &b, &track->mCachedVec3);
 
-            GSvec3 c;
+            GSvec c;
             VECScale(&GET_VEC3_CONTROL(track, kf1->mControlIdxR), &c, h_10);
             VECAdd(&track->mCachedVec3, &c, &track->mCachedVec3);
 
-            GSvec3 d;
+            GSvec d;
             VECScale(&GET_VEC3_CONTROL(track, kf2->mControlIdxL), &d, h_11);
             VECAdd(&track->mCachedVec3, &d, &track->mCachedVec3);
         } break;
@@ -278,7 +278,7 @@ void animInterpolateVec3(f32 cursor, GSanimTrackData *track, GSkeyframe *kf1, GS
     }
 }
 
-void animSampleVec3(GSvec3 *dst, f32 cursor, GSanimTrackData *track, u32 arg2) {
+void animSampleVec3(GSvec *dst, f32 cursor, GSanimTrackData *track, u32 arg2) {
     if (!track->mKeyframes) {
         if (track->mCachedTime == cursor) {
             *dst = track->mCachedVec3;
