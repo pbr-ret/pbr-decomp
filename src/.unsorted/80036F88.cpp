@@ -1136,10 +1136,10 @@ void fn_80038AD0(void *p, GSvec *v) {
 
 extern "C" {
 
-extern u8 lbl_8049362C[];
+extern GSvec lbl_8049362C;
 
 void fn_800505C0(void *p);
-void fn_8003A958(void *p, void *a, u32 b);
+void fn_8003A958(void *p, const GSvec &a, u32 b);
 
 void fn_80039544(void *p, int on) {
     if (U16(p, 0xc68) == 0x100) {
@@ -1295,16 +1295,16 @@ inline void clearAnimFlag(void *c) {
 
 extern "C" {
 
-void fn_802233C8(Mtx m, void *a, u32 b);
+void fn_802233C8(Mtx m, const GSvec *a, u32 b);
 void C_QUATMtx(Quaternion *q, const Mtx m);
 
-void fn_8003A958(void *p, void *a, u32 b) {
+void fn_8003A958(void *p, const GSvec &a, u32 b) {
     if (OBJ(p)) {
         GSnull *n = (GSnull *)objGetNode(OBJ(p), fn_80039838(p, b));
         if (n) {
             Mtx m;
             GSquat q;
-            fn_802233C8(m, a, 0);
+            fn_802233C8(m, &a, 0);
             C_QUATMtx(&q, m);
             *(GSquat *)((u8 *)n + 0x2c) = q;
             U16(n, 0x10) &= ~4;
@@ -1361,7 +1361,7 @@ extern const f32 lbl_80640880;
 double atan2(double y, double x);
 double asin(double x);
 f32 fn_8003AA74(void *p, f32 a, f32 b);
-void fn_8003A6C8(void *p, GSvec *e, u32 c, u32 b, f32 f);
+void fn_8003A6C8(void *p, const GSvec &e, u32 c, u32 b, f32 f);
 }
 
 inline f32 safeAsin(f32 x) {
@@ -1385,7 +1385,7 @@ void fn_80038D08(void *p, void *q, u32 b, f32 f) {
         f32 yaw = myAtan2(d.x, d.z);
         yaw -= fn_8003AA74(p, fn_80038A94(p).y, yaw);
         f32 pitch = safeAsin(d.y / PSVECMag(&d));
-        fn_8003A6C8(p, &GSvec(-pitch, yaw, lbl_80640820), 14, b, f);
+        fn_8003A6C8(p, GSvec(-pitch, yaw, lbl_80640820), 14, b, f);
     }
 }
 
@@ -1403,7 +1403,7 @@ void fn_80038E58(void *p, void *q) {
             yaw = -lim;
         }
         f32 pitch = safeAsin(d.y / PSVECMag(&d));
-        fn_8003A958(p, &GSvec(-pitch, yaw, lbl_80640820), 14);
+        fn_8003A958(p, GSvec(-pitch, yaw, lbl_80640820), 14);
     }
 }
 }
