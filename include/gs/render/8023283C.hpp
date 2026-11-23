@@ -4,6 +4,7 @@
 
 struct GSvertexFormat;
 
+// size: 0x10
 class GSdisplayList {
 private:
     /* 0x00 */ u16 mFlags;
@@ -11,7 +12,6 @@ private:
     /* 0x04 */ void *mDisplayList;
     /* 0x08 */ u32 mDisplayListSize;
     /* 0x0C */ GSvertexFormat *mVertexFormat;
-    /* 0x10 */ u32 _10;
 
 public:
     GSdisplayList();
@@ -20,10 +20,7 @@ public:
     void fn_802328AC();
     void call();
     void flush();
-
-    u32 *get_10() {
-        return &_10;
-    }
+    void fn_80232988(GSvertexFormat *vertexFormat, void *data, u32 size, u16 arg3);
 
     GSvertexFormat *getVertexFormat() const {
         if ((mFlags & (1 << 0))) {

@@ -32,13 +32,13 @@ GSmesh::GSmesh(GSmodel *parentModel, GSmeshData *data)
         return;
     }
 
-    GSdisplayList *displayList = data->_10->mDisplayList;
+    Unk801E2168 *displayList = data->_10->mDisplayList;
     if (!displayList) {
         return;
     }
-    mDisplayList = displayList;
+    mDisplayList = &displayList->mDisplayList;
 
-    _18 = new _UnkClass8023C09C(displayList->get_10());
+    _18 = new _UnkClass8023C09C(&displayList->mVertexFormat);
     if (!_18) {
         return;
     }

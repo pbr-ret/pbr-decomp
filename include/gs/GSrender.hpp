@@ -110,10 +110,26 @@ struct GSvtxAttrArray {
 // Size: 0x3d4
 struct GSvertexFormat {
     /* 0x0 */ u8 mFlags;
+    /* 0x1 */ u8 _1;
+    /* 0x2 */ u8 _2;
+    /* 0x3 */ u8 _3;
     /* 0x4 */ GXVtxFmt mVtxFmt;
     /* 0x8 */ GXVtxAttrFmtList mVtxAttrFmtList[GX_VA_MAX_ATTR + 1];
     /* 0x1b8 */ GXVtxDescList mVtxDescList[GX_VA_MAX_ATTR + 1];
     /* 0x290 */ GSvtxAttrArray mAttrArrayList[GX_VA_MAX_ATTR + 1];
+
+    GSvertexFormat() : mFlags(), _1(), _2(), _3(), mVtxFmt() {
+        fn_8023C8B4();
+    }
+
+    ~GSvertexFormat() {
+        fn_8023CA6C();
+    }
+
+    void fn_8023C8B4();
+    void fn_8023CA6C();
+    void fn_8023CAD8(u8 attr, u8 compCount, u8 compType, u8 frac);
+    void fn_8023CC30(u8 attr, u8 arg1, s32 arg2, u8 stride, u32 size);
 };
 
 // Size: 0x18

@@ -871,6 +871,8 @@ src/.unsorted/801E0810.cpp:
 src/gs/GSsceneData.cpp:
 	.text       start:0x801E0A54 end:0x801E4360
 	.ctors      start:0x803E2070 end:0x803E2074
+	.bss        start:0x80491870 end:0x804918C0
+	.sbss       start:0x8063F378 end:0x8063F380
 
 src/gs/scene/GSjointNode.cpp:
 	.text       start:0x801E4360 end:0x801E474C

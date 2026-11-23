@@ -3,6 +3,7 @@
 #include ".unsorted/80032E60.hpp"
 #include ".unsorted/8003E03C.hpp"
 #include ".unsorted/800400E8.hpp"
+#include "gs/GSsceneData.hpp"
 
 #include "common.hpp"
 
@@ -1693,7 +1694,6 @@ struct TmpC58 {
 
 extern "C" {
 
-void fn_801E37F0(void *a);
 void fn_8003EAB0(void *a);
 
 void fn_800375A4(void *p) {
@@ -1728,7 +1728,7 @@ void fn_800375A4(void *p) {
     fn_800371D4((u8 *)p + 0xd04);
     if (PTR(p, 0xbfc)) {
         if (U32(p, 0) & 0x80) {
-            fn_801E37F0(PTR(p, 0xbfc));
+            fn_801E37F0((GSsceneData *)PTR(p, 0xbfc));
             GSmem::free(PTR(p, 0xbfc));
         } else {
             GScache::decrementRefCount(U32(p, 0xc48), U32(p, 0xc4c));
