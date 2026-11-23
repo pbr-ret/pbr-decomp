@@ -31,8 +31,16 @@ static inline void fixPointer(T **pointer, u32 baseAddr) {
     }
 }
 
-static inline void initTextureList(GStexture **texList, u16 texCount, u32 baseAddr) {
-    for (u16 texIndex = 0; texIndex < texCount; texIndex++, texList++) {
+template <typename T>
+static inline void initTextureList(T *data, u32 baseAddr) {
+    GStexture **texList;
+    u16 texCount;
+    u16 texIndex;
+
+    texCount = data->mTextureCount;
+    texList = data->mTextureList;
+
+    for (texIndex = 0; texIndex < texCount; texIndex++, texList++) {
         if (!*texList) {
             continue;
         }
@@ -59,49 +67,118 @@ static inline void initTextureList(GStexture **texList, u16 texCount, u32 baseAd
     GSrender::sInstance->invalidateTextureCache();
 }
 
-static inline void releaseTextureList(GStexture **texList, u16 texCount) {
-    for (u16 texIndex = 0; texIndex < texCount; texIndex++, texList++) {
+static inline void releaseTextureList(GSsceneData *sceneData) {
+    u16 texCount;
+    u16 texIndex;
+    GStexture **texList;
+
+    texCount = sceneData->mTextureCount;
+    texList = sceneData->mTextureList;
+
+    for (texIndex = 0; texIndex < texCount; texIndex++, texList++) {
         if (*texList) {
             (*texList)->fn_8023E2D0();
         }
     }
 }
 
-static inline void
-initRenderSettingsList(GSmeshRenderSettings **list, u16 count, const Version *version, u32 baseAddr) {
-    for (u16 i = 0; i < count; i++, list++) {
-        if (!*list) {
+template <typename T>
+static inline void initRenderSettingsList(T *data, u32 baseAddr) {
+    u16 rsCount;
+    u16 rsIndex;
+    GSmeshRenderSettings **rsList;
+
+    rsCount = data->mRenderSettingsCount;
+    rsList = data->mRenderSettingsList;
+
+    for (rsIndex = 0; rsIndex < rsCount; rsIndex++, rsList++) {
+        if (!*rsList) {
             continue;
         }
 
-        fixPointer(list, baseAddr);
-        fn_801E1714(*list, version, baseAddr);
+        fixPointer(rsList, baseAddr);
+        fn_801E1714(*rsList, &data->mVersion, baseAddr);
     }
 }
 
-static inline void releaseRenderSettingsList(GSmeshRenderSettings **list, u16 count) {
-    for (u16 i = 0; i < count; i++, list++) {
-        if (*list) {
-            fn_801E1740(*list);
+static inline void releaseRenderSettingsList(GSsceneData *sceneData) {
+    u16 rsCount;
+    u16 rsIndex;
+    GSmeshRenderSettings **rsList;
+
+    rsCount = sceneData->mRenderSettingsCount;
+    rsList = sceneData->mRenderSettingsList;
+
+    for (rsIndex = 0; rsIndex < rsCount; rsIndex++, rsList++) {
+        if (*rsList) {
+            fn_801E1740(*rsList);
         }
     }
 }
 
-static inline void initMaterialList(GSmaterialData **matList, u16 matCount, const Version *version, u32 baseAddr) {
-    for (u16 matIndex = 0; matIndex < matCount; matIndex++, matList++) {
+template <typename T>
+static inline void initMaterialList(T *data, u32 baseAddr) {
+    u16 matCount;
+    u16 matIndex;
+    GSmaterialData **matList;
+
+    matCount = data->mMaterialCount;
+    matList = data->mMaterialList;
+
+    for (matIndex = 0; matIndex < matCount; matIndex++, matList++) {
         if (!*matList) {
             continue;
         }
 
         fixPointer(matList, baseAddr);
-        fn_801E18F8(*matList, version, baseAddr);
+        fn_801E18F8(*matList, &data->mVersion, baseAddr);
     }
 }
 
-static inline void releaseMaterialList(GSmaterialData **matList, u16 matCount) {
-    for (u16 matIndex = 0; matIndex < matCount; matIndex++, matList++) {
+static inline void releaseMaterialList(GSsceneData *sceneData) {
+    u16 matCount;
+    u16 matIndex;
+    GSmaterialData **matList;
+
+    matCount = sceneData->mMaterialCount;
+    matList = sceneData->mMaterialList;
+
+    for (matIndex = 0; matIndex < matCount; matIndex++, matList++) {
         if (*matList) {
             fn_801E1C78(*matList);
+        }
+    }
+}
+
+static inline void initObjectList(GSsceneData *sceneData, u32 baseAddr) {
+    u16 objCount;
+    u16 objIndex;
+    GSobjectData **objList;
+
+    objCount = sceneData->mObjectCount;
+    objList = sceneData->mObjectList;
+
+    for (objIndex = 0; objIndex < objCount; objIndex++, objList++) {
+        if (!*objList) {
+            continue;
+        }
+
+        fixPointer(objList, baseAddr);
+        fn_801E2F60(*objList, &sceneData->mVersion, baseAddr, (bool)sceneData->mEnvData);
+    }
+}
+
+static inline void releaseObjectList(GSsceneData *sceneData) {
+    GSobjectData **objList;
+    u16 objCount;
+    u16 objIndex;
+
+    objCount = sceneData->mObjectCount;
+    objList = sceneData->mObjectList;
+
+    for (objIndex = 0; objIndex < objCount; objIndex++, objList++) {
+        if (*objList) {
+            fn_801E31EC(*objList, (bool)sceneData->mEnvData);
         }
     }
 }
@@ -933,19 +1010,17 @@ void fn_801E31EC(GSobjectData *objectData, bool arg1) {
     }
 }
 
-GSenvData::GSenvData()
-    : mFogEnable(false),
-      mFogType(GX_FOG_LIN),
-      mFogRangeAdjEnable(false),
-      mFogStartZ(0.0f),
-      mFogEndZ(1000.0f),
-      mFogColor(0xff, 0xff, 0xff, 0xff),
-      _10(),
-      _14(),
-      _18(),
-      _1c(),
-      _20(),
-      _24() {}
+GSenvData::GSenvData() : _10(), _14(), _18(), _1c(), _20(), _24() {
+    mFogEnable = false;
+    mFogType = GX_FOG_LIN;
+    mFogRangeAdjEnable = false;
+    mFogStartZ = 0.0f;
+    mFogEndZ = 1000.0f;
+    mFogColor.r = 0xff;
+    mFogColor.g = 0xff;
+    mFogColor.b = 0xff;
+    mFogColor.a = 0xff;
+}
 
 void fn_801E3380(GSenvData *envData, const Version *version, u32 baseAddr) {
     fixPointer(&envData->_14, baseAddr);
@@ -985,47 +1060,29 @@ void fn_801E34DC(GSsceneData *sceneData, u32 baseAddr) {
     fixPointer(&sceneData->mEnvData, baseAddr);
     fixPointer(&sceneData->_28, baseAddr);
 
-    initTextureList(sceneData->mTextureList, sceneData->mTextureCount, baseAddr);
+    initTextureList(sceneData, baseAddr);
 
     if (sceneData->mEnvData) {
         fn_801E3380(sceneData->mEnvData, &sceneData->mVersion, baseAddr);
     }
 
-    initRenderSettingsList(sceneData->mRenderSettingsList,
-                           sceneData->mRenderSettingsCount,
-                           &sceneData->mVersion,
-                           baseAddr);
-    initMaterialList(sceneData->mMaterialList, sceneData->mMaterialCount, &sceneData->mVersion, baseAddr);
+    initRenderSettingsList(sceneData, baseAddr);
+    initMaterialList(sceneData, baseAddr);
 
-    u16 objCount = sceneData->mObjectCount;
-    GSobjectData **objList = sceneData->mObjectList;
-    for (u16 objIndex = 0; objIndex < objCount; objIndex++, objList++) {
-        if (!*objList) {
-            continue;
-        }
-
-        fixPointer(objList, baseAddr);
-        fn_801E2F60(*objList, &sceneData->mVersion, baseAddr, (bool)sceneData->mEnvData);
-    }
+    initObjectList(sceneData, baseAddr);
 }
 
 void fn_801E37F0(GSsceneData *sceneData) {
-    u16 objCount = sceneData->mObjectCount;
-    GSobjectData **objList = sceneData->mObjectList;
-    for (u16 objIndex = 0; objIndex < objCount; objIndex++, objList++) {
-        if (*objList) {
-            fn_801E31EC(*objList, (bool)sceneData->mEnvData);
-        }
-    }
+    releaseObjectList(sceneData);
 
-    releaseMaterialList(sceneData->mMaterialList, sceneData->mMaterialCount);
-    releaseRenderSettingsList(sceneData->mRenderSettingsList, sceneData->mRenderSettingsCount);
+    releaseMaterialList(sceneData);
+    releaseRenderSettingsList(sceneData);
 
     if (sceneData->mEnvData) {
         fn_801E3488(sceneData->mEnvData);
     }
 
-    releaseTextureList(sceneData->mTextureList, sceneData->mTextureCount);
+    releaseTextureList(sceneData);
 }
 
 void fn_801E3920(Unk801E3920 *data, u32 baseAddr) {
@@ -1035,9 +1092,9 @@ void fn_801E3920(Unk801E3920 *data, u32 baseAddr) {
     fixPointer(&data->mMaterialList, baseAddr);
     fixPointer(&data->_20, baseAddr);
 
-    initTextureList(data->mTextureList, data->mTextureCount, baseAddr);
-    initRenderSettingsList(data->mRenderSettingsList, data->mRenderSettingsCount, &data->mVersion, baseAddr);
-    initMaterialList(data->mMaterialList, data->mMaterialCount, &data->mVersion, baseAddr);
+    initTextureList(data, baseAddr);
+    initRenderSettingsList(data, baseAddr);
+    initMaterialList(data, baseAddr);
 
     if (data->mObject) {
         fn_801E2F60(data->mObject, &data->mVersion, baseAddr, false);
@@ -1045,13 +1102,46 @@ void fn_801E3920(Unk801E3920 *data, u32 baseAddr) {
 }
 
 void fn_801E3BA0(Unk801E3920 *data) {
+    u16 matIndex;
+    u16 matCount;
+    GSmaterialData **matList;
+    GSmeshRenderSettings **rsList;
+    u16 rsIndex;
+    u16 rsCount;
+    GStexture **texList;
+    u16 texIndex;
+    u16 texCount;
+
     if (data->mObject) {
         fn_801E31EC(data->mObject, false);
     }
 
-    releaseMaterialList(data->mMaterialList, data->mMaterialCount);
-    releaseRenderSettingsList(data->mRenderSettingsList, data->mRenderSettingsCount);
-    releaseTextureList(data->mTextureList, data->mTextureCount);
+    matCount = data->mMaterialCount;
+    matList = data->mMaterialList;
+
+    for (matIndex = 0; matIndex < matCount; matIndex++, matList++) {
+        if (*matList) {
+            fn_801E1C78(*matList);
+        }
+    }
+
+    rsCount = data->mRenderSettingsCount;
+    rsList = data->mRenderSettingsList;
+
+    for (rsIndex = 0; rsIndex < rsCount; rsIndex++, rsList++) {
+        if (*rsList) {
+            fn_801E1740(*rsList);
+        }
+    }
+
+    texCount = data->mTextureCount;
+    texList = data->mTextureList;
+
+    for (texIndex = 0; texIndex < texCount; texIndex++, texList++) {
+        if (*texList) {
+            (*texList)->fn_8023E2D0();
+        }
+    }
 }
 
 void fn_801E3C94(Unk801E3C94 *data, u32 baseAddr) {
@@ -1060,7 +1150,7 @@ void fn_801E3C94(Unk801E3C94 *data, u32 baseAddr) {
     fixPointer(&data->mMaterial, baseAddr);
     fixPointer(&data->_1c, baseAddr);
 
-    initTextureList(data->mTextureList, data->mTextureCount, baseAddr);
+    initTextureList(data, baseAddr);
 
     switch (data->mRenderSettingsType) {
         case 0: fn_801E1714(data->mRenderSettings, &data->mVersion, baseAddr); break;
@@ -1074,6 +1164,10 @@ void fn_801E3C94(Unk801E3C94 *data, u32 baseAddr) {
 }
 
 void fn_801E3E80(Unk801E3C94 *data) {
+    u16 texIndex;
+    u16 texCount;
+    GStexture **texList;
+
     if (data->mMaterial) {
         fn_801E1C78(data->mMaterial);
     }
@@ -1084,7 +1178,14 @@ void fn_801E3E80(Unk801E3C94 *data) {
         case 2: data->mRenderSettings = NULL; break;
     }
 
-    releaseTextureList(data->mTextureList, data->mTextureCount);
+    texCount = data->mTextureCount;
+    texList = data->mTextureList;
+
+    for (texIndex = 0; texIndex < texCount; texIndex++, texList++) {
+        if (*texList) {
+            (*texList)->fn_8023E2D0();
+        }
+    }
 }
 
 void fn_801E3F48(Unk801E3F48 *data, u32 baseAddr) {
@@ -1094,9 +1195,9 @@ void fn_801E3F48(Unk801E3F48 *data, u32 baseAddr) {
     fixPointer(&data->mModel, baseAddr);
     fixPointer(&data->_20, baseAddr);
 
-    initTextureList(data->mTextureList, data->mTextureCount, baseAddr);
-    initRenderSettingsList(data->mRenderSettingsList, data->mRenderSettingsCount, &data->mVersion, baseAddr);
-    initMaterialList(data->mMaterialList, data->mMaterialCount, &data->mVersion, baseAddr);
+    initTextureList(data, baseAddr);
+    initRenderSettingsList(data, baseAddr);
+    initMaterialList(data, baseAddr);
 
     if (data->mModel) {
         fn_801E24F8(data->mModel, &data->mVersion, baseAddr);
@@ -1104,11 +1205,44 @@ void fn_801E3F48(Unk801E3F48 *data, u32 baseAddr) {
 }
 
 void fn_801E41C4(Unk801E3F48 *data) {
+    u16 matIndex;
+    u16 matCount;
+    GSmaterialData **matList;
+    GSmeshRenderSettings **rsList;
+    u16 rsIndex;
+    u16 rsCount;
+    GStexture **texList;
+    u16 texIndex;
+    u16 texCount;
+
     if (data->mModel) {
         fn_801E2810(data->mModel);
     }
 
-    releaseMaterialList(data->mMaterialList, data->mMaterialCount);
-    releaseRenderSettingsList(data->mRenderSettingsList, data->mRenderSettingsCount);
-    releaseTextureList(data->mTextureList, data->mTextureCount);
+    matCount = data->mMaterialCount;
+    matList = data->mMaterialList;
+
+    for (matIndex = 0; matIndex < matCount; matIndex++, matList++) {
+        if (*matList) {
+            fn_801E1C78(*matList);
+        }
+    }
+
+    rsCount = data->mRenderSettingsCount;
+    rsList = data->mRenderSettingsList;
+
+    for (rsIndex = 0; rsIndex < rsCount; rsIndex++, rsList++) {
+        if (*rsList) {
+            fn_801E1740(*rsList);
+        }
+    }
+
+    texCount = data->mTextureCount;
+    texList = data->mTextureList;
+
+    for (texIndex = 0; texIndex < texCount; texIndex++, texList++) {
+        if (*texList) {
+            (*texList)->fn_8023E2D0();
+        }
+    }
 }
