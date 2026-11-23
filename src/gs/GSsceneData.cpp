@@ -183,10 +183,12 @@ static inline void releaseObjectList(GSsceneData *sceneData) {
     }
 }
 
+// TODO: Relocates a channel using this file's version
 void fn_801E0A54(GSchannelData *channelData, u32 baseAddr) {
     fn_801E0A60(channelData, &version, baseAddr);
 }
 
+// TODO: Relocates a channel and picks its step callback
 void fn_801E0A60(GSchannelData *channelData, const Version *version, u32 baseAddr) {
     fixPointer(&channelData->mKeyframes, baseAddr);
 
@@ -336,8 +338,10 @@ void fn_801E0A60(GSchannelData *channelData, const Version *version, u32 baseAdd
     }
 }
 
+// TODO: Release counterpart of fn_801E0A60 (empty)
 void fn_801E10BC(GSchannelData *channelData) {}
 
+// TODO: Samples a channel into a float
 void fn_801E10C0(GSchannelData *channelData, f32 cursor, f32 *dst) {
     switch (channelData->mDataType) {
         case 0: *dst = GSmath::fn_80221B2C(cursor, channelData->mKeyframes, 0); break;
@@ -360,6 +364,7 @@ void fn_801E10C0(GSchannelData *channelData, f32 cursor, f32 *dst) {
     }
 }
 
+// TODO: Samples a channel into a vector
 void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec3 *dst) {
     switch (channelData->mComponent) {
         case 0: {
@@ -398,12 +403,14 @@ void fn_801E1278(GSchannelData *channelData, f32 cursor, GSvec3 *dst) {
     }
 }
 
+// TODO: Samples a channel into a quaternion
 void fn_801E1360(GSchannelData *channelData, f32 cursor, GSquat *dst) {
     GSquat result;
     GSmath::animSampleQuat(&result, cursor, channelData->mKeyframes, 0);
     *dst = result;
 }
 
+// TODO: Samples a channel into a 2D vector
 void fn_801E13B8(GSchannelData *channelData, f32 cursor, GSvec2 *dst) {
     switch (channelData->mComponent) {
         case 0: *dst = GSmath::fn_80221F8C(cursor, channelData->mKeyframes, 0); break;
@@ -412,6 +419,7 @@ void fn_801E13B8(GSchannelData *channelData, f32 cursor, GSvec2 *dst) {
     }
 }
 
+// TODO: Samples a channel into a colour
 void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor<u8> *dst) {
     switch (channelData->mComponent) {
         case 0: {
@@ -429,10 +437,12 @@ void fn_801E1440(GSchannelData *channelData, f32 cursor, GScolor<u8> *dst) {
     }
 }
 
+// TODO: Samples a channel into a byte
 void fn_801E1504(GSchannelData *channelData, f32 cursor, u8 *dst) {
     *dst = GSmath::animSampleU8(cursor, channelData->mKeyframes, channelData->mScaleExp);
 }
 
+// TODO: Relocates a keyframe data list
 void fn_801E1540(GSkeyframeData *keyframeData, const Version *version, u32 baseAddr) {
     fixPointer(&keyframeData->mChannels, baseAddr);
 
@@ -448,6 +458,7 @@ void fn_801E1540(GSkeyframeData *keyframeData, const Version *version, u32 baseA
     }
 }
 
+// TODO: Release counterpart of fn_801E1540
 void fn_801E1614(GSkeyframeData *keyframeData) {
     if (keyframeData->mNext) {
         fn_801E1614(keyframeData->mNext);
@@ -487,10 +498,12 @@ GSmeshRenderSettings::GSmeshRenderSettings(bool arg0) {
     mBlendOp = GX_LO_NOOP;
 }
 
+// TODO: Relocates mesh render settings
 void fn_801E1714(GSmeshRenderSettings *renderSettings, const Version *version, u32 baseAddr) {
     fixPointer(&renderSettings->mZTexture, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E1714 (empty)
 void fn_801E1740(GSmeshRenderSettings *renderSettings) {}
 
 GSmaterialData::GSmaterialData()
@@ -539,6 +552,7 @@ GSmaterialData::GSmaterialData()
     memset(_40, 0, sizeof(_40));
 }
 
+// TODO: Relocates material data
 void fn_801E18F8(GSmaterialData *materialData, const Version *version, u32 baseAddr) {
     if (*version < VERSION(1, 3, 0)) {
         materialData->_54 = 0;
@@ -584,6 +598,7 @@ void fn_801E18F8(GSmaterialData *materialData, const Version *version, u32 baseA
     }
 }
 
+// TODO: Release counterpart of fn_801E18F8
 void fn_801E1C78(GSmaterialData *materialData) {
     if (materialData->mKeyframes) {
         fn_801E1614(materialData->mKeyframes);
@@ -605,6 +620,7 @@ GSnodeData::GSnodeData()
       mNextSibling(),
       _2c() {}
 
+// TODO: Relocates a node tree
 void fn_801E1CD0(GSnodeData *nodeData, const Version *version, u32 baseAddr) {
     switch (nodeData->mNodeType) {
         case GS_NODE_JOINT:    fn_801E2A90(static_cast<GSjointData *>(nodeData), version, baseAddr); break;
@@ -664,6 +680,7 @@ void fn_801E1CD0(GSnodeData *nodeData, const Version *version, u32 baseAddr) {
     }
 }
 
+// TODO: Release counterpart of fn_801E1CD0
 void fn_801E2090(GSnodeData *nodeData) {
     if (nodeData->mNextSibling) {
         fn_801E2090(nodeData->mNextSibling);
@@ -688,6 +705,7 @@ void fn_801E2090(GSnodeData *nodeData) {
     }
 }
 
+// TODO: Relocates a mesh list and builds its display lists
 void fn_801E2168(GSmeshData *meshData, const Version *version, u32 baseAddr, GSmodelData *modelData) {
     if (meshData->_c == 0) {
         meshData->_c = 1;
@@ -706,6 +724,7 @@ void fn_801E2168(GSmeshData *meshData, const Version *version, u32 baseAddr, GSm
     fixPointer(&meshData->_20, baseAddr);
 
     switch (meshData->_0) {
+        case 0: break;
         case 1: meshData->mRenderSettings = &lbl_80491870; break;
         case 2: meshData->mRenderSettings = &lbl_8049188C; break;
     }
@@ -716,10 +735,19 @@ void fn_801E2168(GSmeshData *meshData, const Version *version, u32 baseAddr, GSm
             for (Unk801E2168Attr *attr = meshData->_10->mAttrs; attr->mAttr != 0xff; attr++) {
                 u32 size = 0;
                 switch (attr->mAttr) {
-                    case GX_VA_POS:  size = attr->mStride * modelData->mVertexCount; break;
-                    case GX_VA_NRM:  size = attr->mStride * modelData->mVertexCount; break;
-                    case GX_VA_NBT:  size = attr->mStride * modelData->mVertexCount; break;
-                    case GX_VA_CLR0: size = attr->mStride * modelData->_4; break;
+                    case GX_VA_PNMTXIDX:
+                    case GX_VA_TEX0MTXIDX:
+                    case GX_VA_TEX1MTXIDX:
+                    case GX_VA_TEX2MTXIDX:
+                    case GX_VA_TEX3MTXIDX:
+                    case GX_VA_TEX4MTXIDX:
+                    case GX_VA_TEX5MTXIDX:
+                    case GX_VA_TEX6MTXIDX:
+                    case GX_VA_TEX7MTXIDX: break;
+                    case GX_VA_POS:        size = attr->mStride * modelData->mVertexCount; break;
+                    case GX_VA_NRM:        size = attr->mStride * modelData->mVertexCount; break;
+                    case GX_VA_NBT:        size = attr->mStride * modelData->mVertexCount; break;
+                    case GX_VA_CLR0:       size = attr->mStride * modelData->_4; break;
                     case GX_VA_TEX0:
                     case GX_VA_TEX1:
                     case GX_VA_TEX2:
@@ -740,17 +768,19 @@ void fn_801E2168(GSmeshData *meshData, const Version *version, u32 baseAddr, GSm
                 }
             }
 
-            displayList->fn_80232988(&displayList->mVertexFormat,
-                                     meshData->mDisplayList,
-                                     meshData->mDisplayListSize,
-                                     meshData->_c);
+            displayList->mDisplayList.fn_80232988(&displayList->mVertexFormat,
+                                                  meshData->mDisplayList,
+                                                  meshData->mDisplayListSize,
+                                                  meshData->_c);
             meshData->_10->mDisplayList = displayList;
         }
     }
 }
 
+// TODO: Release counterpart of fn_801E2168
 void fn_801E2444(GSmeshData *meshData) {
     switch (meshData->_0) {
+        case 0: break;
         case 1: meshData->mRenderSettings = NULL; break;
         case 2: meshData->mRenderSettings = NULL; break;
     }
@@ -765,6 +795,7 @@ void fn_801E2444(GSmeshData *meshData) {
     }
 }
 
+// TODO: Relocates model data
 void fn_801E24F8(GSmodelData *modelData, const Version *version, u32 baseAddr) {
     fixPointer(&modelData->mVertices, baseAddr);
     fixPointer(&modelData->mWeights, baseAddr);
@@ -781,7 +812,8 @@ void fn_801E24F8(GSmodelData *modelData, const Version *version, u32 baseAddr) {
 
     _UnkModelData_2 *texCoords = modelData->_14;
     if (texCoords) {
-        for (u16 i = 0; i < modelData->_6; i++, texCoords++) {
+        u32 count = modelData->_6;
+        for (u32 i = 0; i < count; i++, texCoords++) {
             fixPointer(&texCoords->mTexCoords, baseAddr);
         }
     }
@@ -812,6 +844,7 @@ void fn_801E24F8(GSmodelData *modelData, const Version *version, u32 baseAddr) {
     }
 }
 
+// TODO: Release counterpart of fn_801E24F8
 void fn_801E2810(GSmodelData *modelData) {
     if (modelData->mFirstMesh) {
         fn_801E2444(modelData->mFirstMesh);
@@ -822,6 +855,7 @@ void fn_801E2810(GSmodelData *modelData) {
     }
 }
 
+// TODO: Relocates model node data
 void fn_801E2878(GSmodelNodeData *nodeData, const Version *version, u32 baseAddr) {
     fixPointer(&nodeData->mModelData, baseAddr);
 
@@ -833,12 +867,14 @@ void fn_801E2878(GSmodelNodeData *nodeData, const Version *version, u32 baseAddr
     fixPointer(&nodeData->_38, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E2878
 void fn_801E2938(GSmodelNodeData *nodeData) {
     if (nodeData->mModelData) {
         fn_801E2810(nodeData->mModelData);
     }
 }
 
+// TODO: Relocates the table at _UnkModelData_1::_1c
 void fn_801E294C(_UnkModelData_1 *arg0, u32 baseAddr) {
     fixPointer(&arg0->_1c, baseAddr);
 
@@ -867,26 +903,33 @@ GSlightData::GSlightData() {
     mNodeType = GS_NODE_LIGHT;
 }
 
+// TODO: Relocates light node data
 void fn_801E2A60(GSlightData *nodeData, const Version *version, u32 baseAddr) {
     fixPointer(&nodeData->_54, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E2A60 (empty)
 void fn_801E2A8C(GSlightData *nodeData) {}
 
+// TODO: Relocates joint node data
 void fn_801E2A90(GSjointData *nodeData, const Version *version, u32 baseAddr) {
     fixPointer(&nodeData->_40, baseAddr);
     fixPointer(&nodeData->_74, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E2A90 (empty)
 void fn_801E2AE4(GSjointData *nodeData) {}
 
+// TODO: Relocates camera node data
 void fn_801E2AE8(GScameraData *nodeData, const Version *version, u32 baseAddr) {
     fixPointer(&nodeData->_48, baseAddr);
     fixPointer(&nodeData->_4c, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E2AE8 (empty)
 void fn_801E2B3C(GScameraData *nodeData) {}
 
+// TODO: Relocates particle node data
 void fn_801E2B40(GSparticleData *nodeData, const Version *version, u32 baseAddr) {
     fixPointer(&nodeData->_38, baseAddr);
     fixPointer(&nodeData->_3c, baseAddr);
@@ -914,8 +957,10 @@ void fn_801E2B40(GSparticleData *nodeData, const Version *version, u32 baseAddr)
     fixPointer(&nodeData->_6c, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E2B40 (empty)
 void fn_801E2D84(GSparticleData *nodeData) {}
 
+// TODO: Relocates volume node data
 void fn_801E2D88(GSvolumeData *nodeData, const Version *version, u32 baseAddr) {
     fixPointer(&nodeData->_34, baseAddr);
     fixPointer(&nodeData->_3c, baseAddr);
@@ -926,12 +971,14 @@ void fn_801E2D88(GSvolumeData *nodeData, const Version *version, u32 baseAddr) {
     }
 }
 
+// TODO: Release counterpart of fn_801E2D88
 void fn_801E2E20(GSvolumeData *nodeData) {
     if (nodeData->_38) {
         fn_80206DF4(nodeData->_38);
     }
 }
 
+// TODO: Relocates animation data
 void fn_801E2E34(GSanimationData *animationData, const Version *version, u32 baseAddr) {
     fixPointer(&animationData->mName, baseAddr);
     fixPointer(&animationData->_10, baseAddr);
@@ -941,6 +988,7 @@ void fn_801E2E34(GSanimationData *animationData, const Version *version, u32 bas
     fixPointer(&animationData->_2c, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E2E34 (empty)
 void fn_801E2F28(GSanimationData *animationData) {}
 
 GSobjectData::GSobjectData()
@@ -954,6 +1002,7 @@ GSobjectData::GSobjectData()
       mBoundingBox(),
       _18(&lbl_804918B4) {}
 
+// TODO: Relocates object data
 void fn_801E2F60(GSobjectData *objectData, const Version *version, u32 baseAddr, bool arg3) {
     fixPointer(&objectData->mName, baseAddr);
     fixPointer(&objectData->mRootNode, baseAddr);
@@ -989,6 +1038,7 @@ void fn_801E2F60(GSobjectData *objectData, const Version *version, u32 baseAddr,
     }
 }
 
+// TODO: Release counterpart of fn_801E2F60
 void fn_801E31EC(GSobjectData *objectData, bool arg1) {
     if (arg1) {
         GSrenderTarget::_unkFunc_2(GShierarchyModule::getInstance()->get_138());
@@ -1022,6 +1072,7 @@ GSenvData::GSenvData() : _10(), _14(), _18(), _1c(), _20(), _24() {
     mFogColor.a = 0xff;
 }
 
+// TODO: Relocates environment data
 void fn_801E3380(GSenvData *envData, const Version *version, u32 baseAddr) {
     fixPointer(&envData->_14, baseAddr);
     fixPointer(&envData->_10, baseAddr);
@@ -1036,6 +1087,7 @@ void fn_801E3380(GSenvData *envData, const Version *version, u32 baseAddr) {
     fixPointer(&envData->_24, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E3380 (empty)
 void fn_801E3488(GSenvData *envData) {}
 
 GSsceneData::GSsceneData()
@@ -1052,6 +1104,7 @@ GSsceneData::GSsceneData()
       mEnvData(),
       _28() {}
 
+// TODO: Relocates a loaded .sdr scene file
 void fn_801E34DC(GSsceneData *sceneData, u32 baseAddr) {
     fixPointer(&sceneData->mObjectList, baseAddr);
     fixPointer(&sceneData->mTextureList, baseAddr);
@@ -1072,6 +1125,7 @@ void fn_801E34DC(GSsceneData *sceneData, u32 baseAddr) {
     initObjectList(sceneData, baseAddr);
 }
 
+// TODO: Release counterpart of fn_801E34DC
 void fn_801E37F0(GSsceneData *sceneData) {
     releaseObjectList(sceneData);
 
@@ -1085,6 +1139,7 @@ void fn_801E37F0(GSsceneData *sceneData) {
     releaseTextureList(sceneData);
 }
 
+// TODO: Relocates a loaded single-object file
 void fn_801E3920(Unk801E3920 *data, u32 baseAddr) {
     fixPointer(&data->mObject, baseAddr);
     fixPointer(&data->mTextureList, baseAddr);
@@ -1101,6 +1156,7 @@ void fn_801E3920(Unk801E3920 *data, u32 baseAddr) {
     }
 }
 
+// TODO: Release counterpart of fn_801E3920
 void fn_801E3BA0(Unk801E3920 *data) {
     u16 matIndex;
     u16 matCount;
@@ -1144,6 +1200,7 @@ void fn_801E3BA0(Unk801E3920 *data) {
     }
 }
 
+// TODO: Relocates a loaded single-material file
 void fn_801E3C94(Unk801E3C94 *data, u32 baseAddr) {
     fixPointer(&data->mTextureList, baseAddr);
     fixPointer(&data->mRenderSettings, baseAddr);
@@ -1163,6 +1220,7 @@ void fn_801E3C94(Unk801E3C94 *data, u32 baseAddr) {
     }
 }
 
+// TODO: Release counterpart of fn_801E3C94
 void fn_801E3E80(Unk801E3C94 *data) {
     u16 texIndex;
     u16 texCount;
@@ -1188,6 +1246,7 @@ void fn_801E3E80(Unk801E3C94 *data) {
     }
 }
 
+// TODO: Relocates a loaded single-model file
 void fn_801E3F48(Unk801E3F48 *data, u32 baseAddr) {
     fixPointer(&data->mTextureList, baseAddr);
     fixPointer(&data->mRenderSettingsList, baseAddr);
@@ -1204,6 +1263,7 @@ void fn_801E3F48(Unk801E3F48 *data, u32 baseAddr) {
     }
 }
 
+// TODO: Release counterpart of fn_801E3F48
 void fn_801E41C4(Unk801E3F48 *data) {
     u16 matIndex;
     u16 matCount;

@@ -142,8 +142,8 @@ struct GSmeshRenderSettings {
 };
 
 // size: 0x3E4
-class Unk801E2168 : public GSdisplayList {
-public:
+struct Unk801E2168 {
+    /* 0x00 */ GSdisplayList mDisplayList;
     /* 0x10 */ GSvertexFormat mVertexFormat;
 };
 

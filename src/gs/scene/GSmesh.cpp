@@ -36,7 +36,7 @@ GSmesh::GSmesh(GSmodel *parentModel, GSmeshData *data)
     if (!displayList) {
         return;
     }
-    mDisplayList = displayList;
+    mDisplayList = &displayList->mDisplayList;
 
     _18 = new _UnkClass8023C09C(&displayList->mVertexFormat);
     if (!_18) {
