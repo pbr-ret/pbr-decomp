@@ -1,6 +1,7 @@
 #pragma once
 
 #include ".unsorted/800400E8.hpp"
+#include ".unsorted/801FB42C.hpp"
 #include "gs/GScolor.hpp"
 #include "gs/render/GSrenderTarget.hpp"
 
@@ -120,7 +121,13 @@ public:
 
 // size: >= 0x4A4
 struct Unk8063F410 {
-    /* 0x000 */ u8 unk000[0x40D];
+    /* 0x000 */ u8 unk000[0x10];
+    /* 0x010 */ u32 _10;
+    /* 0x014 */ u8 unk014[0x3D8];
+    /* 0x3EC */ Unk801FB80C *_3ec;
+    /* 0x3F0 */ GXColor *_3f0;
+    /* 0x3F4 */ u8 unk3f4[0x18];
+    /* 0x40C */ u8 _40c;
     /* 0x40D */ u8 _40d;
     /* 0x40E */ u8 _40e;
     /* 0x40F */ u8 _40f;
@@ -158,6 +165,10 @@ struct Unk8063F410 {
     /* 0x498 */ u8 _unk498[0x4];
     /* 0x49C */ u32 _49c;
     /* 0x4A0 */ void *_4a0;
+
+    GXColor *getColor(Unk801FB80C *entry) {
+        return entry->_1 ? &_3f0[entry->_0] : NULL;
+    }
 };
 
 extern Unk8063F410 *lbl_8063F410;
