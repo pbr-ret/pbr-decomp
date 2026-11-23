@@ -78,7 +78,6 @@ int fn_80250398(int, int, int);
 int fn_803919C4(void *, int);
 int fn_803919F8(void *, int);
 void fn_80253CCC(u16);
-void fn_801E37F0(void *);
 void fn_80253F8C(int);
 void fn_8005A994();
 u16 fn_80253C38(void *, void *, void *, void *, int, int, int, int);
@@ -952,14 +951,14 @@ void fn_800578BC() {
     lbl_8063D4A0->_0030 = 0;
     fn_80253CCC(lbl_8063D4A0->_0034);
     if (lbl_8063D4A0->_001c) {
-        fn_801E37F0(lbl_8063D4A0->_001c);
+        fn_801E37F0((GSsceneData *)lbl_8063D4A0->_001c);
         fn_80055E30(lbl_8063D4A0->_001c);
     }
     if (lbl_8063D4A0->_0020) {
         fn_80055E30(lbl_8063D4A0->_0020);
     }
     if (lbl_8063D4A0->_0024) {
-        fn_801E37F0(lbl_8063D4A0->_0024);
+        fn_801E37F0((GSsceneData *)lbl_8063D4A0->_0024);
         fn_80055E30(lbl_8063D4A0->_0024);
     }
     lbl_8063D4A0->_001c = 0;

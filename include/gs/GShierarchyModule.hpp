@@ -124,6 +124,10 @@ public:
         return mCurrentScene;
     }
 
+    u32 get_134() const {
+        return _134;
+    }
+
     u32 get_138() const {
         return _138;
     }

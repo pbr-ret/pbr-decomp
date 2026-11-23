@@ -24,5 +24,6 @@ s8 animSampleS8(f32 cursor, GSanimTrackData *track, u32 arg2);
 u8 animSampleU8(f32 cursor, GSanimTrackData *track, u32 arg2);
 s16 animSampleS16(f32 cursor, GSanimTrackData *track, u32 arg2);
 u16 animSampleU16(f32 cursor, GSanimTrackData *track, u32 arg2);
+u32 fn_80223164(f32 cursor, GSanimTrackData *track, u32 arg2);
 
 } // namespace GSmath
