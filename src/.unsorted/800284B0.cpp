@@ -9,7 +9,6 @@ void fn_80028554(Unk800284B0Value *value, u32 v) {
     value->_00 = 1;
 }
 
-void fn_8002A294(void) {}
 void fn_8002A298(void) {}
 u32 fn_8002A2EC(Unk800284B0 *obj) {
     return obj->mFlags & 0x1;
