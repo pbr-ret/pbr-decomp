@@ -850,7 +850,10 @@ src/gs/scene/GSanimationObject.cpp:
 src/gs/scene/GScamera.cpp:
 	.text       start:0x801DDF78 end:0x801DF040
 	.ctors      start:0x803E2060 end:0x803E2064
+	.data       start:0x80423338 end:0x804233A0
 	.sdata      start:0x8063D700 end:0x8063D730
+	.sbss       start:0x8063F358 end:0x8063F360
+	.sdata2     start:0x80641BF8 end:0x80641C48
 
 src/gs/scene/GSvolumeNode.cpp:
 	.text       start:0x801DF040 end:0x801E07E8
