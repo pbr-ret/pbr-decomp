@@ -210,7 +210,7 @@ GSnull::GSnull(GSobject *parentObject, GSnodeData *data)
     GSnodeData *childData = data->mFirstChild;
     while (childData) {
         switch (childData->mNodeType) {
-            case GS_NODE_MODEL:    childNode = new GSmodel(parentObject, static_cast<GSmodelNodeData *>(childData)); break;
+            case GS_NODE_MODEL: childNode = new GSmodel(parentObject, static_cast<GSmodelNodeData *>(childData)); break;
             case GS_NODE_CAMERA:   childNode = new GScamera(parentObject, childData); break;
             case GS_NODE_JOINT:    childNode = new GSjointNode(parentObject, childData); break;
             case GS_NODE_LIGHT:    childNode = new GSlight(parentObject, childData); break;
@@ -683,17 +683,18 @@ void GSnull::updateTransform() {
     if (mTransformPivots) {
         // TODO(samm) Only this being inlined feels weird
         // Move to scale pivot
-        initTranslation(
-            mTransformPivots->mScalePivot.x, mTransformPivots->mScalePivot.y, mTransformPivots->mScalePivot.z
-        );
+        initTranslation(mTransformPivots->mScalePivot.x,
+                        mTransformPivots->mScalePivot.y,
+                        mTransformPivots->mScalePivot.z);
 
         MTXScaleApply(mTransform, mTransform, mLocalScale.x, mLocalScale.y, mLocalScale.z);
 
         // Move from scale pivot to rotation pivot
-        MTXTransApply(
-            mTransform, mTransform, mTransformPivots->mScaleToRot.x, mTransformPivots->mScaleToRot.y,
-            mTransformPivots->mScaleToRot.z
-        );
+        MTXTransApply(mTransform,
+                      mTransform,
+                      mTransformPivots->mScaleToRot.x,
+                      mTransformPivots->mScaleToRot.y,
+                      mTransformPivots->mScaleToRot.z);
 
         if ((mFlags & FLAG_UPDATE_LOCAL_ROTATION_QUAT)) {
             GSmath::eulerToQuat(&mLocalRotationQuat, &mLocalRotationEuler);
@@ -704,10 +705,11 @@ void GSnull::updateTransform() {
         MTXConcat(mtx, mTransform, mTransform);
 
         // Move from rotation pivot to translation pivot
-        MTXTransApply(
-            mTransform, mTransform, mTransformPivots->mRotToTrans.x, mTransformPivots->mRotToTrans.y,
-            mTransformPivots->mRotToTrans.z
-        );
+        MTXTransApply(mTransform,
+                      mTransform,
+                      mTransformPivots->mRotToTrans.x,
+                      mTransformPivots->mRotToTrans.y,
+                      mTransformPivots->mRotToTrans.z);
     } else {
         MTXScale(mTransform, mLocalScale.x, mLocalScale.y, mLocalScale.z);
 
