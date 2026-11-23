@@ -26,7 +26,7 @@ GSrenderLight::GSrenderLight() {
 }
 
 void GSrenderLight::initPointLight(
-    const GScolor<u8> &color, const Vec &position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness) {
+    const GScolor<u8> &color, const GSvec &position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness) {
     _1 = 0;
     _0 = 0;
     mType = GS_LIGHT_POINT;
@@ -48,16 +48,14 @@ void GSrenderLight::initPointLight(
         _1 |= (1 << 5);
     }
 
-    mPosition.x = position.x;
-    mPosition.y = position.y;
-    mPosition.z = position.z;
+    mPosition = position;
     _1 |= (1 << 1);
     _0 |= (1 << 0);
 }
 
 void GSrenderLight::initSpotLight(const GScolor<u8> &color,
-                                  const Vec &position,
-                                  const Vec &direction,
+                                  const GSvec &position,
+                                  const GSvec &direction,
                                   GXDistAttnFn distAttnFn,
                                   f32 refDistance,
                                   f32 refBrightness,
@@ -73,15 +71,11 @@ void GSrenderLight::initSpotLight(const GScolor<u8> &color,
     mColor.a = color.a;
     _1 |= (1 << 0);
 
-    mPosition.x = position.x;
-    mPosition.y = position.y;
-    mPosition.z = position.z;
+    mPosition = position;
     _1 |= (1 << 1);
     _0 |= (1 << 0);
 
-    mDirection.x = direction.x;
-    mDirection.y = direction.y;
-    mDirection.z = direction.z;
+    mDirection = direction;
     _1 |= (1 << 2);
     _0 |= (1 << 1);
 
@@ -95,7 +89,7 @@ void GSrenderLight::initSpotLight(const GScolor<u8> &color,
     _1 |= (1 << 5);
 }
 
-void GSrenderLight::initSpecLight(const GScolor<u8> &color, const Vec &direction, f32 shininess) {
+void GSrenderLight::initSpecLight(const GScolor<u8> &color, const GSvec &direction, f32 shininess) {
     _1 = 0;
     _0 = 0;
     mType = GS_LIGHT_SPEC;
@@ -106,9 +100,7 @@ void GSrenderLight::initSpecLight(const GScolor<u8> &color, const Vec &direction
     mColor.a = color.a;
     _1 |= (1 << 0);
 
-    mDirection.x = direction.x;
-    mDirection.y = direction.y;
-    mDirection.z = direction.z;
+    mDirection = direction;
     _1 |= (1 << 2);
     _0 |= (1 << 1);
 
@@ -121,15 +113,9 @@ void GSrenderLight::load(u8 index, GSlightStruct1 *param2) {
         GXInitLightColor(&mLightObj, mColor);
     }
 
-    Vec pos;
-    pos.x = mPosition.x;
-    pos.y = mPosition.y;
-    pos.z = mPosition.z;
+    GSvec pos(mPosition);
 
-    Vec dir;
-    dir.x = mDirection.x;
-    dir.y = mDirection.y;
-    dir.z = mDirection.z;
+    GSvec dir(mDirection);
 
     if (param2 != NULL) {
         MtxPtr mtx1 = param2->_1d4;

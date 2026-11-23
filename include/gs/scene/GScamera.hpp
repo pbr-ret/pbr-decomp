@@ -22,12 +22,12 @@ public: // TODO Make private
     /* 0x17C */ f32 _17c;
     /* 0x180 */ f32 _180;
     /* 0x184 */ f32 _184;
-    /* 0x188 */ GSvec3 _188;
-    /* 0x194 */ GSvec3 _194;
-    /* 0x1A0 */ GSvec3 _1a0;
-    /* 0x1AC */ GSvec3 _1ac;
-    /* 0x1B8 */ GSvec3 _1b8;
-    /* 0x1C4 */ GSvec3 _1c4;
+    /* 0x188 */ GSvec _188;
+    /* 0x194 */ GSvec _194;
+    /* 0x1A0 */ GSvec _1a0;
+    /* 0x1AC */ GSvec _1ac;
+    /* 0x1B8 */ GSvec _1b8;
+    /* 0x1C4 */ GSvec _1c4;
     /* 0x1D0 */ GSnull *_1d0;
     /* 0x1D4 */ GSmatrix _1d4;
     /* 0x204 */ GSmatrix _204;

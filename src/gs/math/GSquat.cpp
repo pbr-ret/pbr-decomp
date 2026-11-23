@@ -4,19 +4,19 @@
 
 // TODO(samm) Is a namespace really appropriate?
 namespace GSmath {
-GSvec3 sXAxis(1.f, 0.f, 0.f);
-GSvec3 sYAxis(0.f, 1.f, 0.f);
-GSvec3 sZAxis(0.f, 0.f, 1.f);
+GSvec sXAxis(1.f, 0.f, 0.f);
+GSvec sYAxis(0.f, 1.f, 0.f);
+GSvec sZAxis(0.f, 0.f, 1.f);
 } // namespace GSmath
 
 // TODO(samm) Name these variables
-GSvec3 lbl_8049362C(0.f, 0.f, 0.f);
-GSvec3 lbl_80493638(1.f, 1.f, 1.f);
+GSvec lbl_8049362C(0.f, 0.f, 0.f);
+GSvec lbl_80493638(1.f, 1.f, 1.f);
 
 GSvec2 lbl_8063F5B0(0.f, 0.f);
 GSvec2 lbl_8063F5B8(1.f, 1.f);
 
-void GSmath::rotateVec3ByQuat(GSvec3 *p, GSquat *r) {
+void GSmath::rotateVec3ByQuat(GSvec *p, GSquat *r) {
     f32 rw;
     f32 rz;
     f32 ry;

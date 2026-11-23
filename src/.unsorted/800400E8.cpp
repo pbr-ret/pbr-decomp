@@ -18,7 +18,7 @@ extern "C" {
 f32 PSVECMag(const Vec *v);
 f32 PSVECDistance(const Vec *a, const Vec *b);
 f32 PSVECDotProduct(const Vec *a, const Vec *b);
-GSvec3 fn_8003B674(u32 obj, u32 kind);
+GSvec fn_8003B674(u32 obj, u32 kind);
 f32 fn_8000739C();
 f32 fn_8003A5EC(u32 obj, int i);
 int fn_800396D4(u32 obj);
@@ -411,8 +411,8 @@ f32 fn_800407B0(Unk800404A8 *c) {
                     } else if (a == a2) {
                         r = fn_8003A5ECByKind(a, c->_58[0]._4);
                     } else {
-                        GSvec3 p1;
-                        GSvec3 p0;
+                        GSvec p1;
+                        GSvec p0;
                         p0 = fn_8003B674(a, c->_58[0]._4);
                         p1 = fn_8003B674(c->_58[1]._0, c->_58[1]._4);
                         r = lbl_806408B8 * PSVECDistance(&p0, &p1);
@@ -684,12 +684,12 @@ void fn_800410BC(Unk80040EA4 *e, Vec *v) {
 
 // TODO Places the eye around the target from yaw x, pitch y and distance d.
 void fn_8004111C(Unk80040EA4 *e, f32 x, f32 y, f32 d) {
-    GSvec3 tmp;
+    GSvec tmp;
     GSquat q;
-    GSvec3 temp;
-    GSvec3 out;
-    GSvec3 v;
-    GSvec3 ang;
+    GSvec temp;
+    GSvec out;
+    GSvec v;
+    GSvec ang;
     ang.set(-y, x, lbl_806408B0);
     GSmath::eulerToQuat(&q, &ang);
     temp.set(lbl_806408B0, lbl_806408B0, d);
@@ -725,12 +725,12 @@ void fn_8004121C(Unk80040EA4 *e) {
 // TODO Computes the eye position from the angles and distance around controller c.
 void fn_80041228(Unk80040EA4 *e, Unk800404A8 *c) {
     Vec d;
-    GSvec3 tmp;
+    GSvec tmp;
     GSquat q;
-    GSvec3 off;
-    GSvec3 out;
-    GSvec3 v;
-    GSvec3 ang;
+    GSvec off;
+    GSvec out;
+    GSvec v;
+    GSvec ang;
     Vec *tgt = &c->_14;
     f32 yaw0;
     f32 dist;
@@ -983,14 +983,14 @@ void fn_80041B40(Unk80040EA4 *e, u32 a, u32 b) {
 
 // TODO Offset from the target for the given angles and distance.
 void fn_80041B58(Vec *out, Unk80040EA4 *e, f32 a, f32 b, f32 c) {
-    GSvec3 dir;
+    GSvec dir;
     GSquat q;
     Vec tv;
     Vec p1;
     Vec p2;
     Vec p4;
     Vec p3;
-    GSvec3 eul;
+    GSvec eul;
     u32 obj;
     Unk800404A8 *ctl;
     f32 yaw;
@@ -1612,20 +1612,20 @@ void fn_80043B60(Unk80040EA4 *e, f32 v) {
 // TODO Updates a camera and writes its eye, target and up vector to the scene camera.
 void fn_80043B68(Unk80040EA4 *e, f32 t) {
     Unk800404A8 tmp;
-    GSvec3 p;
-    GSvec3 off;
-    GSvec3 f;
-    GSvec3 s2;
-    GSvec3 up;
+    GSvec p;
+    GSvec off;
+    GSvec f;
+    GSvec s2;
+    GSvec up;
     Quaternion q;
     Vec cr;
-    GSvec3 p2;
-    GSvec3 E;
-    GSvec3 T;
+    GSvec p2;
+    GSvec E;
+    GSvec T;
     Vec fwd;
     Vec side;
     Vec sc;
-    GSvec3 r;
+    GSvec r;
     Vec eye;
     Unk800404A8 *tgt;
     int i;
@@ -1777,12 +1777,12 @@ u32 fn_800444A0(Unk80040EA4 *e) {
 // TODO Projects a point on the screen of the camera's render target; FALSE when it is behind.
 int fn_80044554(Unk80040EA4 *e, Vec *in, Vec *out) {
     Unk80044554 vp;
-    GSvec3 dir;
-    GSvec3 rel;
-    GSvec3 pos;
-    GSvec3 p;
-    GSvec3 q;
-    GSvec3 d;
+    GSvec dir;
+    GSvec rel;
+    GSvec pos;
+    GSvec p;
+    GSvec q;
+    GSvec d;
     Unk80033090 *manager;
     u32 x;
     GScamera *cam;

@@ -181,7 +181,7 @@ void GSmodel::update(f32 deltaTime) {
         fn_801F15EC(0, 0, 0.f);
     }
 
-    GSvec3 center;
+    GSvec center;
     GSmath::calcBoundingBoxCenter(&center, &mBoundingBox);
     mCenter = center;
 
@@ -211,7 +211,7 @@ void GSmodel::initTransform(bool recursive) {
     mBoundingBox.mMin = _unk1->mBoundingBoxMin;
     mBoundingBox.mMax = _unk1->mBoundingBoxMax;
 
-    GSvec3 center;
+    GSvec center;
     GSmath::calcBoundingBoxCenter(&center, &mBoundingBox);
     mCenter = center;
 

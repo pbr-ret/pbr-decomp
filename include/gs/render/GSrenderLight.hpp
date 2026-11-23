@@ -26,8 +26,8 @@ public:
     /* 0x1 */ u8 _1;
     /* 0x4 */ GSlightType mType;
     /* 0x8 */ GXColor mColor;
-    /* 0xc */ Vec mPosition;
-    /* 0x18 */ Vec mDirection;
+    /* 0xc */ GSvec mPosition;
+    /* 0x18 */ GSvec mDirection;
     union {
         /* 0x24 */ Vec mHalfAngle;
         struct {
@@ -63,22 +63,20 @@ public:
     }
 
     void initPointLight(
-        const GScolor<u8> &color, const Vec &position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness);
+        const GScolor<u8> &color, const GSvec &position, GXDistAttnFn distAttnFn, f32 refDistance, f32 refBrightness);
     void initSpotLight(const GScolor<u8> &color,
-                       const Vec &position,
-                       const Vec &direction,
+                       const GSvec &position,
+                       const GSvec &direction,
                        GXDistAttnFn distAttnFn,
                        f32 refDistance,
                        f32 refBrightness,
                        GXSpotFn spotFn,
                        f32 cutoff);
-    void initSpecLight(const GScolor<u8> &color, const Vec &direction, f32 shininess);
+    void initSpecLight(const GScolor<u8> &color, const GSvec &direction, f32 shininess);
     void load(u8 index, GSlightStruct1 *param2);
 
-    void setDirection(const Vec &direction) {
-        mDirection.x = direction.x;
-        mDirection.y = direction.y;
-        mDirection.z = direction.z;
+    void setDirection(const GSvec &direction) {
+        mDirection = direction;
         _1 |= (1 << 2);
         _1 &= ~(1 << 6);
         _0 |= (1 << 1);

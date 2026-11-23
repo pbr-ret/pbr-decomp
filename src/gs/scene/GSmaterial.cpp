@@ -18,7 +18,7 @@ extern GSmaterialData *lbl_8063F3AC;
 extern u8 lbl_8063F3B0;
 extern GSmatrix lbl_804932B0;
 
-/* 0x80491970 */ Unk80491970 lbl_80491970(GSvec3(0.5f, -0.5f, 0.f), GSvec3(0.5f, 0.5f, 1.f));
+/* 0x80491970 */ Unk80491970 lbl_80491970(GSvec(0.5f, -0.5f, 0.f), GSvec(0.5f, 0.5f, 1.f));
 /* 0x8063D768 */ Unk8063D768 lbl_8063D768 = {1};
 
 GSmaterial::GSmaterial(GSmaterialData *matData, GSmeshRenderSettings *renderSettings)
@@ -860,7 +860,7 @@ void GSmaterial::fn_801E9114(GScamera *arg0, bool useTexture) {
         return;
     }
 
-    GSvec3 dir;
+    GSvec dir;
     dir = renderLight->mDirection;
     MTXMultVecSR(arg0->_1d4, &dir, &dir);
 
@@ -873,14 +873,14 @@ void GSmaterial::fn_801E9114(GScamera *arg0, bool useTexture) {
     if (FLOAT_EQUAL(cosAngle, 1.f)) {
         MTXIdentity(mtx);
     } else {
-        GSvec3 viewDir = -GSmath::sZAxis;
-        GSvec3 half;
+        GSvec viewDir = -GSmath::sZAxis;
+        GSvec half;
         VECHalfAngle(&dir, &viewDir, &half);
         half.x = -half.x;
         half.y = -half.y;
         half.z = -half.z;
 
-        GSvec3 axis;
+        GSvec axis;
         VECCrossProduct(&half, &viewDir, &axis);
         f32 dot = VECDotProduct(&half, &viewDir);
 
@@ -1007,12 +1007,12 @@ GSmatrix *GSmaterial::fn_801E9C74(u8 index, _UnkMaterialData_2 *data) {
         return &lbl_804932B0;
     }
 
-    /* 0x804919A0 */ static GSvec3 center(0.5f, 0.5f, 0.f);
+    /* 0x804919A0 */ static GSvec center(0.5f, 0.5f, 0.f);
 
     GSmatrix *mtx = &_18[index];
     u16 mask = (1 << index);
     if (_1c & mask) {
-        mtx->setScale(GSvec3(data->_10, data->_14, 1.f));
+        mtx->setScale(GSvec(data->_10, data->_14, 1.f));
         MTXTransApply(*mtx, *mtx, -center.x, -center.y, -center.z);
 
         GSmatrix rot;
@@ -1020,7 +1020,7 @@ GSmatrix *GSmaterial::fn_801E9C74(u8 index, _UnkMaterialData_2 *data) {
         MTXConcat(rot, *mtx, *mtx);
 
         MTXTransApply(*mtx, *mtx, center.x, center.y, center.z);
-        mtx->translate(GSvec3(data->_4, data->_8, 0.f));
+        mtx->translate(GSvec(data->_4, data->_8, 0.f));
 
         _1c &= ~mask;
     }
@@ -1082,9 +1082,9 @@ void GSmaterial::fn_801E9DCC(const GScamera *arg0, GSmatrix *arg1) {
         MTXCopy(_unk4->_4->mNrmMtx, _unk6);
 
         if (_27) {
-            _unk6.scale(GSvec3(1.f, 1.f, 0.75f));
+            _unk6.scale(GSvec(1.f, 1.f, 0.75f));
 
-            GSvec3 _unk5 = arg0->_1ac - arg0->_1c4;
+            GSvec _unk5 = arg0->_1ac - arg0->_1c4;
 
             f32 _unk7 = _unk5.x * _unk5.x + _unk5.z * _unk5.z;
             _unk7 = (_unk7 <= 0.f) ? 0.f : sqrtf(_unk7);

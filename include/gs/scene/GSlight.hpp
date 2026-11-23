@@ -56,10 +56,10 @@ public:
     /* 0x0C */ virtual void update(f32 deltaTime);
     /* 0x10 */ virtual void initTransform(bool recursive);
 
-    void fn_801E64DC(const GSvec3 *target);
-    GSvec3 fn_801E6944() const;
-    GSvec3 fn_801E69D8() const;
-    GSvec3 fn_801E6A94(const GSvec3 *point) const;
+    void fn_801E64DC(const GSvec *target);
+    GSvec fn_801E6944() const;
+    GSvec fn_801E69D8() const;
+    GSvec fn_801E6A94(const GSvec *point) const;
 
     // TODO(samm) Names
 

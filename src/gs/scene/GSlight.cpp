@@ -32,8 +32,8 @@ static inline bool isZero(const Vec &vec) {
     return true;
 }
 
-static inline GSvec3 getMtxColumn(const Mtx mtx, int col) {
-    GSvec3 vec;
+static inline GSvec getMtxColumn(const Mtx mtx, int col) {
+    GSvec vec;
     vec.x = mtx[0][col];
     vec.y = mtx[1][col];
     vec.z = mtx[2][col];
@@ -168,12 +168,12 @@ GSlight::~GSlight() {
 }
 
 // TODO Points the specular light from the light's position towards target
-void GSlight::fn_801E64DC(const GSvec3 *target) {
+void GSlight::fn_801E64DC(const GSvec *target) {
     if (!_134 || _134 == _130) {
         return;
     }
 
-    GSvec3 dir = *target - getMtxColumn(mTransform, 3);
+    GSvec dir = *target - getMtxColumn(mTransform, 3);
 
     if (isZero(dir)) {
         dir.set(0.f, -1.f, 0.f);
@@ -192,8 +192,8 @@ void GSlight::update(f32 deltaTime) {
     GSnull::update(deltaTime);
 
     if (checkLightFlag(1 << 0)) {
-        GSvec3 position;
-        GSvec3 dir;
+        GSvec position;
+        GSvec dir;
 
         switch (mType) {
             case GS_LIGHT_NODE_POINT:
@@ -236,8 +236,8 @@ void GSlight::update(f32 deltaTime) {
 }
 
 // TODO Position of the light; directional lights are placed far away against their direction
-GSvec3 GSlight::fn_801E6944() const {
-    GSvec3 position;
+GSvec GSlight::fn_801E6944() const {
+    GSvec position;
     switch (mType) {
         case GS_LIGHT_NODE_DIRECTIONAL: position = fn_801E69D8() * -1e18f; break;
         case GS_LIGHT_NODE_POINT:
@@ -248,9 +248,9 @@ GSvec3 GSlight::fn_801E6944() const {
 }
 
 // TODO Direction the light points in
-GSvec3 GSlight::fn_801E69D8() const {
+GSvec GSlight::fn_801E69D8() const {
     const Mtx &mtx = mTransform;
-    GSvec3 dir;
+    GSvec dir;
     dir.x = -mtx[0][2];
     dir.y = -mtx[1][2];
     dir.z = -mtx[2][2];
@@ -259,8 +259,8 @@ GSvec3 GSlight::fn_801E69D8() const {
 }
 
 // TODO Direction of the light at point
-GSvec3 GSlight::fn_801E6A94(const GSvec3 *point) const {
-    GSvec3 dir;
+GSvec GSlight::fn_801E6A94(const GSvec *point) const {
+    GSvec dir;
     if (mType == GS_LIGHT_NODE_DIRECTIONAL) {
         negate(&dir, getMtxColumn(mTransform, 2));
     } else {

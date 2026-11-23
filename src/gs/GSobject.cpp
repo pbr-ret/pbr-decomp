@@ -25,7 +25,7 @@
 
 // TODO(samm) Proper includes
 extern GSmatrix lbl_804932B0;
-extern GSvec3 lbl_8049362C;
+extern GSvec lbl_8049362C;
 
 bool GSobject::fn_801F40E0(GSnull *rootNode) {
     GSnull *node = rootNode;
@@ -566,7 +566,7 @@ void GSobject::init() {
     }
 
     if (mData->mBoundingBox) {
-        GSvec3 center;
+        GSvec center;
         mBoundingBox.mMin = mData->mBoundingBox->mMin;
         mBoundingBox.mMax = mData->mBoundingBox->mMax;
         GSmath::calcBoundingBoxCenter(&center, &mBoundingBox);
@@ -594,7 +594,7 @@ void GSobject::update(f32 deltaTime, bool updateNodes) {
         calcBoundingBox();
     }
 
-    GSvec3 center;
+    GSvec center;
     GSmath::calcBoundingBoxCenter(&center, &mBoundingBox);
     mCenter = center;
 
@@ -650,7 +650,7 @@ bool _UnkObjectStruct_2::fn_801F8368(const GSmatrix *arg0, f32 deltaTime) {
         MTXMultVecSR(*arg0, &_14, &_14);
     }
 
-    GSvec3 _unk4;
+    GSvec _unk4;
     _unk4 = _14.cross(&GSmath::sYAxis);
 
     f32 x = _unk4.x;
@@ -670,7 +670,7 @@ bool _UnkObjectStruct_2::fn_801F8368(const GSmatrix *arg0, f32 deltaTime) {
 
     VECNormalize(&_unk4, &_unk4);
 
-    GSvec3 camUp;
+    GSvec camUp;
     camUp = _unk4.cross(&_14);
 
     if (!(_28 < EPSILON && _28 > -EPSILON)) {
@@ -679,14 +679,14 @@ bool _UnkObjectStruct_2::fn_801F8368(const GSmatrix *arg0, f32 deltaTime) {
         GSmath::rotateVec3ByQuat(&camUp, &_unk7);
     }
 
-    GSvec3 _unk8;
+    GSvec _unk8;
     _unk8 = _unk4 * _20;
 
-    GSvec3 _unk9 = camUp * _24;
+    GSvec _unk9 = camUp * _24;
     VECAdd(&_unk8, &_unk9, &_unk8);
 
-    GSvec3 target = _8 + _14 + _unk8;
-    GSvec3 camPos = _8 + _unk8;
+    GSvec target = _8 + _14 + _unk8;
+    GSvec camPos = _8 + _unk8;
 
     MTXLookAt(_40, &camPos, &camUp, &target);
     Mtx _unk13;

@@ -25,16 +25,16 @@ struct _UnkObjectStruct_3 {
     /* 0xF8 */ f32 _f8;
     /* 0xFC */ f32 _fc;
 
-    GSvec3 _unkVec3_1() const {
-        GSvec3 _unk1;
+    GSvec _unkVec3_1() const {
+        GSvec _unk1;
         _unk1.x = _d8;
         _unk1.y = _e8;
         _unk1.z = _f8;
         return _unk1;
     }
 
-    GSvec3 _unkVec3_2() const {
-        GSvec3 _unk1;
+    GSvec _unkVec3_2() const {
+        GSvec _unk1;
         _unk1.x = _dc;
         _unk1.y = _ec;
         _unk1.z = _fc;
@@ -46,8 +46,8 @@ struct _UnkObjectStruct_3 {
 struct _UnkObjectStruct_2 {
     /* 0x000 */ u32 _0;
     /* 0x004 */ _UnkObjectStruct_3 *_4;
-    /* 0x008 */ GSvec3 _8;
-    /* 0x014 */ GSvec3 _14;
+    /* 0x008 */ GSvec _8;
+    /* 0x014 */ GSvec _14;
     /* 0x020 */ f32 _20;
     /* 0x024 */ f32 _24;
     /* 0x028 */ f32 _28;
@@ -110,7 +110,7 @@ private:
     /* 0x118 */ f32 mAnimBlendFactor;
     /* 0x11C */ f32 mTransitionLength;
     /* 0x120 */ GSboundingBox mBoundingBox;
-    /* 0x13C */ GSvec3 mCenter;
+    /* 0x13C */ GSvec mCenter;
     // TODO(samm) GScolor?
     /* 0x148 */ u8 _148;
     /* 0x149 */ u8 _149;

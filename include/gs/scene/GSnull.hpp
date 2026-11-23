@@ -31,17 +31,17 @@ protected:
     /* 0x016 */ u16 mChildCount;
     /* 0x018 */ u8 mDepth;
     /* 0x01C */ GSnodeData *mNodeData;
-    /* 0x020 */ GSvec3 mLocalTranslation;
+    /* 0x020 */ GSvec mLocalTranslation;
     /* 0x02C */ GSquat mLocalRotationQuat;
-    /* 0x03C */ GSvec3 mLocalRotationEuler;
-    /* 0x048 */ GSvec3 mLocalScale;
-    /* 0x054 */ GSvec3 mParentTranslation;
+    /* 0x03C */ GSvec mLocalRotationEuler;
+    /* 0x048 */ GSvec mLocalScale;
+    /* 0x054 */ GSvec mParentTranslation;
     /* 0x060 */ GSquat mParentRotation;
-    /* 0x070 */ GSvec3 mParentScale;
-    /* 0x07C */ GSvec3 mBlendTranslation;
+    /* 0x070 */ GSvec mParentScale;
+    /* 0x07C */ GSvec mBlendTranslation;
     /* 0x088 */ GSquat mBlendRotationQuat;
-    /* 0x098 */ GSvec3 mBlendRotationEuler;
-    /* 0x0A4 */ GSvec3 mBlendScale;
+    /* 0x098 */ GSvec mBlendRotationEuler;
+    /* 0x0A4 */ GSvec mBlendScale;
     // TODO(samm) Revisit this
     /* 0x0B0 */ _TransformPivots *mTransformPivots;
     /* 0x0B4 */ _BlendRotationCache *mRotationCache;
@@ -92,7 +92,7 @@ protected:
     bool fn_801F3C7C();
 
 public:
-    const GSvec3 &getLocalTranslation() const {
+    const GSvec &getLocalTranslation() const {
         return mLocalTranslation;
     }
 
